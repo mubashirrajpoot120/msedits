@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IP Info Lookup by Ms Edits</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --bg: #000000;
+  --card: #0a0a0a;
+  --accent: #00ff00;
+  --muted: #00aa00;
+  --text: #00ff00;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Courier New', monospace, sans-serif;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Binary animation background */
+.binary-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  opacity: 0.1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.binary-digit {
+  position: absolute;
+  color: var(--accent);
+  font-size: 12px;
+  font-family: 'Courier New', monospace;
+  opacity: 0;
+  animation: float 15s linear infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(-100px);
+    opacity: 0;
+  }
+}
+
+.container {
+  max-width: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  padding: 20px 15px;
+  box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+  position: relative;
+  z-index: 1;
+  overflow: visible;
+}
+
+h1 {
+  text-align: center;
+  font-size: 20px;
+  margin: 0 0 15px;
+  color: var(--text);
+  text-shadow: 0 0 5px var(--accent);
+  line-height: 1.3;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 6px;
+  border: 1px solid var(--accent);
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--text);
+  font-size: 16px;
+  outline: none;
+  transition: .2s;
+}
+
+input:focus {
+  box-shadow: 0 0 8px var(--accent);
+}
+
+button {
+  padding: 14px 16px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(0, 255, 0, 0.2);
+  color: var(--text);
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s;
+  border: 1px solid var(--accent);
+  font-size: 16px;
+  width: 100%;
+}
+
+button:hover {
+  background: rgba(0, 255, 0, 0.3);
+  box-shadow: 0 0 8px var(--accent);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid var(--accent);
+  color: var(--muted);
+  font-weight: 500;
+  padding: 12px 14px;
+}
+
+.btn-ghost:hover {
+  background: rgba(0, 255, 0, 0.1);
+  color: var(--text);
+}
+
+.result {
+  margin-top: 16px;
+}
+
+.card {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  padding: 16px;
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.2);
+}
+
+.top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.flag {
+  width: 60px;
+  height: 40px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.ip {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.row {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(0, 255, 0, 0.2);
+  font-size: 14px;
+}
+
+.k {
+  color: var(--muted);
+  font-size: 13px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.v {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.error {
+  color: #ff5555;
+  background: rgba(255, 0, 0, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+  border: 1px solid #ff5555;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+footer {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  background: #000;
+  border: 2px solid #00ff00;
+  height: auto;
+  width: 100%;
+  max-width: 280px;
+  padding: 12px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+}
+
+footer a {
+  color: var(--accent);
+  font-size: 22px;
+  text-decoration: none;
+  transition: .3s;
+}
+
+footer a:hover {
+  color: #7dd3fc;
+  transform: scale(1.1);
+}
+
+.whatsapp {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  margin: 0 auto;
+}
+
+.whatsapp img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  margin: 0;
+  border: 2px solid #00ff00;
+}
+
+.whatsapp:hover {
+  transform: translateY(-5px) scale(1.05);
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .container {
+    max-width: 420px;
+    padding: 22px;
+  }
+  
+  h1 {
+    font-size: 22px;
+  }
+  
+  .field {
+    flex-direction: row;
+  }
+  
+  button {
+    width: auto;
+  }
+  
+  .actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+  
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
+  
+  .flag {
+    width: 70px;
+    height: 48px;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 360px) {
+  body {
+    padding: 10px;
+  }
+  
+  .container {
+    padding: 15px 10px;
+  }
+  
+  h1 {
+    font-size: 18px;
+  }
+  
+  input, button {
+    padding: 12px 14px;
+  }
+  
+  .flag {
+    width: 50px;
+    height: 35px;
+  }
+  
+  .ip {
+    font-size: 16px;
+  }
+}
+</style>
+</head>
+<body>
+
+<!-- Binary animation background -->
+<div class="binary-bg" id="binaryBg"></div>
+
+<div class="container">
+  <h1>IP Info Lookup <br> By MS EDITS</h1>
+  <div class="field">
+    <input id="ipInput" placeholder="Enter IP (optional)" />
+    <button id="btnFetch">Lookup</button>
+  </div>
+  <div class="actions">
+    <button id="btnMyIp" class="btn-ghost">Use my IP</button>
+    <button id="btnClear" class="btn-ghost">Clear</button>
+  </div>
+  <div id="msg" style="text-align:center;margin-top:10px;font-size:13px;"></div>
+  <div class="result" id="output"><div class="card" style="text-align:center;color:var(--muted)">Enter an IP and tap Lookup.</div></div>
+  <footer>
+    <div class="whatsapp" onclick="window.open('https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a', '_blank')">
+      <img src="whatsapp channel.jpg" alt="WhatsApp Channel">
+    </div>
+    <span>© MS EDITS | 2025 IP Info Tool</span>
+  </footer>
+</div>
+
+<script>
+// Binary animation
+function createBinaryAnimation() {
+  const binaryBg = document.getElementById('binaryBg');
+  const digits = ['0', '1'];
+  
+  // Clear any existing content
+  binaryBg.innerHTML = '';
+  
+  // Create binary digits
+  for (let i = 0; i < 60; i++) {
+    const digit = document.createElement('div');
+    digit.className = 'binary-digit';
+    digit.textContent = digits[Math.floor(Math.random() * digits.length)];
+    digit.style.left = `${Math.random() * 100}%`;
+    digit.style.animationDelay = `${Math.random() * 15}s`;
+    binaryBg.appendChild(digit);
+  }
+}
+
+// Original functionality - NO CHANGES MADE
+const btn=document.getElementById('btnFetch'),ipInput=document.getElementById('ipInput'),output=document.getElementById('output'),msg=document.getElementById('msg'),btnMy=document.getElementById('btnMyIp'),btnClear=document.getElementById('btnClear');
+function showError(t){output.innerHTML='<div class="error">'+t+'</div>'}
+function setMsg(h=''){msg.innerHTML=h}
+function renderCard(d){const ip=d.ip||'—',type=d.type||'—',country=d.country||'—',code=d.country_code||'',region=d.region||'—',city=d.city||'—',lat=d.latitude??'—',lon=d.longitude??'—',postal=d.postal||'—',calling=d.calling_code||'—',capital=d.capital||'—',borders=d.borders||'—',flag=d.flag?.img,flagEmoji=d.flag?.emoji||'',conn=d.connection||{},asn=conn.asn||'—',org=conn.org||'—',isp=conn.isp||'—',domain=conn.domain||'—',tz=d.timezone||{},tzId=tz.id||'—',tzAbbr=tz.abbr||'—',tzTime=tz.current_time||'—';
+output.innerHTML=`<div class="card">
+<div class="top"><div class="flag">${flag?`<img src="${flag}" style="width:100%;height:100%;object-fit:cover">`:flagEmoji||'🏳️'}</div>
+<div><div class="ip">${ip} <span style="font-size:12px;color:var(--muted)">(${type})</span></div>
+<div class="muted">${city}, ${region} — ${country} ${code}</div></div></div>
+<div class="grid">
+<div class="row"><span class="k">Latitude / Longitude</span><span class="v">${lat} , ${lon}</span></div>
+<div class="row"><span class="k">Postal / Calling</span><span class="v">${postal} · +${calling.replace('+','')}</span></div>
+<div class="row"><span class="k">Capital / Borders</span><span class="v">${capital} · ${borders}</span></div>
+<div class="row"><span class="k">ASN / Org</span><span class="v">AS${asn} · ${org}</span></div>
+<div class="row"><span class="k">ISP</span><span class="v">${isp}</span></div>
+<div class="row"><span class="k">Domain</span><span class="v">${domain}</span></div>
+<div class="row"><span class="k">Timezone</span><span class="v">${tzId} ${tzAbbr}</span></div>
+<div class="row"><span class="k">Current Time</span><span class="v">${tzTime}</span></div>
+</div>
+<div class="actions">
+<button id="copyBtn" class="btn-ghost">Copy</button>
+<button id="rawBtn" class="btn-ghost">Raw</button>
+</div></div>`;
+document.getElementById('copyBtn').onclick=()=>{const s=`IP: ${ip} (${type}) | ${city}, ${region}, ${country} ${code} | ISP: ${isp} | ASN: ${asn}`;navigator.clipboard.writeText(s).then(()=>{setMsg('<span style="color:#7ef0c4">Copied ✔</span>');setTimeout(()=>setMsg(''),2500)})};
+document.getElementById('rawBtn').onclick=()=>{const c=JSON.parse(JSON.stringify(d));delete c.About_Us;output.innerHTML='<pre style="white-space:pre-wrap;font-size:12px;background:rgba(0,0,0,.05);padding:12px;border-radius:8px">'+JSON.stringify(c,null,2)+'</pre><div class="actions"><button id="back" class="btn-ghost">Back</button></div>';document.getElementById('back').onclick=()=>renderCard(d)}}
+async function fetchIP(ip){try{setMsg('');output.innerHTML='<div class="card" style="text-align:center;color:var(--muted)">Loading...</div>';const e=ip?`https://ipwho.is/${encodeURIComponent(ip)}`:'https://ipwho.is/';const r=await fetch(e,{cache:'no-store'});if(!r.ok){showError('Network '+r.status);return}const j=await r.json();if(j.success===false){showError(j.message||'No data');return}delete j.About_Us;renderCard(j)}catch(err){showError('Error '+err.message)}}
+btn.onclick=()=>fetchIP(ipInput.value.trim());
+ipInput.onkeydown=e=>{if(e.key==='Enter')fetchIP(ipInput.value.trim())};
+btnMy.onclick=()=>{ipInput.value='';fetchIP('')};
+btnClear.onclick=()=>{ipInput.value='';output.innerHTML='<div class="card" style="text-align:center;color:var(--muted)">Enter an IP and tap Lookup.</div>';setMsg('')}
+
+// Initialize binary animation
+createBinaryAnimation();
+</script>
+</body>
+</html>

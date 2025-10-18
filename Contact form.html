@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Ms Edits</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(30, 30, 30, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(20, 20, 20, 0.6) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .matrix-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: matrixMove 20s linear infinite;
+        }
+
+        @keyframes matrixMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        .contact-container {
+            background: rgba(10, 10, 10, 0.9);
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 0, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .contact-container:hover::before {
+            transform: translateX(100%);
+        }
+
+        .contact-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .contact-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(90deg, #00ff00, #00cc00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .contact-header p {
+            color: #cccccc;
+            font-size: 1.1rem;
+        }
+
+        .whatsapp-display {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+
+        .whatsapp-display i {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .whatsapp-display h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .whatsapp-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            margin-bottom: 8px;
+            color: #00ff00;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            background: rgba(20, 20, 20, 0.8);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #00ff00;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .submit-btn {
+            padding: 15px 30px;
+            background: linear-gradient(90deg, #00ff00, #00cc00);
+            color: #000;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 255, 0, 0.4);
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 255, 0, 0.6);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 10px;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            background: rgba(0, 255, 0, 0.2);
+            transform: translateY(-2px);
+            border-color: #00ff00;
+        }
+
+        .success-message {
+            background: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00ff00;
+            color: #00ff00;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin-top: 20px;
+            display: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .contact-container {
+                padding: 30px 20px;
+            }
+            
+            .contact-header h1 {
+                font-size: 2rem;
+            }
+            
+            .whatsapp-number {
+                font-size: 1.3rem;
+            }
+            
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .contact-header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .whatsapp-display {
+                padding: 15px;
+            }
+            
+            .submit-btn {
+                padding: 12px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg"></div>
+    
+    <div class="contact-container">
+        <div class="contact-header">
+            <h1>Contact Ms Edits <br> & <br>Send us Bug Report</h1>
+            <p>Get in touch for tips and tricks services</p>
+        </div>
+        
+        
+        
+        <form class="contact-form" id="contactForm">
+            <div class="form-group">
+                <label for="name">Your Name</label>
+                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="service">Service Required</label>
+                <select id="service" name="service" required>
+                    <option value="">Select a service</option>
+                    <option value="web-development">Buy a Number</option>
+                    <option value="web-design">Whatsapp B@n Methods</option>
+                    <option value="sms-bomber">SMS Bomber</option>
+                    <option value="ip-finder">IP Finder</option>
+                    <option value="video-editing">Video Editing</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Your Message</label>
+                <textarea id="message" name="message" placeholder="Describe your project requirements..." required></textarea>
+            </div>
+            
+            <button type="submit" class="submit-btn">
+                <i class="fas fa-paper-plane"></i> Send Message via WhatsApp
+            </button>
+        </form>
+        
+        <div class="quick-actions">
+            <a href="https://wa.me/923167364896?text=Hello%20Ms%20Edits,%20I%20want%20to%20discuss%20a%20project" class="action-btn" target="_blank">
+                <i class="fab fa-whatsapp"></i> Quick Chat
+            </a>
+            <a href="tel:+923167364896" class="action-btn">
+                <i class="fas fa-phone"></i> Call Now
+            </a>
+        </div>
+        
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i> Message prepared! Redirecting to WhatsApp...
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const service = document.getElementById('service').value;
+            const message = document.getElementById('message').value;
+            
+            // Create WhatsApp message
+            const whatsappMessage = `Hello Ms Edits!%0A%0AName: ${name}%0AEmail: ${email}%0AService: ${service}%0AMessage: ${message}%0A%0AI found you through your website and I'm interested in your services.`;
+            
+            // Show success message
+            const successMessage = document.getElementById('successMessage');
+            successMessage.style.display = 'block';
+            
+            // Redirect to WhatsApp after 2 seconds
+            setTimeout(() => {
+                window.open(`https://wa.me/923167364896?text=${whatsappMessage}`, '_blank');
+                successMessage.style.display = 'none';
+                document.getElementById('contactForm').reset();
+            }, 2000);
+        });
+
+        // Auto-fill quick chat for specific services
+        document.getElementById('service').addEventListener('change', function() {
+            const service = this.value;
+            let autoMessage = '';
+            
+            switch(service) {
+                case 'sms-bomber':
+                    autoMessage = 'I am interested in your SMS Bomber tool. Please provide more details.';
+                    break;
+                case 'ip-finder':
+                    autoMessage = 'I want to learn more about your IP Finder tool.';
+                    break;
+                case 'web-development':
+                    autoMessage = 'I need whatsapp number services for my project.';
+                    break;
+                case 'web-design':
+                    autoMessage = 'I am looking for whatsapp b@n services.';
+                    break;
+            }
+            
+            if (autoMessage) {
+                document.getElementById('message').value = autoMessage;
+            }
+        });
+    </script>
+</body>
+</html>
