@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MS Edits - WebCopy Viewer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --primary: #00ff99;
+    --primary-dark: #00cc7a;
+    --primary-light: #33ffad;
+    --secondary: #00ffd5;
+    --secondary-dark: #00ccaa;
+    --background: #071014;
+    --card-bg: #0f1720;
+    --text: #dffbf0;
+    --text-light: #9aa6b2;
+    --text-muted: #6b7b8a;
+    --border: #1a2a33;
+    --border-light: #0a1a23;
+    --success: #00ff99;
+    --warning: #ffcc00;
+    --error: #ff3333;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -1px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.9), 0 4px 6px -2px rgba(0, 0, 0, 0.7);
+    --radius: 6px;
+    --radius-lg: 8px;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    height: 100%;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--background);
+    color: var(--text);
+    line-height: 1.4;
+  }
+
+  body {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 16px;
+    width: 100%;
+  }
+
+  header {
+    background: linear-gradient(135deg, #071317 0%, #030405 40%, #000000 100%);
+    color: white;
+    padding: 1.5rem 0;
+    box-shadow: var(--shadow);
+    border-bottom: 1px solid var(--primary);
+  }
+
+  .header-content {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+    font-weight: 400;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    color: var(--text-light);
+  }
+
+  main {
+    flex: 1;
+    padding: 1.5rem 0;
+  }
+
+  .input-section {
+    background-color: var(--card-bg);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border);
+  }
+
+  .input-group {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .input-group input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    background-color: #06121a;
+    color: var(--text);
+    outline: none;
+  }
+
+  .input-group input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(0, 255, 153, 0.2);
+  }
+
+  .input-group button {
+    padding: 0.75rem 1.25rem;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    color: #00110a;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 4px 12px rgba(0, 255, 153, 0.2);
+  }
+
+  .input-group button:hover {
+    background: linear-gradient(90deg, var(--primary-light), var(--primary));
+    box-shadow: 0 6px 16px rgba(0, 255, 153, 0.3);
+  }
+
+  .input-group button:active {
+    transform: translateY(1px);
+  }
+
+  .status {
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius);
+    margin-bottom: 1.25rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: none;
+  }
+
+  .status.success {
+    background-color: rgba(0, 255, 153, 0.1);
+    color: var(--success);
+    border: 1px solid rgba(0, 255, 153, 0.2);
+    display: block;
+  }
+
+  .status.error {
+    background-color: rgba(255, 51, 51, 0.1);
+    color: var(--error);
+    border: 1px solid rgba(255, 51, 51, 0.2);
+    display: block;
+  }
+
+  .status.info {
+    background-color: rgba(0, 255, 213, 0.1);
+    color: var(--secondary);
+    border: 1px solid rgba(0, 255, 213, 0.2);
+    display: block;
+  }
+
+  .result-section {
+    display: none;
+    margin-bottom: 1.5rem;
+  }
+
+  .card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    border: 1px solid rgba(0, 255, 153, 0.08);
+  }
+
+  .card-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .card-body {
+    padding: 1.25rem;
+  }
+
+  .controls {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+  }
+
+  .btn {
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius);
+    font-weight: 500;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  .btn-primary {
+    background-color: rgba(0, 255, 153, 0.15);
+    color: var(--primary);
+  }
+
+  .btn-primary:hover {
+    background-color: rgba(0, 255, 153, 0.25);
+  }
+
+  .btn-secondary {
+    background-color: rgba(0, 255, 213, 0.1);
+    color: var(--secondary);
+  }
+
+  .btn-secondary:hover {
+    background-color: rgba(0, 255, 213, 0.2);
+  }
+
+  .btn-outline {
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--text-light);
+    border: 1px solid var(--border);
+  }
+
+  .btn-outline:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+
+  /* JSON renderer styles */
+  .kv {
+    display: flex;
+    gap: 0.75rem;
+    margin: 0.5rem 0;
+    font-size: 0.85rem;
+    align-items: flex-start;
+  }
+
+  .k {
+    min-width: 140px;
+    color: var(--primary);
+    font-weight: 600;
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.375rem 0;
+  }
+
+  .emoji {
+    font-size: 0.9rem;
+    display: inline-block;
+    width: 20px;
+    text-align: center;
+  }
+
+  .v {
+    flex: 1;
+    color: var(--text);
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 0.375rem 0.75rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-size: 0.85rem;
+  }
+
+  .collapsible {
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-top: 0.375rem;
+  }
+
+  .collapsible > summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    background: linear-gradient(90deg, rgba(0, 255, 153, 0.05), transparent);
+    border-radius: var(--radius);
+    color: var(--primary);
+    font-weight: 600;
+    outline: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+  }
+
+  .collapsible > summary:hover {
+    background: linear-gradient(90deg, rgba(0, 255, 153, 0.1), transparent);
+  }
+
+  .collapsible > summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .inner-list {
+    padding: 0.5rem 0.375rem 0.375rem 0.375rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .rawpre {
+    background-color: #020607;
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
+    font-size: 0.85rem;
+    color: #bfffe9;
+    max-height: 380px;
+    overflow: auto;
+    white-space: pre;
+  }
+
+  footer {
+    background-color: #030405;
+    border-top: 1px solid var(--border);
+    padding: 1rem 0;
+    margin-top: auto;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 1rem;
+    }
+    
+    h1 {
+      font-size: 1.75rem;
+    }
+    
+    .input-group {
+      flex-direction: column;
+    }
+    
+    .k {
+      min-width: 110px;
+    }
+    
+    .card-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    
+    .controls {
+      justify-content: flex-start;
+    }
+    
+    .kv {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    
+    .k {
+      min-width: 100%;
+    }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <h1>MS Edits - WebCopy Viewer</h1>
+        <p class="subtitle">Paste a page URL, click <b>Fetch Data ⚡</b> — full JSON response will be shown with emojis & collapsible sections.</p>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <div class="input-section">
+        <h2>Fetch Website Data</h2>
+        <p>Enter a URL to extract information about the website including metadata, content, and technical details.</p>
+        
+        <div class="input-group">
+          <input id="url" placeholder="Enter website URL — e.g. https://example.com" value="https://legendxdata.site/index.html"/>
+          <button id="fetchBtn">
+            <span>Fetch Data ⚡</span>
+          </button>
+        </div>
+      </div>
+
+      <div id="status" class="status"></div>
+
+      <div id="result-section" class="result-section">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 17H7V10H9V17ZM13 17H11V7H13V17ZM17 17H15V13H17V17ZM19 19H5V5H19V19.1M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z" fill="currentColor"/>
+              </svg>
+              Response Data
+            </h3>
+          </div>
+          <div class="card-body">
+            <div id="jsonArea"></div>
+
+            <div class="controls">
+              <button class="btn btn-primary" id="copyBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z" fill="currentColor"/>
+                </svg>
+                Copy JSON
+              </button>
+              <button class="btn btn-secondary" id="downloadBtn">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M19 9H15V3H9V9H5L12 16L19 9ZM5 18V20H19V18H5Z" fill="currentColor"/>
+                </svg>
+                Download JSON
+              </button>
+              <button class="btn btn-outline" id="collapseAll">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.41 8.59L12 13.17L16.59 8.59L18 10L12 16L6 10L7.41 8.59ZM6 18H18V20H6V18Z" fill="currentColor"/>
+                </svg>
+                Collapse All
+              </button>
+              <button class="btn btn-outline" id="expandAll">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7.41 15.41L12 10.83L16.59 15.41L18 14L12 8L6 14L7.41 15.41ZM6 18H18V20H6V18Z" fill="currentColor"/>
+                </svg>
+                Expand All
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.4 16.6L4.8 12L9.4 7.4L8 6L2 12L8 18L9.4 16.6ZM14.6 16.6L19.2 12L14.6 7.4L16 6L22 12L16 18L14.6 16.6Z" fill="currentColor"/>
+              </svg>
+              Raw JSON Data
+            </h3>
+          </div>
+          <div class="card-body">
+            <div id="rawJson" class="rawpre"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="error-section" class="result-section">
+        <div class="card">
+          <div class="card-header">
+            <h3 class="card-title" style="color: var(--error);">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="currentColor"/>
+              </svg>
+              Error
+            </h3>
+          </div>
+          <div class="card-body">
+            <div id="errMsg"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    
+    <div class="container">
+      <p>MS Edits - WebCopy Viewer &copy; 2025 | Created by MS Edits</p>
+    </div>
+  </footer>
+
+<script>
+/*
+  JSON renderer:
+  - shows every field (no skipping)
+  - maps specific keys to emojis
+  - recursively renders objects/arrays as collapsible details
+*/
+
+const EMOJI_MAP = {
+  ok: "✅",
+  url: "🌐",
+  final_url: "🔗",
+  http_code: "📡",
+  contentType: "🧾",
+  content_length: "📏",
+  truncated: "✂️",
+  title: "🏷️",
+  content: "📄",
+  resolved_ips: "🛰️",
+  redirect_chain: "↪️",
+  meta_info: "🧩",
+  link_info: "🔗📊",
+  text_info: "📝",
+  head_headers: "🧾🔐",
+  robots: "🤖",
+  sitemap: "🗺️",
+  ssl_info: "🔒",
+  timings: "⏱️",
+  credit: "🫡",
+  charset: "🔤",
+  words: "🔢",
+  total_links: "🔗",
+  primary_ip: "📍",
+  server: "🖥️",
+  date: "📅"
+};
+
+function emojiForKey(key){
+  // exact key or nested name match
+  if(EMOJI_MAP[key]) return EMOJI_MAP[key];
+  // find partial matches
+  if(/ip|ip_address|primary_ip/i.test(key)) return "📍";
+  if(/time|timings|date/i.test(key)) return "⏱️";
+  if(/content/i.test(key)) return "📄";
+  if(/link|url|redirect/i.test(key)) return "🔗";
+  if(/code|status|http/i.test(key)) return "📡";
+  if(/title|name/i.test(key)) return "🏷️";
+  if(/length|size/i.test(key)) return "📏";
+  if(/ssl|cert|issuer/i.test(key)) return "🔒";
+  if(/json|meta|head/i.test(key)) return "🧩";
+  return "📦"; // default
+}
+
+function createKeyValueNode(key, value){
+  const wrapper = document.createElement('div');
+  wrapper.className = 'kv';
+
+  const k = document.createElement('div');
+  k.className = 'k';
+  const em = document.createElement('span');
+  em.className = 'emoji';
+  em.textContent = emojiForKey(key);
+  const keyLabel = document.createElement('span');
+  keyLabel.textContent = key;
+  keyLabel.style.opacity = '0.95';
+  k.appendChild(em);
+  k.appendChild(keyLabel);
+
+  const v = document.createElement('div');
+  v.className = 'v';
+
+  // render depending on type
+  if(value === null){
+    v.textContent = 'null';
+    v.style.opacity = '0.9';
+  } else if(typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'){
+    v.textContent = String(value);
+  } else if(Array.isArray(value)){
+    // collapsible array
+    const details = document.createElement('details');
+    details.open = true;
+    details.className = 'collapsible';
+    const summary = document.createElement('summary');
+    summary.textContent = `Array [${value.length}]`;
+    const inner = document.createElement('div');
+    inner.className = 'inner-list';
+    value.forEach((it, idx) => {
+      const child = createKeyValueNode(`[${idx}]`, it);
+      inner.appendChild(child);
+    });
+    details.appendChild(summary);
+    details.appendChild(inner);
+    v.appendChild(details);
+  } else if(typeof value === 'object'){
+    // collapsible object
+    const details = document.createElement('details');
+    details.open = true;
+    details.className = 'collapsible';
+    const summary = document.createElement('summary');
+    summary.textContent = `Object { ${Object.keys(value).length} }`;
+    const inner = document.createElement('div');
+    inner.className = 'inner-list';
+    Object.keys(value).forEach(k2 => {
+      inner.appendChild(createKeyValueNode(k2, value[k2]));
+    });
+    details.appendChild(summary);
+    details.appendChild(inner);
+    v.appendChild(details);
+  } else {
+    v.textContent = String(value);
+  }
+
+  wrapper.appendChild(k);
+  wrapper.appendChild(v);
+  return wrapper;
+}
+
+function renderFullJSON(data, container){
+  container.innerHTML = '';
+  // render top-level keys in order
+  const keys = Object.keys(data);
+  keys.forEach(k => {
+    const node = createKeyValueNode(k, data[k]);
+    container.appendChild(node);
+  });
+}
+
+/* Helpers: copy/download */
+function copyRaw(jsonStr){
+  navigator.clipboard.writeText(jsonStr).then(()=> {
+    alert('Raw JSON copied to clipboard ✅');
+  }).catch(()=> alert('Copy failed — maybe browser denied clipboard.'));
+}
+function downloadRaw(jsonStr){
+  const blob = new Blob([jsonStr], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `msedits_response_${Date.now()}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
+/* Collapse/Expand utility */
+function setAllDetails(open){
+  const details = document.querySelectorAll('#jsonArea details');
+  details.forEach(d => d.open = open);
+}
+
+document.getElementById('collapseAll').onclick = ()=> setAllDetails(false);
+document.getElementById('expandAll').onclick = ()=> setAllDetails(true);
+document.getElementById('copyBtn').onclick = ()=> {
+  if(window._lastJsonStr) copyRaw(window._lastJsonStr);
+};
+document.getElementById('downloadBtn').onclick = ()=> {
+  if(window._lastJsonStr) downloadRaw(window._lastJsonStr);
+};
+
+/* Main fetch logic */
+document.getElementById('fetchBtn').addEventListener('click', doFetch);
+document.getElementById('url').addEventListener('keydown', e => { if(e.key === 'Enter') doFetch(); });
+
+async function doFetch(){
+  const input = document.getElementById('url').value.trim();
+  const status = document.getElementById('status');
+  const resultSection = document.getElementById('result-section');
+  const errorSection = document.getElementById('error-section');
+  const jsonArea = document.getElementById('jsonArea');
+  const rawJson = document.getElementById('rawJson');
+  const errMsg = document.getElementById('errMsg');
+
+  resultSection.style.display = 'none';
+  errorSection.style.display = 'none';
+  status.textContent = '⏳ Fetching data...';
+  status.className = 'status info';
+
+  if(!input){
+    status.textContent = 'Please enter a URL first!';
+    status.className = 'status error';
+    return;
+  }
+
+  try {
+    // Build api url
+    const apiBase = 'https://legendxdata.site/webcopy.php?url=';
+    const fullApi = apiBase + encodeURIComponent(input);
+
+    // fetch
+    const resp = await fetch(fullApi, { method: 'GET' });
+    const contentType = resp.headers.get('content-type') || '';
+    const text = await resp.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (e){
+      // If JSON parsing fails, show raw text as 'content' field inside object
+      data = { ok:false, error: 'Invalid JSON from API', raw: text };
+    }
+
+    // Save raw JSON string for copy/download
+    const pretty = JSON.stringify(data, null, 2);
+    window._lastJsonStr = pretty;
+
+    // render
+    renderFullJSON(data, jsonArea);
+    rawJson.textContent = pretty;
+
+    status.textContent = '✅ Data fetched successfully';
+    status.className = 'status success';
+    resultSection.style.display = 'block';
+  } catch (err){
+    status.textContent = '⚠️ Failed to fetch data';
+    status.className = 'status error';
+    errorSection.style.display = 'block';
+    errMsg.textContent = String(err);
+    console.error(err);
+  }
+}
+
+/* Auto-fetch sample on load (optional) */
+window.addEventListener('load', () => {
+  // pre-fill from input value
+  // auto-run to demo (comment out if undesired)
+  // doFetch();
+});
+</script>
+</body>
+</html>
