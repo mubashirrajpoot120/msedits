@@ -1,742 +1,444 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>MS Edits - WebCopy Viewer</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --primary: #00ff99;
-    --primary-dark: #00cc7a;
-    --primary-light: #33ffad;
-    --secondary: #00ffd5;
-    --secondary-dark: #00ccaa;
-    --background: #071014;
-    --card-bg: #0f1720;
-    --text: #dffbf0;
-    --text-light: #9aa6b2;
-    --text-muted: #6b7b8a;
-    --border: #1a2a33;
-    --border-light: #0a1a23;
-    --success: #00ff99;
-    --warning: #ffcc00;
-    --error: #ff3333;
-    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -1px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.9), 0 4px 6px -2px rgba(0, 0, 0, 0.7);
-    --radius: 6px;
-    --radius-lg: 8px;
-  }
-
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  html, body {
-    height: 100%;
-    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background-color: var(--background);
-    color: var(--text);
-    line-height: 1.4;
-  }
-
-  body {
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 16px;
-    width: 100%;
-  }
-
-  header {
-    background: linear-gradient(135deg, #071317 0%, #030405 40%, #000000 100%);
-    color: white;
-    padding: 1.5rem 0;
-    box-shadow: var(--shadow);
-    border-bottom: 1px solid var(--primary);
-  }
-
-  .header-content {
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    letter-spacing: 0.5px;
-    background: linear-gradient(90deg, var(--primary), var(--secondary));
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  .subtitle {
-    font-size: 1rem;
-    font-weight: 400;
-    opacity: 0.9;
-    max-width: 600px;
-    margin: 0 auto;
-    color: var(--text-light);
-  }
-
-  main {
-    flex: 1;
-    padding: 1.5rem 0;
-  }
-
-  .input-section {
-    background-color: var(--card-bg);
-    border-radius: var(--radius-lg);
-    padding: 1.25rem;
-    box-shadow: var(--shadow);
-    margin-bottom: 1.5rem;
-    border: 1px solid var(--border);
-  }
-
-  .input-group {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 0.75rem;
-  }
-
-  .input-group input {
-    flex: 1;
-    padding: 0.75rem 1rem;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-size: 0.95rem;
-    transition: all 0.2s;
-    background-color: #06121a;
-    color: var(--text);
-    outline: none;
-  }
-
-  .input-group input:focus {
-    outline: none;
-    border-color: var(--primary);
-    box-shadow: 0 0 0 2px rgba(0, 255, 153, 0.2);
-  }
-
-  .input-group button {
-    padding: 0.75rem 1.25rem;
-    background: linear-gradient(90deg, var(--primary), var(--primary-light));
-    color: #00110a;
-    border: none;
-    border-radius: var(--radius);
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    box-shadow: 0 4px 12px rgba(0, 255, 153, 0.2);
-  }
-
-  .input-group button:hover {
-    background: linear-gradient(90deg, var(--primary-light), var(--primary));
-    box-shadow: 0 6px 16px rgba(0, 255, 153, 0.3);
-  }
-
-  .input-group button:active {
-    transform: translateY(1px);
-  }
-
-  .status {
-    padding: 0.75rem 1rem;
-    border-radius: var(--radius);
-    margin-bottom: 1.25rem;
-    font-size: 0.85rem;
-    font-weight: 500;
-    display: none;
-  }
-
-  .status.success {
-    background-color: rgba(0, 255, 153, 0.1);
-    color: var(--success);
-    border: 1px solid rgba(0, 255, 153, 0.2);
-    display: block;
-  }
-
-  .status.error {
-    background-color: rgba(255, 51, 51, 0.1);
-    color: var(--error);
-    border: 1px solid rgba(255, 51, 51, 0.2);
-    display: block;
-  }
-
-  .status.info {
-    background-color: rgba(0, 255, 213, 0.1);
-    color: var(--secondary);
-    border: 1px solid rgba(0, 255, 213, 0.2);
-    display: block;
-  }
-
-  .result-section {
-    display: none;
-    margin-bottom: 1.5rem;
-  }
-
-  .card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow);
-    overflow: hidden;
-    margin-bottom: 1.25rem;
-    border: 1px solid rgba(0, 255, 153, 0.08);
-  }
-
-  .card-header {
-    padding: 1rem 1.25rem;
-    border-bottom: 1px solid var(--border-light);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .card-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--primary);
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
-
-  .card-body {
-    padding: 1.25rem;
-  }
-
-  .controls {
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-    margin-top: 0.75rem;
-  }
-
-  .btn {
-    padding: 0.5rem 0.75rem;
-    border-radius: var(--radius);
-    font-weight: 500;
-    font-size: 0.85rem;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: none;
-    display: flex;
-    align-items: center;
-    gap: 0.375rem;
-  }
-
-  .btn-primary {
-    background-color: rgba(0, 255, 153, 0.15);
-    color: var(--primary);
-  }
-
-  .btn-primary:hover {
-    background-color: rgba(0, 255, 153, 0.25);
-  }
-
-  .btn-secondary {
-    background-color: rgba(0, 255, 213, 0.1);
-    color: var(--secondary);
-  }
-
-  .btn-secondary:hover {
-    background-color: rgba(0, 255, 213, 0.2);
-  }
-
-  .btn-outline {
-    background-color: rgba(255, 255, 255, 0.05);
-    color: var(--text-light);
-    border: 1px solid var(--border);
-  }
-
-  .btn-outline:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-  }
-
-  /* JSON renderer styles */
-  .kv {
-    display: flex;
-    gap: 0.75rem;
-    margin: 0.5rem 0;
-    font-size: 0.85rem;
-    align-items: flex-start;
-  }
-
-  .k {
-    min-width: 140px;
-    color: var(--primary);
-    font-weight: 600;
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    padding: 0.375rem 0;
-  }
-
-  .emoji {
-    font-size: 0.9rem;
-    display: inline-block;
-    width: 20px;
-    text-align: center;
-  }
-
-  .v {
-    flex: 1;
-    color: var(--text);
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 0.375rem 0.75rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-    white-space: pre-wrap;
-    word-break: break-word;
-    font-size: 0.85rem;
-  }
-
-  .collapsible {
-    border-radius: var(--radius);
-    overflow: hidden;
-    margin-top: 0.375rem;
-  }
-
-  .collapsible > summary {
-    list-style: none;
-    cursor: pointer;
-    padding: 0.5rem 0.75rem;
-    background: linear-gradient(90deg, rgba(0, 255, 153, 0.05), transparent);
-    border-radius: var(--radius);
-    color: var(--primary);
-    font-weight: 600;
-    outline: none;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: background-color 0.2s;
-  }
-
-  .collapsible > summary:hover {
-    background: linear-gradient(90deg, rgba(0, 255, 153, 0.1), transparent);
-  }
-
-  .collapsible > summary::-webkit-details-marker {
-    display: none;
-  }
-
-  .inner-list {
-    padding: 0.5rem 0.375rem 0.375rem 0.375rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.375rem;
-  }
-
-  .rawpre {
-    background-color: #020607;
-    padding: 1rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
-    font-size: 0.85rem;
-    color: #bfffe9;
-    max-height: 380px;
-    overflow: auto;
-    white-space: pre;
-  }
-
-  footer {
-    background-color: #030405;
-    border-top: 1px solid var(--border);
-    padding: 1rem 0;
-    margin-top: auto;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-  }
-
-  /* Responsive adjustments */
-  @media (max-width: 768px) {
-    .container {
-      padding: 0 1rem;
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>MS Edits - WebCopy Viewer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#071014;
+      --card:#0f1720;
+      --muted:#6b7b8a;
+      --text:#dffbf0;
+      --accent:#00ff99;
+      --accent-2:#00ffd5;
+      --accent-strong:#00cc7a;
+      --danger:#ff3333;
+      --glass: rgba(255,255,255,0.03);
+      --radius:8px;
+      --shadow: 0 8px 26px rgba(0,0,0,0.6);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, "Roboto Mono", monospace;
     }
-    
-    h1 {
-      font-size: 1.75rem;
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:'Inter',system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:linear-gradient(180deg,#041017,#071014 40%);color:var(--text);-webkit-font-smoothing:antialiased}
+    .container{max-width:1200px;margin:28px auto;padding:20px}
+    header{padding:20px;border-radius:12px;background:linear-gradient(90deg, rgba(0,255,153,0.03), transparent);border:1px solid rgba(0,255,153,0.06);box-shadow:var(--shadow);display:flex;align-items:center;justify-content:space-between;gap:16px}
+    .brand {display:flex;flex-direction:column}
+    h1{margin:0;font-size:20px;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;color:transparent;letter-spacing:0.3px}
+    .subtitle{margin:6px 0 0 0;color:var(--muted);font-size:13px}
+    .top-controls{display:flex;gap:8px;align-items:center}
+    .circle-btn{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;color:var(--text);cursor:pointer;font-weight:600}
+    .circle-btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#00110a;border:none}
+    main{margin-top:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));border-radius:12px;padding:18px;border:1px solid rgba(255,255,255,0.03);box-shadow:var(--shadow)}
+    .input-row{display:flex;gap:10px;align-items:center}
+    input[type="text"]{flex:1;padding:12px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:#06121a;color:var(--text);outline:none}
+    input[type="text"]:focus{box-shadow:0 0 0 4px rgba(0,255,153,0.06);border-color:var(--accent-strong)}
+    .fetch-btn{padding:11px 14px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#00110a;font-weight:700;cursor:pointer}
+    .status{margin-top:12px;padding:10px;border-radius:8px;display:none;font-weight:600}
+    .status.info{display:block;background:rgba(0,255,213,0.06);color:var(--accent-2);border:1px solid rgba(0,255,213,0.08)}
+    .status.success{display:block;background:rgba(0,255,153,0.06);color:var(--accent);border:1px solid rgba(0,255,153,0.08)}
+    .status.error{display:block;background:rgba(255,51,51,0.06);color:var(--danger);border:1px solid rgba(255,51,51,0.08)}
+
+    /* results */
+    .results {margin-top:18px;display:none;gap:12px}
+    .row{display:flex;gap:12px;align-items:flex-start}
+    .col{flex:1;min-width:0}
+    .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .card-title{font-weight:700;color:var(--accent);display:flex;gap:8px;align-items:center}
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{padding:8px 10px;border-radius:8px;border:none;background:rgba(255,255,255,0.02);color:var(--text-muted);cursor:pointer;font-weight:600}
+    .btn.primary{background:linear-gradient(90deg,var(--accent-2),var(--accent));color:#00110a}
+    .btn.secondary{background:rgba(0,255,213,0.06);color:var(--accent-2)}
+    .rawpre{background:#020607;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);font-family:var(--mono);font-size:13px;color:#bfffe9;max-height:420px;overflow:auto;white-space:pre-wrap}
+    .kv{display:flex;gap:10px;margin:6px 0;align-items:flex-start}
+    .k{min-width:140px;color:var(--accent);font-weight:700;display:flex;gap:8px;align-items:center}
+    .emoji{width:20px;text-align:center}
+    .v{flex:1;background:var(--glass);padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.02);font-family:var(--mono);white-space:pre-wrap;word-break:break-word;color:var(--text);font-size:13px}
+
+    details.collapsible summary{list-style:none;cursor:pointer;padding:8px;border-radius:8px;background:linear-gradient(90deg, rgba(0,255,153,0.03), transparent);display:flex;justify-content:space-between;align-items:center;font-weight:700;color:var(--accent)}
+    details.collapsible{margin-top:6px;border-radius:8px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
+    .inner-list{padding:8px;display:flex;flex-direction:column;gap:8px}
+
+    footer{margin-top:22px;color:var(--muted);text-align:center;font-size:13px}
+
+    @media (max-width:900px){
+      .row{flex-direction:column}
+      .k{min-width:120px}
     }
-    
-    .input-group {
-      flex-direction: column;
-    }
-    
-    .k {
-      min-width: 110px;
-    }
-    
-    .card-header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-    
-    .controls {
-      justify-content: flex-start;
-    }
-    
-    .kv {
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-    
-    .k {
-      min-width: 100%;
-    }
-  }
-</style>
+  </style>
 </head>
 <body>
-  <header>
-    <div class="container">
-      <div class="header-content">
-        <h1>MS Edits - WebCopy Viewer</h1>
-        <p class="subtitle">Paste a page URL, click <b>Fetch Data ⚡</b> — full JSON response will be shown with emojis & collapsible sections.</p>
-      </div>
-    </div>
-  </header>
-
-  <main>
-    <div class="container">
-      <div class="input-section">
-        <h2>Fetch Website Data</h2>
-        <p>Enter a URL to extract information about the website including metadata, content, and technical details.</p>
-        
-        <div class="input-group">
-          <input id="url" placeholder="Enter website URL — e.g. https://example.com" value="https://legendxdata.site/index.html"/>
-          <button id="fetchBtn">
-            <span>Fetch Data ⚡</span>
-          </button>
-        </div>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <h1 id="brandTitle">MS Edits - WebCopy Viewer</h1>
+        <div class="subtitle" id="brandSubtitle">Paste a URL and fetch site data — JSON with collapsible sections.</div>
       </div>
 
-      <div id="status" class="status"></div>
+      <div class="top-controls" role="toolbar" aria-label="top controls">
+        <button id="langToggle" class="circle-btn" title="Toggle language">اردو</button>
+        <button id="themeToggle" class="circle-btn" title="Toggle theme">Theme</button>
+      </div>
+    </header>
 
-      <div id="result-section" class="result-section">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 17H7V10H9V17ZM13 17H11V7H13V17ZM17 17H15V13H17V17ZM19 19H5V5H19V19.1M19 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V5C21 3.9 20.1 3 19 3Z" fill="currentColor"/>
-              </svg>
-              Response Data
-            </h3>
+    <main>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap">
+          <div style="flex:1;min-width:220px">
+            <h3 style="margin:0 0 8px 0">Fetch Website Data</h3>
+            <div style="color:var(--muted);font-size:13px">Enter a URL to extract metadata, content and technical info.</div>
           </div>
-          <div class="card-body">
-            <div id="jsonArea"></div>
-
-            <div class="controls">
-              <button class="btn btn-primary" id="copyBtn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M16 1H4C2.9 1 2 1.9 2 3V17H4V3H16V1ZM19 5H8C6.9 5 6 5.9 6 7V21C6 22.1 6.9 23 8 23H19C20.1 23 21 22.1 21 21V7C21 5.9 20.1 5 19 5ZM19 21H8V7H19V21Z" fill="currentColor"/>
-                </svg>
-                Copy JSON
-              </button>
-              <button class="btn btn-secondary" id="downloadBtn">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19 9H15V3H9V9H5L12 16L19 9ZM5 18V20H19V18H5Z" fill="currentColor"/>
-                </svg>
-                Download JSON
-              </button>
-              <button class="btn btn-outline" id="collapseAll">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7.41 8.59L12 13.17L16.59 8.59L18 10L12 16L6 10L7.41 8.59ZM6 18H18V20H6V18Z" fill="currentColor"/>
-                </svg>
-                Collapse All
-              </button>
-              <button class="btn btn-outline" id="expandAll">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M7.41 15.41L12 10.83L16.59 15.41L18 14L12 8L6 14L7.41 15.41ZM6 18H18V20H6V18Z" fill="currentColor"/>
-                </svg>
-                Expand All
-              </button>
+          <div style="min-width:240px;display:flex;gap:8px;align-items:center">
+            <div style="display:flex;gap:8px;width:100%">
+              <input id="urlInput" type="text" placeholder="https://example.com" value="https://legendxdata.site/index.html" aria-label="website url">
+              <button id="fetchBtn" class="fetch-btn" aria-label="Fetch Data">Fetch Data ⚡</button>
             </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9.4 16.6L4.8 12L9.4 7.4L8 6L2 12L8 18L9.4 16.6ZM14.6 16.6L19.2 12L14.6 7.4L16 6L22 12L16 18L14.6 16.6Z" fill="currentColor"/>
-              </svg>
-              Raw JSON Data
-            </h3>
-          </div>
-          <div class="card-body">
-            <div id="rawJson" class="rawpre"></div>
+        <div id="statusBox" class="status info" role="status" aria-live="polite" style="margin-top:12px;display:none"></div>
+
+        <div class="results" id="resultsArea">
+          <div class="row">
+            <div class="col">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Response Data</div>
+                  <div class="controls">
+                    <button id="copyBtn" class="btn primary">Copy JSON</button>
+                    <button id="downloadBtn" class="btn secondary">Download JSON</button>
+                    <button id="collapseAll" class="btn">Collapse All</button>
+                    <button id="expandAll" class="btn">Expand All</button>
+                  </div>
+                </div>
+                <div class="card-body" id="jsonArea" style="padding:12px"></div>
+              </div>
+            </div>
+
+            <div class="col" style="max-width:420px">
+              <div class="card">
+                <div class="card-header">
+                  <div class="card-title">Raw JSON Data</div>
+                </div>
+                <div class="card-body">
+                  <div id="rawJson" class="rawpre"></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div id="error-section" class="result-section">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="card-title" style="color: var(--error);">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM13 17H11V15H13V17ZM13 13H11V7H13V13Z" fill="currentColor"/>
-              </svg>
-              Error
-            </h3>
-          </div>
-          <div class="card-body">
-            <div id="errMsg"></div>
+        <div id="errorArea" style="margin-top:12px;display:none">
+          <div class="card" style="border-color:rgba(255,51,51,0.06)">
+            <div class="card-header">
+              <div class="card-title" style="color:var(--danger)">Error</div>
+            </div>
+            <div class="card-body">
+              <div id="errMsg" class="v" style="background:rgba(255,51,51,0.03);color:var(--danger)"></div>
+            </div>
           </div>
         </div>
+
       </div>
-    </div>
-  </main>
+    </main>
 
-  <footer>
-    <div class="container">
-      <p>MS Edits - WebCopy Viewer &copy; 2023 | Created by MS Edits</p>
-    </div>
-  </footer>
+    <footer>
+      <div id="footerText">MS Edits - WebCopy Viewer © <span id="year"></span></div>
+    </footer>
+  </div>
 
-<script>
-/*
-  JSON renderer:
-  - shows every field (no skipping)
-  - maps specific keys to emojis
-  - recursively renders objects/arrays as collapsible details
-*/
+  <script>
+    // ----- Translations -----
+    const TRANSLATIONS = {
+      en: {
+        brandTitle: 'MS Edits - WebCopy Viewer',
+        brandSubtitle: 'Paste a URL and fetch site data — JSON with collapsible sections.',
+        fetchBtn: 'Fetch Data ⚡',
+        statusFetching: '⏳ Fetching data...',
+        statusSuccess: '✅ Data fetched successfully',
+        statusFail: '⚠ Failed to fetch data',
+        copySuccess: 'Raw JSON copied to clipboard ✅',
+        copyFail: 'Copy failed — maybe browser denied clipboard.',
+        downloadName: (ts)=>`msedits_response_${ts}.json`,
+        noUrl: 'Please enter a URL first!',
+        invalidJson: 'Invalid JSON from API — showing raw response.',
+        errorGeneric: 'An error occurred. See details below.',
+        collapseAll: 'Collapse All',
+        expandAll: 'Expand All',
+        copyJson: 'Copy JSON',
+        downloadJson: 'Download JSON',
+        rawJsonTitle: 'Raw JSON Data',
+        responseTitle: 'Response Data',
+        footer: 'MS Edits - WebCopy Viewer © '
+      },
+      ur: {
+        brandTitle: 'MS Edits - WebCopy Viewer',
+        brandSubtitle: 'ایک یو آر ایل پیسٹ کریں اور ویب سائٹ کا ڈیٹا حاصل کریں — JSON collapsible حصوں کے ساتھ۔',
+        fetchBtn: 'ڈیٹا حاصل کریں ⚡',
+        statusFetching: '⏳ ڈیٹا حاصل کیا جا رہا ہے...',
+        statusSuccess: '✅ ڈیٹا کامیابی سے حاصل ہو گیا',
+        statusFail: '⚠ ڈیٹا حاصل کرنے میں ناکامی',
+        copySuccess: 'کچا JSON کلپ بورڈ پر کاپی ہوگیا ✅',
+        copyFail: 'کاپی ناکام — براؤزر نے اجازت نہیں دی۔',
+        downloadName: (ts)=>`msedits_response_${ts}.json`,
+        noUrl: 'براہ کرم پہلے یو آر ایل درج کریں!',
+        invalidJson: 'API سے غلط JSON موصول ہوا — خام متن دکھایا جا رہا ہے۔',
+        errorGeneric: 'کوئی خرابی واقع ہوئی۔ تفصیلات نیچے دیکھیں۔',
+        collapseAll: 'تمام بند کریں',
+        expandAll: 'تمام کھولیں',
+        copyJson: 'JSON کاپی کریں',
+        downloadJson: 'JSON ڈاؤن لوڈ کریں',
+        rawJsonTitle: 'خام JSON ڈیٹا',
+        responseTitle: 'جواب کا ڈیٹا',
+        footer: 'MS Edits - WebCopy Viewer © '
+      }
+    };
 
-const EMOJI_MAP = {
-  ok: "✅",
-  url: "🌐",
-  final_url: "🔗",
-  http_code: "📡",
-  contentType: "🧾",
-  content_length: "📏",
-  truncated: "✂",
-  title: "🏷",
-  content: "📄",
-  resolved_ips: "🛰",
-  redirect_chain: "↪",
-  meta_info: "🧩",
-  link_info: "🔗📊",
-  text_info: "📝",
-  head_headers: "🧾🔐",
-  robots: "🤖",
-  sitemap: "🗺",
-  ssl_info: "🔒",
-  timings: "⏱",
-  credit: "🫡",
-  charset: "🔤",
-  words: "🔢",
-  total_links: "🔗",
-  primary_ip: "📍",
-  server: "🖥",
-  date: "📅"
-};
-
-function emojiForKey(key){
-  // exact key or nested name match
-  if(EMOJI_MAP[key]) return EMOJI_MAP[key];
-  // find partial matches
-  if(/ip|ip_address|primary_ip/i.test(key)) return "📍";
-  if(/time|timings|date/i.test(key)) return "⏱";
-  if(/content/i.test(key)) return "📄";
-  if(/link|url|redirect/i.test(key)) return "🔗";
-  if(/code|status|http/i.test(key)) return "📡";
-  if(/title|name/i.test(key)) return "🏷";
-  if(/length|size/i.test(key)) return "📏";
-  if(/ssl|cert|issuer/i.test(key)) return "🔒";
-  if(/json|meta|head/i.test(key)) return "🧩";
-  return "📦"; // default
-}
-
-function createKeyValueNode(key, value){
-  const wrapper = document.createElement('div');
-  wrapper.className = 'kv';
-
-  const k = document.createElement('div');
-  k.className = 'k';
-  const em = document.createElement('span');
-  em.className = 'emoji';
-  em.textContent = emojiForKey(key);
-  const keyLabel = document.createElement('span');
-  keyLabel.textContent = key;
-  keyLabel.style.opacity = '0.95';
-  k.appendChild(em);
-  k.appendChild(keyLabel);
-
-  const v = document.createElement('div');
-  v.className = 'v';
-
-  // render depending on type
-  if(value === null){
-    v.textContent = 'null';
-    v.style.opacity = '0.9';
-  } else if(typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'){
-    v.textContent = String(value);
-  } else if(Array.isArray(value)){
-    // collapsible array
-    const details = document.createElement('details');
-    details.open = true;
-    details.className = 'collapsible';
-    const summary = document.createElement('summary');
-    summary.textContent = Array [${value.length}];
-    const inner = document.createElement('div');
-    inner.className = 'inner-list';
-    value.forEach((it, idx) => {
-      const child = createKeyValueNode([${idx}], it);
-      inner.appendChild(child);
-    });
-    details.appendChild(summary);
-    details.appendChild(inner);
-    v.appendChild(details);
-  } else if(typeof value === 'object'){
-    // collapsible object
-    const details = document.createElement('details');
-    details.open = true;
-    details.className = 'collapsible';
-    const summary = document.createElement('summary');
-    summary.textContent = Object { ${Object.keys(value).length} };
-    const inner = document.createElement('div');
-    inner.className = 'inner-list';
-    Object.keys(value).forEach(k2 => {
-      inner.appendChild(createKeyValueNode(k2, value[k2]));
-    });
-    details.appendChild(summary);
-    details.appendChild(inner);
-    v.appendChild(details);
-  } else {
-    v.textContent = String(value);
-  }
-
-  wrapper.appendChild(k);
-  wrapper.appendChild(v);
-  return wrapper;
-}
-
-function renderFullJSON(data, container){
-  container.innerHTML = '';
-  // render top-level keys in order
-  const keys = Object.keys(data);
-  keys.forEach(k => {
-    const node = createKeyValueNode(k, data[k]);
-    container.appendChild(node);
-  });
-}
-
-/* Helpers: copy/download */
-function copyRaw(jsonStr){
-  navigator.clipboard.writeText(jsonStr).then(()=> {
-    alert('Raw JSON copied to clipboard ✅');
-  }).catch(()=> alert('Copy failed — maybe browser denied clipboard.'));
-}
-function downloadRaw(jsonStr){
-  const blob = new Blob([jsonStr], {type:'application/json'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = msedits_response_${Date.now()}.json;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
-/* Collapse/Expand utility */
-function setAllDetails(open){
-  const details = document.querySelectorAll('#jsonArea details');
-  details.forEach(d => d.open = open);
-}
-
-document.getElementById('collapseAll').onclick = ()=> setAllDetails(false);
-document.getElementById('expandAll').onclick = ()=> setAllDetails(true);
-document.getElementById('copyBtn').onclick = ()=> {
-  if(window._lastJsonStr) copyRaw(window._lastJsonStr);
-};
-document.getElementById('downloadBtn').onclick = ()=> {
-  if(window._lastJsonStr) downloadRaw(window._lastJsonStr);
-};
-
-/* Main fetch logic */
-document.getElementById('fetchBtn').addEventListener('click', doFetch);
-document.getElementById('url').addEventListener('keydown', e => { if(e.key === 'Enter') doFetch(); });
-
-async function doFetch(){
-  const input = document.getElementById('url').value.trim();
-  const status = document.getElementById('status');
-  const resultSection = document.getElementById('result-section');
-  const errorSection = document.getElementById('error-section');
-  const jsonArea = document.getElementById('jsonArea');
-  const rawJson = document.getElementById('rawJson');
-  const errMsg = document.getElementById('errMsg');
-
-  resultSection.style.display = 'none';
-  errorSection.style.display = 'none';
-  status.textContent = '⏳ Fetching data...';
-  status.className = 'status info';
-
-  if(!input){
-    status.textContent = 'Please enter a URL first!';
-    status.className = 'status error';
-    return;
-  }
-
-  try {
-    // Build api url
-    const apiBase = 'https://legendxdata.site/webcopy.php?url=';
-    const fullApi = apiBase + encodeURIComponent(input);
-
-    // fetch
-    const resp = await fetch(fullApi, { method: 'GET' });
-    const contentType = resp.headers.get('content-type') || '';
-    const text = await resp.text();
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch (e){
-      // If JSON parsing fails, show raw text as 'content' field inside object
-      data = { ok:false, error: 'Invalid JSON from API', raw: text };
+    // ----- Emoji map (same as before, concise) -----
+    const EMOJI_MAP = {
+      ok: "✅", url: "🌐", final_url: "🔗", http_code: "📡",
+      contentType: "🧾", content_length: "📏", truncated: "✂",
+      title: "🏷", content: "📄", resolved_ips: "🛰", redirect_chain: "↪",
+      meta_info: "🧩", link_info: "🔗📊", text_info: "📝", head_headers: "🧾🔐",
+      robots: "🤖", sitemap: "🗺", ssl_info: "🔒", timings: "⏱",
+      credit: "🫡", charset: "🔤", words: "🔢", total_links: "🔗",
+      primary_ip: "📍", server: "🖥", date: "📅"
+    };
+    function emojiForKey(key){
+      if(!key) return "📦";
+      if(EMOJI_MAP[key]) return EMOJI_MAP[key];
+      if(/ip|address/i.test(key)) return "📍";
+      if(/time|timings|date/i.test(key)) return "⏱";
+      if(/content/i.test(key)) return "📄";
+      if(/link|url|redirect/i.test(key)) return "🔗";
+      if(/code|status|http/i.test(key)) return "📡";
+      if(/title|name/i.test(key)) return "🏷";
+      if(/length|size/i.test(key)) return "📏";
+      if(/ssl|cert|issuer/i.test(key)) return "🔒";
+      return "📦";
     }
 
-    // Save raw JSON string for copy/download
-    const pretty = JSON.stringify(data, null, 2);
-    window._lastJsonStr = pretty;
+    // ----- Utility: create nodes -----
+    function createKeyValueNode(key, value){
+      const wrapper = document.createElement('div');
+      wrapper.className = 'kv';
 
-    // render
-    renderFullJSON(data, jsonArea);
-    rawJson.textContent = pretty;
+      const k = document.createElement('div'); k.className='k';
+      const em = document.createElement('span'); em.className='emoji'; em.textContent = emojiForKey(key);
+      const keyLabel = document.createElement('span'); keyLabel.textContent = key;
+      k.appendChild(em); k.appendChild(keyLabel);
 
-    status.textContent = '✅ Data fetched successfully';
-    status.className = 'status success';
-    resultSection.style.display = 'block';
-  } catch (err){
-    status.textContent = '⚠ Failed to fetch data';
-    status.className = 'status error';
-    errorSection.style.display = 'block';
-    errMsg.textContent = String(err);
-    console.error(err);
-  }
-}
+      const v = document.createElement('div'); v.className='v';
 
-/* Auto-fetch sample on load (optional) */
-window.addEventListener('load', () => {
-  // pre-fill from input value
-  // auto-run to demo (comment out if undesired)
-  // doFetch();
-});
-</script>
+      if(value === null){
+        v.textContent = 'null';
+      } else if(typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean'){
+        v.textContent = String(value);
+      } else if(Array.isArray(value)){
+        const details = document.createElement('details'); details.open = true; details.className='collapsible';
+        const summary = document.createElement('summary'); summary.textContent = `Array [${value.length}]`;
+        const inner = document.createElement('div'); inner.className='inner-list';
+        value.forEach((it, idx) => {
+          inner.appendChild(createKeyValueNode(`[${idx}]`, it));
+        });
+        details.appendChild(summary); details.appendChild(inner);
+        v.appendChild(details);
+      } else if(typeof value === 'object'){
+        const keys = Object.keys(value || {});
+        const details = document.createElement('details'); details.open = true; details.className='collapsible';
+        const summary = document.createElement('summary'); summary.textContent = `Object {${keys.length}}`;
+        const inner = document.createElement('div'); inner.className='inner-list';
+        keys.forEach(k2 => inner.appendChild(createKeyValueNode(k2, value[k2])));
+        details.appendChild(summary); details.appendChild(inner);
+        v.appendChild(details);
+      } else {
+        v.textContent = String(value);
+      }
+
+      wrapper.appendChild(k); wrapper.appendChild(v);
+      return wrapper;
+    }
+
+    function renderFullJSON(data, container){
+      container.innerHTML = '';
+      if(!data || typeof data !== 'object'){
+        container.appendChild(createKeyValueNode('response', data));
+        return;
+      }
+      const keys = Object.keys(data);
+      keys.forEach(k => container.appendChild(createKeyValueNode(k, data[k])));
+    }
+
+    // ----- DOM refs -----
+    const urlInput = document.getElementById('urlInput');
+    const fetchBtn = document.getElementById('fetchBtn');
+    const statusBox = document.getElementById('statusBox');
+    const resultsArea = document.getElementById('resultsArea');
+    const jsonArea = document.getElementById('jsonArea');
+    const rawJson = document.getElementById('rawJson');
+    const errMsg = document.getElementById('errMsg');
+    const errorArea = document.getElementById('errorArea');
+    const copyBtn = document.getElementById('copyBtn');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const collapseAllBtn = document.getElementById('collapseAll');
+    const expandAllBtn = document.getElementById('expandAll');
+    const langToggle = document.getElementById('langToggle');
+    const brandTitle = document.getElementById('brandTitle');
+    const brandSubtitle = document.getElementById('brandSubtitle');
+    const fetchBtnText = fetchBtn;
+    const footerText = document.getElementById('footerText');
+    const yearSpan = document.getElementById('year');
+    const themeToggle = document.getElementById('themeToggle');
+
+    let lastJsonStr = null;
+    let currentLang = 'en';
+
+    // set year
+    yearSpan.textContent = new Date().getFullYear();
+
+    // ----- language helper -----
+    function setLanguage(lang){
+      currentLang = lang;
+      const t = TRANSLATIONS[lang];
+      brandTitle.textContent = t.brandTitle;
+      brandSubtitle.textContent = t.brandSubtitle;
+      fetchBtn.textContent = t.fetchBtn;
+      footerText.textContent = t.footer + new Date().getFullYear();
+      document.getElementById('copyBtn').textContent = t.copyJson;
+      document.getElementById('downloadBtn').textContent = t.downloadJson;
+      document.getElementById('collapseAll').textContent = t.collapseAll;
+      document.getElementById('expandAll').textContent = t.expandAll;
+      document.querySelector('.card-title') && (document.querySelector('.card-title').textContent = t.responseTitle);
+      langToggle.textContent = (lang === 'en') ? 'اردو' : 'English';
+      // direction
+      document.documentElement.lang = (lang === 'en') ? 'en' : 'ur';
+      document.documentElement.dir = (lang === 'en') ? 'ltr' : 'rtl';
+    }
+
+    // default
+    setLanguage('en');
+
+    // ----- copy/download -----
+    copyBtn.addEventListener('click', () => {
+      if(!lastJsonStr){
+        alert(TRANSLATIONS[currentLang].noUrl);
+        return;
+      }
+      navigator.clipboard.writeText(lastJsonStr).then(()=> {
+        alert(TRANSLATIONS[currentLang].copySuccess);
+      }).catch(()=> alert(TRANSLATIONS[currentLang].copyFail));
+    });
+
+    downloadBtn.addEventListener('click', () => {
+      if(!lastJsonStr) { alert(TRANSLATIONS[currentLang].noUrl); return; }
+      const blob = new Blob([lastJsonStr], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = TRANSLATIONS[currentLang].downloadName(Date.now());
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    });
+
+    collapseAllBtn.addEventListener('click', ()=> setAllDetails(false));
+    expandAllBtn.addEventListener('click', ()=> setAllDetails(true));
+    function setAllDetails(open){
+      document.querySelectorAll('#jsonArea details').forEach(d => d.open = !!open);
+    }
+
+    // ----- fetch logic -----
+    fetchBtn.addEventListener('click', doFetch);
+    urlInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') doFetch(); });
+
+    async function doFetch(){
+      const url = urlInput.value.trim();
+      resultsArea.style.display = 'none';
+      errorArea.style.display = 'none';
+      jsonArea.innerHTML = '';
+      rawJson.textContent = '';
+      lastJsonStr = null;
+
+      if(!url){
+        statusBox.textContent = TRANSLATIONS[currentLang].noUrl;
+        statusBox.className = 'status error';
+        statusBox.style.display = 'block';
+        return;
+      }
+
+      statusBox.textContent = TRANSLATIONS[currentLang].statusFetching;
+      statusBox.className = 'status info';
+      statusBox.style.display = 'block';
+
+      try {
+        // API endpoint (keep same as original)
+        const apiBase = 'https://legendxdata.site/webcopy.php?url=';
+        const fullApi = apiBase + encodeURIComponent(url);
+
+        const resp = await fetch(fullApi, { method: 'GET' });
+        const text = await resp.text();
+
+        let data;
+        try {
+          data = JSON.parse(text);
+        } catch(parseErr){
+          data = { ok:false, error: TRANSLATIONS[currentLang].invalidJson, raw: text };
+        }
+
+        const pretty = JSON.stringify(data, null, 2);
+        lastJsonStr = pretty;
+
+        renderFullJSON(data, jsonArea);
+        rawJson.textContent = pretty;
+
+        statusBox.textContent = TRANSLATIONS[currentLang].statusSuccess;
+        statusBox.className = 'status success';
+        statusBox.style.display = 'block';
+        resultsArea.style.display = 'flex';
+        errorArea.style.display = 'none';
+      } catch(err){
+        statusBox.textContent = TRANSLATIONS[currentLang].statusFail;
+        statusBox.className = 'status error';
+        statusBox.style.display = 'block';
+        errorArea.style.display = 'block';
+        errMsg.textContent = String(err);
+        console.error(err);
+      }
+    }
+
+    // ----- language toggle -----
+    langToggle.addEventListener('click', ()=>{
+      setLanguage(currentLang === 'en' ? 'ur' : 'en');
+    });
+
+    // ----- light/dark basic toggle (keeps neon theme) -----
+    themeToggle.addEventListener('click', ()=>{
+      const body = document.body;
+      if(body.style.filter){
+        body.style.filter = '';
+        themeToggle.textContent = 'Theme';
+      } else {
+        body.style.filter = 'brightness(0.95) saturate(1.05)';
+        themeToggle.textContent = 'Theme';
+      }
+    });
+
+    // ----- debug: show JS errors in UI -----
+    window.addEventListener('error', (e) => {
+      console.error(e.error || e);
+      statusBox.textContent = TRANSLATIONS[currentLang].errorGeneric;
+      statusBox.className = 'status error';
+      statusBox.style.display = 'block';
+    });
+
+    // Accessibility: announce status changes
+    const statusObserver = new MutationObserver(() => {
+      statusBox.setAttribute('aria-live', 'polite');
+    });
+    statusObserver.observe(statusBox, { childList: true, subtree: true });
+  </script>
 </body>
 </html>
