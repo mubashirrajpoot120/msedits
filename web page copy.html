@@ -504,9 +504,8 @@
   </main>
 
   <footer>
-    
     <div class="container">
-      <p>MS Edits - WebCopy Viewer &copy; 2025 | Created by MS Edits</p>
+      <p>MS Edits - WebCopy Viewer &copy; 2023 | Created by MS Edits</p>
     </div>
   </footer>
 
@@ -525,25 +524,25 @@ const EMOJI_MAP = {
   http_code: "📡",
   contentType: "🧾",
   content_length: "📏",
-  truncated: "✂️",
-  title: "🏷️",
+  truncated: "✂",
+  title: "🏷",
   content: "📄",
-  resolved_ips: "🛰️",
-  redirect_chain: "↪️",
+  resolved_ips: "🛰",
+  redirect_chain: "↪",
   meta_info: "🧩",
   link_info: "🔗📊",
   text_info: "📝",
   head_headers: "🧾🔐",
   robots: "🤖",
-  sitemap: "🗺️",
+  sitemap: "🗺",
   ssl_info: "🔒",
-  timings: "⏱️",
+  timings: "⏱",
   credit: "🫡",
   charset: "🔤",
   words: "🔢",
   total_links: "🔗",
   primary_ip: "📍",
-  server: "🖥️",
+  server: "🖥",
   date: "📅"
 };
 
@@ -552,11 +551,11 @@ function emojiForKey(key){
   if(EMOJI_MAP[key]) return EMOJI_MAP[key];
   // find partial matches
   if(/ip|ip_address|primary_ip/i.test(key)) return "📍";
-  if(/time|timings|date/i.test(key)) return "⏱️";
+  if(/time|timings|date/i.test(key)) return "⏱";
   if(/content/i.test(key)) return "📄";
   if(/link|url|redirect/i.test(key)) return "🔗";
   if(/code|status|http/i.test(key)) return "📡";
-  if(/title|name/i.test(key)) return "🏷️";
+  if(/title|name/i.test(key)) return "🏷";
   if(/length|size/i.test(key)) return "📏";
   if(/ssl|cert|issuer/i.test(key)) return "🔒";
   if(/json|meta|head/i.test(key)) return "🧩";
@@ -593,11 +592,11 @@ function createKeyValueNode(key, value){
     details.open = true;
     details.className = 'collapsible';
     const summary = document.createElement('summary');
-    summary.textContent = `Array [${value.length}]`;
+    summary.textContent = Array [${value.length}];
     const inner = document.createElement('div');
     inner.className = 'inner-list';
     value.forEach((it, idx) => {
-      const child = createKeyValueNode(`[${idx}]`, it);
+      const child = createKeyValueNode([${idx}], it);
       inner.appendChild(child);
     });
     details.appendChild(summary);
@@ -609,7 +608,7 @@ function createKeyValueNode(key, value){
     details.open = true;
     details.className = 'collapsible';
     const summary = document.createElement('summary');
-    summary.textContent = `Object { ${Object.keys(value).length} }`;
+    summary.textContent = Object { ${Object.keys(value).length} };
     const inner = document.createElement('div');
     inner.className = 'inner-list';
     Object.keys(value).forEach(k2 => {
@@ -648,7 +647,7 @@ function downloadRaw(jsonStr){
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `msedits_response_${Date.now()}.json`;
+  a.download = msedits_response_${Date.now()}.json;
   document.body.appendChild(a);
   a.click();
   a.remove();
@@ -724,7 +723,7 @@ async function doFetch(){
     status.className = 'status success';
     resultSection.style.display = 'block';
   } catch (err){
-    status.textContent = '⚠️ Failed to fetch data';
+    status.textContent = '⚠ Failed to fetch data';
     status.className = 'status error';
     errorSection.style.display = 'block';
     errMsg.textContent = String(err);

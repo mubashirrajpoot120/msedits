@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IK KING TOOLKIT - Hacker Pro</title>
+
+  <!-- Google Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* 🟥 Matrix Rain Background */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+      background: black;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      color: #ff2b2b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      text-align: center;
+    }
+
+    /* 🔒 Lock Screen */
+    #lock-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.97);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      color: #ff2b2b;
+    }
+    #lock-screen h2 {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px #ff2b2b, 0 0 40px #ff0000;
+    }
+    #key-input {
+      padding: 12px;
+      border: 2px solid #ff2b2b;
+      border-radius: 10px;
+      background: black;
+      color: #ff2b2b;
+      font-size: 1.3rem;
+      text-align: center;
+      box-shadow: 0 0 15px #ff2b2b;
+      font-family: 'Orbitron', sans-serif;
+    }
+    #unlock-btn {
+      margin-top: 20px;
+      padding: 12px 30px;
+      font-size: 1.2rem;
+      border: 2px solid #ff2b2b;
+      border-radius: 10px;
+      background: transparent;
+      color: #ff2b2b;
+      cursor: pointer;
+      transition: 0.3s;
+      font-family: 'Orbitron', sans-serif;
+    }
+    #unlock-btn:hover {
+      background: #ff2b2b;
+      color: black;
+      box-shadow: 0 0 25px #ff2b2b, 0 0 50px #ff0000;
+      transform: scale(1.1);
+    }
+    #error-msg {
+      margin-top: 10px;
+      font-size: 1rem;
+      color: red;
+      display: none;
+    }
+
+    /* add style for Get Key button (keeps page look consistent) */
+    #get-key-btn {
+      margin-top: 12px;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border: 2px solid #ff2b2b;
+      border-radius: 8px;
+      background: transparent;
+      color: #ff2b2b;
+      cursor: pointer;
+      box-shadow: 0 0 12px #ff2b2b;
+      font-family: 'Orbitron', sans-serif;
+    }
+    #get-key-btn:hover {
+      background: #ff2b2b;
+      color: black;
+      transform: scale(1.03);
+    }
+
+    /* ⚡ Glitch Title */
+    .title {
+      font-size: 3.5rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #ff2b2b;
+      position: relative;
+      animation: glitch 1s infinite;
+      margin-bottom: 30px;
+      text-shadow: 0 0 25px #ff2b2b, 0 0 50px #ff0000;
+    }
+    @keyframes glitch {
+      0% { text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff; }
+      25% { text-shadow: -2px -2px #ff00ff, 2px 2px #00ffff; }
+      50% { text-shadow: 2px -2px #ff00ff, -2px 2px #00ffff; }
+      75% { text-shadow: -2px 2px #ff00ff, 2px -2px #00ffff; }
+      100% { text-shadow: 2px 2px #ff00ff, -2px -2px #00ffff; }
+    }
+
+    /* ✨ Container */
+    .container {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #ff2b2b;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 40px #ff2b2b, 0 0 80px #ff0000;
+      width: 90%;
+      max-width: 800px;
+      display: none; /* Hidden until unlocked */
+    }
+
+    /* 🔥 Hacker Buttons */
+    .btn {
+      display: block;
+      margin: 15px auto;
+      padding: 15px;
+      width: 90%;
+      max-width: 500px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      color: #ff2b2b;
+      background: transparent;
+      border: 2px solid #ff2b2b;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      box-shadow: 0 0 20px #ff2b2b;
+      font-family: 'Orbitron', sans-serif;
+    }
+    .btn:hover {
+      background: #ff2b2b;
+      color: black;
+      box-shadow: 0 0 40px #ff2b2b, 0 0 80px #ff0000;
+      transform: scale(1.05);
+    }
+
+    /* ✅ WhatsApp Button Special */
+    .btn.whatsapp {
+      border: 2px solid #25D366;
+      color: #25D366;
+      box-shadow: 0 0 20px #25D366;
+    }
+    .btn.whatsapp:hover {
+      background: #25D366;
+      color: black;
+      box-shadow: 0 0 40px #25D366, 0 0 80px #25D366;
+    }
+
+    .footer {
+      margin-top: 20px;
+      font-size: 1rem;
+      color: #ff2b2b;
+      opacity: 0.8;
+      text-shadow: 0 0 10px #ff2b2b;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🟥 Matrix Rain Effect -->
+  <canvas id="matrix"></canvas>
+
+  <!-- 🔑 Lock Screen -->
+  <div id="lock-screen">
+    <h2>🔑 Enter Access Key</h2>
+    <input type="password" id="key-input" placeholder="Enter Key...">
+    <!-- GET KEY button inserted here -->
+    <button id="get-key-btn">Get Key</button>
+
+    <button id="unlock-btn">Unlock</button>
+    <div id="error-msg">❌ Wrong Key! Try again.</div>
+  </div>
+
+  <!-- Main Container (Hidden until unlocked) -->
+  <div class="container" id="main-container">
+    <h1 class="title">IK KING TOOLKIT</h1>
+
+    <!-- Replace # with your links -->
+    <a href="https://whatsapp.com/channel/0029VbAqaWNCRs1oqCTXRS3m" class="btn whatsapp">WhatsApp</a>
+    <a href="https://www.mediafire.com/file/bcmddy9r7onqutd/N3tfl%2521x_premium_by_%2540zerox.apk/file" class="btn">NETFLEX PREMIUM</a>
+    <a href="https://zeroxdatabase.vercel.app" class="btn">SIM DATA BASE</a>
+    <a href="https://www.mediafire.com/file/0870qd38lw6j54w/Instagram_Hack.7z/file" class="btn">HACK INSTA ACCOUNTS</a>
+    <a href="https://drive.google.com/drive/folders/1N_S5B31SDdNd7tZ25YBNwrJdL4AnlK4g?usp=sharing" class="btn">LIVE LOCATION HACK</a>
+    <a href="https://www.mediafire.com/folder/r01749bcfuygl/Track+Mobile" class="btn">TRACK ANY MOBILE</a>
+    <a href="https://www.mediafire.com/file/0870qd38lw6j54w/Instagram_Hack.7z/file" class="btn">HACK INSTAGRAM ACCOUNT 2</a>
+    <a href="https://www.mediafire.com/file/ep8skhavdtp9c7m/Youtube_5.3.80.132.apk/file" class="btn">YOUTUBE Premium</a>
+    <a href="https://www.mediafire.com/file/9bdrtv6g6mtmjoz/ChatGPT+Premium_1.0.11.apk/file" class="btn">CHAT GPT PREMIUM</a>
+    <a href="https://www.mediafire.com/file/rlwuwg5th605i39/%25F0%259D%2599%25B5%25F0%259D%2599%25B0%25F0%259D%2599%25BA%25F0%259D%2599%25B4_%25F0%259D%259A%2583%25F0%259D%2599%25B4%25F0%259D%259A%2587%25F0%259D%259A%2583_%25F0%259D%2599%25BC%25F0%259D%2599%25B4%25F0%259D%259A%2582%25F0%259D%259A%2582%25F0%259D%2599%25B0%25F0%259D%2599%25B6%25F0%259D%2599%25B4_%25F0%259D%2599%25B6%25F0%259D%2599%25B4%25F0%259D%2599%25BD_%25F0%259D%2599%25B1%25F0%259D%259A%2588_%25C2%25A9_%25F0%259D%259A%2589%25F0%259D%2599%25B4%25F0%259D%259A%2581%25F0%259D%2599%25BE%25F0%259D%259A%2587/file" class="btn">FAKE SMS GENERATE</a>
+    <a href="https://www.mediafire.com/file/d4zsedauucyi947/Mask_%2526_Cloth_Remover.apk/file" class="btn">CLOUTH & MASK REMOVER</a>
+    <a href="https://t.me/zeroxofc_bot" class="btn">WHATSAPP UNBAN MAIL</a>
+    <a href="https://www.mediafire.com/file/f9pziak22eonjrm/HOW_TO_FIND_ANYONE_LOCATION_TRACK_WITH_OWN_MOBILE_PHONE.zip/file" class="btn">TRACE ANY LOCATION 2</a>
+    <a href="https://www.mediafire.com/folder/kxznkgynq4fap/Fb+Ban+Method" class="btn">FACEBOOK BAN</a>
+    <a href="https://fb-tool-drab.vercel.app" class="btn">FACEBOOL REPORT SAND</a>
+    <a href="https://www.mediafire.com/file/7o170c2ekmfdh2v/UNLIMITED+GMAIL+METHOD+1+BY+JADOON.zip/file" class="btn">MAKE UNLAMENTED GMAIL</a>
+    <a href="https://zerox-courses.blogspot.com/2025/07/chatgpt-plus-method-by-zerox-body.html?m" class="btn">CHAT GPT PLUS FREE</a>
+    <a href="https://tex-to-video.vercel.app" class="btn">TEXT TO VIDEO GEN</a>
+    <a href="https://www.mediafire.com/file/kkk6l40duq1sxg3/WhatsApp_1.0.apk/file" class="btn">PHONE DEAD VIRES APK</a>
+    <a href="https://www.mediafire.com/folder/smcniqg480w0c/Autosave+Contact" class="btn">AUTO CONTACT SAVER</a>
+    <a href="https://mega.nz/file/wSVmETxT#TKkXwq6ZosCzAlh_lk58V009eUmAqF6vgkuvPWV4aO4" class="btn">GALLERY CRESH APK</a>
+    <a href="https://smallshorts.com/mbkgd" class="btn">CREATE FAKE INSTAGRAM</a>
+    <a href="https://ytthumbnl.vercel.app" class="btn">YOUTUBE THUMBNAIL copy</a>
+    <a href="https://smallshorts.com/mbkgd" class="btn">CREATE UNLAMENTED TELE WP ACCOUNT</a>
+    <a href="https://www.mediafire.com/file/wp38tvufsj3988j/UNLIMITED+CALL+2+METHOD+BY+JADOON.zip/fil" class="btn">call without number</a>
+    <a href="https://smallshorts.com/0tBO94G" class="btn">TEXT TO VIDEO GEN AI</a>
+    <a href="https://whatsappp-unban-ik.vercel.app/" class="btn">WP UNBAN TOOL</a>
+    <a href="https://www.mediafire.com/file/uoiimanlu0v2zfh/Youtube_Watch_Time_and_Views_1.0.apk/file" class="btn">YOUTUBE WATCHTIME AND VIWES</a>
+    <a href="https://www.mediafire.com/file/dyiyl8h23mo8s5p/Carding_complete_guideline.pdf/file" class="btn">CARDING COMPLETE GUIDE</a>
+    <a href="https://drive.google.com/file/d/1b4NcDgm3L2Qob2aBP7JpTfnOPDvrGZG4/view?usp=drivesdk" class="btn">+1 FAKE NUMBER TRICK</a>
+    <a href="https://mega.nz/folder/zwg3FCAQ#KC2COdwxjYzKIxhiejYTxA" class="btn">ALL FAKE NUMBER METHODS</a>
+    <a href="https://www.mediafire.com/file/y78pzecdr5bmj7y/Pubg_Hack_Making_Course.rar/file" class="btn">PUBG HACK MAKE COURSE</a>
+    <script language=javascript>document.write(unescape('%3C%61%20%68%72%65%66%3D%22%68%74%74%70%73%3A%2F%2F%77%68%61%74%73%61%70%70%2E%63%6F%6D%2F%63%68%61%6E%6E%65%6C%2F%30%30%32%39%56%62%41%71%61%57%4E%43%52%73%31%6F%71%43%54%58%52%53%33%6D%22%20%63%6C%61%73%73%3D%22%62%74%6E%22%3E%52%45%41%4C%20%48%41%43%4B%49%4E%47%20%4F%4E%20%4D%4F%42%49%4C%45%3C%2F%61%3E'))</script>
+    <a href="https://www.mediafire.com/file/umfe4yn2872l5b5/FREE_EMOTES_FILE_BY_SASUKE.7z/file" class="btn">PUBG MOBILE EMOTE FILE</a>
+    <a href="https://www.mediafire.com/file/fedpj1p5ialdxyo/XSUIT_FILE_BY_SASUKA.zip/file" class="btn">FREE FIRE PANEL </a>
+    <a href="https://www.mediafire.com/file/x5rl62lab695l5k/SPOTIFY_PREMIUM_BY_%2540ZEROX.apk/file" class="btn">SPOTIFY PREMIUM</a>
+    <a href="https://youtube.com/shorts/m5-0ilSNP1U?feature=share" class="btn">WHATSAPP FAKE REACT</a>
+    <a href="https://www.mediafire.com/file_premium/vfsmk9dnxvbwneg/See_private.apk/file" class="btn">SEE PREVATE INSTAGRAM</a>
+    <a href="https://www.mediafire.com/file/ifxvks1slvqfgj8/LIVE_SCREEN_HACK.zip/file" class="btn">LIVE SCREEN HACK</a>
+    <a href="https://www.mediafire.com/file/i9rb75gcz23a824/Telegram_Hack.7z/file" class="btn">TELEGRAM HACK</a>
+    <a href="https://www.mediafire.com/file/4eobtvyo8qqfcmy/EasyPaisa_to_All_bank_By_Jabir.apk/file" class="btn">FAKE EASY PAISA SS</a>
+    <a href="https://www.mediafire.com/file/m5elnssx6cft6ij/PAID_Wi-Fi_HACK.zip/file" class="btn">WIFI HACK 100% WORK</a>
+    <a href="https://www.mediafire.com/file/uprld7kdv72p003/How_To_Unlock_Lockscreen_Of_Android_Phone_Using_ADB_BY_HARI_CYBER_%25F0%259F%2592%2580.mp4/file" class="btn">UNLOCK LOCK SCREEN OF ANDROID</a>
+    <a href="https://www.mediafire.com/file/numvfv1ku9qod7f/VID_20241215_202143_437.mp4/file" class="btn">NON PTA TO PTA MOBILE</a>
+    <a href="https://drive.google.com/file/d/179ygjrGTb1FKd-G3sKbTGeiD4UVyc8to/view?usp=drivesdk" class="btn">FACEBOOK WATCHTIME METHOD</a>
+    <a href="https://officialzerox.blogspot.com" class="btn">GET DAILY HACKING TOOL</a>
+    <a href="https://drive.google.com/drive/folders/1nvszaXdcUxFwrhEWSqxlo21pdT8dII1w?usp=sharing" class="btn">WHATSAPP HACK</a>
+    <a href="https://drive.google.com/drive/folders/1ycC5W6bT2anWli1RYARcw0KhvLuWQp6A?usp=sharing" class="btn">WEBSITE HACKING COURSE</a>
+    <a href="https://drive.google.com/file/d/1UXIauIgH_rrYMJIcdo1igOTZvioFhNCL/view?usp=drivesdk" class="btn">ANDROID HACKING </a>
+    <a href="https://drive.google.com/drive/folders/1zD-JrP4sgIlAedjaLxAMdg_4ArF9IYyN" class="btn">ETHICAL HACKING COURSE</a>
+    <a href="https://www.mediafire.com/folder/372e5n0e7f3nk/Network+Hacking+Course+2025+in+urdu+By+Power+By+Safi" class="btn">NETWORK HACKING COURSE</a>
+    <a href="https://officialzerox.blogspot.com/2025/07/premium-accounts-cracking-course.html?m=1" class="btn">PREMIUM ACCOUNT PASSWORD CREKING</a>
+    <a href="https://drive.google.com/drive/folders/1yR5oL00yzr83QzHL5CVAztnpeQCW4Iyo" class="btn">PASSWORD CREKING COURSE</a>
+    <a href="https://courses-ai-nine.vercel.app" class="btn">PREMIUM COURSE SITE</a>
+    <a href="https://www.mediafire.com/file/ajp87wcx2tvez4e/FREE_CALL_APP_BY_%2540ZEROX.apk/file" class="btn">FREE CALL APK</a>
+    <a href="https://teenpatti-hack-gray.vercel.app" class="btn">TEEN PATI HACK </a>
+    <a href="https://ai-logo-delta.vercel.app" class="btn">AI LOGO GEN</a>
+    <a href="https://www.mediafire.com/file/ua3grks0dz5h0hh/gallery+crash.zip/file" class="btn">MOBILE CRESH FILE</a>
+    <a href="https://www.mediafire.com/file/du9tybq34i3pbgp/.7z/file" class="btn">MOBILE HACK RAT</a>
+    <a href="https://www.mediafire.com/folder/8u922zsj9ms5p/Unlimited+Snapchat+score" class="btn">UNLAMTED SNAPCHAT SCORE</a>
+    <a href="https://a-new-free-bot-50d087d2d65f.herokuapp.com" class="btn">FREE WHATSAPP BOT</a>
+    <a href="https://www.mediafire.com/folder/x5n954j8z90lm/All+Games+Hack" class="btn">ALL ERINING GAME HACK</a>
+    <a href="https://www.mediafire.com/file/hpme6oulwr5c7dc/TIKTOK+ID+BAN+FULLY+WORKING+METHOD.zip/file" class="btn">TIKTOK BAN METHED</a>
+    <a href="https://zefoy.com" class="btn">TIKTOK FREE LIKE </a>
+    <a href="https://drive.google.com/file/d/1W_pCmK-I-OphhQOSA9cNpEI8JRioWIE5/view?usp=drivesdk" class="btn">CREATE UNLAMTED ACCOUNT TIKTOK</a>
+    <a href="https://drive.google.com/file/d/1XUfR8LP8MPkBp5Kr1dOaHMpIKnryzEat/view?usp=drivesdk" class="btn">TIKTOK FOR YOU TRICK</a>
+    <a href="https://tik-tok-description-generator.vercel.app" class="btn">TIKTOK HASHTAG GENERATION</a>
+    <a href="https://ik-x-data-base-v2.vercel.app/" class="btn">HEAVY DATA BASE </a>
+<a href="https://www.view-page-source.com/" class="btn">VIWES ANYONE WEB SOURCE CODE</a>
+    <a href="https://website-to-apk.vercel.app/" class="btn">WEB2APK</a>
+    <a href="https://flowgpt.com/chat/wormgpt-6" class="btn">WormGPT FREE</a>
+    <a href="https://www.html-code-generator.com/tools/html-encrypt-decrypt" class="btn">HTML Code Encrypt Decrypt</a>
+    <a href="https://smmstone.com/free-telegram-members" class="btn">TELEGRAM FREE MEMBERS TRICK 100% WORK</a>
+    <a href="https://play.google.com/store/apps/details?id=hacking.learnhacking.learn.hack.ethicalhacking.programming.coding.hackerx.cybersecurity" class="btn">ETHICAL HACKING 2</a>
+    <a href="https://www.mediafire.com/file/o83fu9y9q3056e5/HOW_TO_BAN_INSTAGRAM_ID_PERMANENT_BAN_BY_MRISBRAND_.7z.zip/file" class="btn">INSTAGRAM BAN IN 1H</a>
+    <a href="https://drive.google.com/drive/folders/17lmO2Ea98T6QfPCfsdt1Ed25wXrrvOmr" class="btn">GTA VICE CITY IN MOBILE</a>
+    <a href="https://drive.google.com/drive/folders/14WXiqCBfvNjqnThnfHWvaYi2wTAYHCQr" class="btn">WHATSAPP ACCOUNT BAN NO SAND MASSAGE</a>
+    <a href="https://www.mediafire.com/file/ofi4ovocz869p8g/SMM_PANEL_SOURCE_CODE_%25E2%259A%25A1.zip/file" class="btn">SMM PANEL SOURCE CODE</a>
+    <a href="https://ftgm.pages.dev/view.html?id=ik-king" class="btn">YOUTUBE WATCHTIME & VIEWS FREE</a>
+    <a href="https://www.mediafire.com/file/tv2zxzcwl547le3/Jazz_cash_payment_Sms_099/file" class="btn">JAZZ CASH MOD</a>
+    <div class="footer">COPY RIGHT BY IK KING®</div>
+  </div>
+
+  <script>
+    // 🟥 Matrix Rain Script
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const letters = "01";
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+
+    const drops = [];
+    for (let x = 0; x < columns; x++) drops[x] = 1;
+
+    function draw() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = "#ff2b2b"; // 🔴 Red Color
+      ctx.font = fontSize + "px monospace";
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters[Math.floor(Math.random() * letters.length)];
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 33);
+
+    // 🔑 Unlock Script
+    const unlockBtn = document.getElementById("unlock-btn");
+    const keyInput = document.getElementById("key-input");
+    const lockScreen = document.getElementById("lock-screen");
+    const mainContainer = document.getElementById("main-container");
+    const errorMsg = document.getElementById("error-msg");
+
+    unlockBtn.addEventListener("click", () => {
+      if (keyInput.value === "ms edits") {
+        lockScreen.style.display = "none";
+        mainContainer.style.display = "block";
+      } else {
+        errorMsg.style.display = "block";
+        setTimeout(() => errorMsg.style.display = "none", 2000);
+      }
+    });
+
+    const getKeyBtn = document.getElementById("get-key-btn");
+    
+    getKeyBtn.addEventListener("click", () => {
+    // WhatsApp direct open with your number
+    window.open("https://wa.me/923327043713?text=%F0%9D%90%87%F0%9D%90%84%F0%9D%90%8B%F0%9D%90%8B%F0%9D%90%8E%20%E3%83%BE%F0%9F%98%8A%EF%BE%89%EF%BE%9E%20%F0%9D%90%92%F0%9D%90%88%F0%9D%90%91%20%F0%9D%90%88%F0%9D%90%8A%20%F0%9D%90%8A%F0%9D%90%88%F0%9D%90%8D%F0%9D%90%86%20%F0%9D%90%8D%F0%9D%90%84%F0%9D%90%84%F0%9D%90%83%20%F0%9D%90%93%F0%9D%90%8E%F0%9D%90%8E%F0%9D%90%8B%20%F0%9D%90%8A%F0%9D%90%88%F0%9D%90%93%20%F0%9D%90%8A%F0%9D%90%84%F0%9D%90%98%F0%9F%94%91");
+    });
+
+    // helper to show a temporary message in the #error-msg area
+    function showTempMessage(text, color = 'red') {
+      const prev = errorMsg.textContent;
+      errorMsg.textContent = text;
+      errorMsg.style.color = color;
+      errorMsg.style.display = 'block';
+      setTimeout(() => {
+        errorMsg.style.display = 'none';
+        errorMsg.style.color = 'red';
+        errorMsg.textContent = prev || '❌ Wrong Key! Try again.';
+      }, 2200);
+    }
+    // ===== end added code =====
+  </script>
+
+</body>
+</html>
