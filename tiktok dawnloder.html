@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TIKTOK DOWNLOADER - MS EDITS</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --hacker-green: #00ff00;
+            --hacker-dark: #0a0a0a;
+            --hacker-darker: #050505;
+            --hacker-gray: #1a1a1a;
+            --hacker-light: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--hacker-darker);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--hacker-light);
+            position: relative;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Matrix Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(30, 30, 30, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(20, 20, 20, 0.6) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .matrix-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: matrixMove 20s linear infinite;
+        }
+
+        @keyframes matrixMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Terminal Container */
+        .terminal-container {
+            background: linear-gradient(145deg, #1a1a1a, #222222);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 0, 0.1);
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px;
+        }
+
+        .terminal-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 0, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .terminal-container:hover::before {
+            transform: translateX(100%);
+        }
+
+        /* Terminal Header */
+        .terminal-header {
+            background: rgba(10, 10, 10, 0.9);
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .terminal-title {
+            color: var(--hacker-green);
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .terminal-control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .control-close { background: #ff5f57; }
+        .control-minimize { background: #ffbd2e; }
+        .control-maximize { background: #28ca42; }
+
+        /* Terminal Content */
+        .terminal-content {
+            padding: 30px;
+        }
+
+        .terminal-prompt {
+            color: var(--hacker-green);
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: var(--hacker-green);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Input Group */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--hacker-green);
+            font-size: 1.1em;
+        }
+
+        .hacker-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(20, 20, 20, 0.8);
+            color: var(--hacker-light);
+            font-family: 'Courier New', monospace;
+        }
+
+        .hacker-input:focus {
+            border-color: var(--hacker-green);
+            background: rgba(20, 20, 20, 0.9);
+            box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.1);
+        }
+
+        /* Buttons */
+        .hacker-btn {
+            width: 100%;
+            padding: 15px 30px;
+            background: linear-gradient(90deg, var(--hacker-green), #00cc00);
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .hacker-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
+        }
+
+        .hacker-btn:active {
+            transform: translateY(0);
+        }
+
+        .hacker-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            background: #555;
+        }
+
+        /* Results Container */
+        .results-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .video-container {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .video-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .video-preview {
+            width: 100%;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: #000;
+        }
+
+        .video-download-btn {
+            background: linear-gradient(90deg, var(--hacker-green), #00cc00);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .video-download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+        }
+
+        .video-download-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Status Messages */
+        .loading {
+            display: none;
+            color: var(--hacker-green);
+            font-weight: 600;
+            margin: 20px 0;
+            text-align: center;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 5px;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            text-align: center;
+        }
+
+        .success {
+            color: var(--hacker-green);
+            background: rgba(0, 255, 0, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            text-align: center;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .footer-links {
+            margin-bottom: 15px;
+        }
+
+        .whatsapp-btn {
+            display: inline-block;
+            background: #25d366;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .whatsapp-btn:hover {
+            background: #128c7e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .powered-by {
+            color: var(--hacker-green);
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .powered-by a {
+            color: var(--hacker-green);
+            text-decoration: none;
+        }
+
+        .powered-by a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .terminal-container {
+                margin: 15px;
+            }
+            
+            .terminal-content {
+                padding: 20px;
+            }
+            
+            .terminal-title {
+                font-size: 1.3rem;
+            }
+            
+            .video-preview {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .terminal-container {
+                margin: 10px;
+            }
+            
+            .terminal-content {
+                padding: 15px;
+            }
+            
+            .terminal-prompt {
+                font-size: 1rem;
+            }
+            
+            .hacker-btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+            
+            .video-download-btn {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="matrix-bg"></div>
+
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <h2 class="terminal-title">📱 TIKTOK DOWNLOADER</h2>
+            <div class="terminal-controls">
+                <div class="terminal-control control-close"></div>
+                <div class="terminal-control control-minimize"></div>
+                <div class="terminal-control control-maximize"></div>
+            </div>
+        </div>
+        
+        <div class="terminal-content">
+            <div class="terminal-prompt">
+                $ tiktok_downloader --start<span class="typing-cursor"></span>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">ENTER TIKTOK VIDEO URL</label>
+                <input type="text" id="tiktokUrl" class="hacker-input" placeholder="PASTE TIKTOK URL HERE">
+            </div>
+            
+            <button id="downloadBtn" class="hacker-btn">DOWNLOAD VIDEO</button>
+            
+            <div class="loading" id="loading">⏳ PROCESSING YOUR REQUEST...</div>
+            <div class="error" id="error"></div>
+            <div class="success" id="success"></div>
+            
+            <div class="results-container" id="results"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-links">
+            <a href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" class="whatsapp-btn" target="_blank">
+                <i class="fab fa-whatsapp"></i> JOIN WHATSAPP CHANNEL
+            </a>
+        </div>
+        <div class="powered-by">POWERED BY <a href="https://msedits.pages.dev" target="_blank">MS EDITS</a></div>
+    </div>
+
+    <script>
+        document.getElementById('downloadBtn').addEventListener('click', downloadVideo);
+        document.getElementById('tiktokUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                downloadVideo();
+            }
+        });
+
+        // Pre-fill with example URL
+        document.getElementById('tiktokUrl').value = "";
+
+        async function downloadVideo() {
+            const tiktokUrl = document.getElementById('tiktokUrl').value.trim();
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const successEl = document.getElementById('success');
+            const resultsEl = document.getElementById('results');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            if (!tiktokUrl) {
+                showError('PLEASE ENTER A TIKTOK URL');
+                return;
+            }
+            
+            // Validate TikTok URL format
+            if (!isValidTikTokUrl(tiktokUrl)) {
+                showError('PLEASE ENTER A VALID TIKTOK URL');
+                return;
+            }
+            
+            // Show loading state
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            successEl.style.display = 'none';
+            resultsEl.innerHTML = '';
+            downloadBtn.disabled = true;
+            
+            try {
+                // Construct API URL
+                const apiUrl = `https://old-studio-tiktok-down.oldhacker7866.workers.dev/?url=${encodeURIComponent(tiktokUrl)}`;
+                
+                console.log("FETCHING FROM:", apiUrl);
+                
+                // Fetch video data with timeout
+                const fetchPromise = fetch(apiUrl);
+                const timeoutPromise = new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('REQUEST TIMEOUT')), 15000)
+                );
+                
+                const response = await Promise.race([fetchPromise, timeoutPromise]);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ERROR! STATUS: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log("API RESPONSE:", data);
+                
+                // Try different possible response formats
+                let videoUrl = null;
+                
+                // Format 1: Direct video URL in response
+                if (typeof data === 'string' && data.startsWith('http')) {
+                    videoUrl = data;
+                }
+                // Format 2: Object with videoUrl property
+                else if (data && data.videoUrl) {
+                    videoUrl = data.videoUrl;
+                }
+                // Format 3: Object with url property
+                else if (data && data.url) {
+                    videoUrl = data.url;
+                }
+                // Format 4: Object with download_url or similar
+                else if (data && data.download_url) {
+                    videoUrl = data.download_url;
+                }
+                // Format 5: Nested object structure
+                else if (data && data.data && data.data.videoUrl) {
+                    videoUrl = data.data.videoUrl;
+                }
+                // Format 6: Check for any property containing 'video' or 'url'
+                else if (data) {
+                    for (let key in data) {
+                        if (typeof data[key] === 'string' && 
+                            (data[key].includes('video') || data[key].includes('tiktok')) && 
+                            data[key].startsWith('http')) {
+                            videoUrl = data[key];
+                            break;
+                        }
+                    }
+                }
+                
+                if (!videoUrl) {
+                    throw new Error('NO VIDEO URL FOUND IN RESPONSE');
+                }
+                
+                // Ensure the URL is absolute
+                if (!videoUrl.startsWith('http')) {
+                    videoUrl = 'https:' + videoUrl;
+                }
+                
+                console.log("FOUND VIDEO URL:", videoUrl);
+                
+                // Display video and download button
+                displayVideo(videoUrl);
+                
+                loadingEl.style.display = 'none';
+                downloadBtn.disabled = false;
+                
+            } catch (error) {
+                console.error('ERROR:', error);
+                loadingEl.style.display = 'none';
+                downloadBtn.disabled = false;
+                
+                if (error.name === 'AbortError' || error.message === 'REQUEST TIMEOUT') {
+                    showError('REQUEST TIMEOUT. PLEASE TRY AGAIN.');
+                } else {
+                    showError('FAILED TO DOWNLOAD VIDEO. PLEASE CHECK THE URL AND TRY AGAIN.');
+                }
+            }
+        }
+        
+        function displayVideo(videoUrl) {
+            const resultsEl = document.getElementById('results');
+            
+            const videoContainer = document.createElement('div');
+            videoContainer.className = 'video-container';
+            
+            videoContainer.innerHTML = `
+                <video class="video-preview" controls>
+                    <source src="${videoUrl}" type="video/mp4">
+                    YOUR BROWSER DOES NOT SUPPORT THE VIDEO TAG.
+                </video>
+                <br>
+                <button class="video-download-btn" onclick="forceDownload('${videoUrl}')">
+                    📥 DOWNLOAD VIDEO
+                </button>
+            `;
+            
+            resultsEl.appendChild(videoContainer);
+        }
+        
+        // Fixed download function - uses fetch and blob approach
+        async function forceDownload(videoUrl) {
+            const downloadBtn = document.querySelector('.video-download-btn');
+            const originalText = downloadBtn.innerHTML;
+            
+            try {
+                downloadBtn.innerHTML = '⏳ DOWNLOADING...';
+                downloadBtn.disabled = true;
+                
+                // Fetch the video as blob
+                const response = await fetch(videoUrl);
+                const blob = await response.blob();
+                
+                // Create blob URL
+                const blobUrl = window.URL.createObjectURL(blob);
+                
+                // Create download link
+                const link = document.createElement('a');
+                link.href = blobUrl;
+                link.download = 'tiktok_video_' + Date.now() + '.mp4';
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Clean up
+                window.URL.revokeObjectURL(blobUrl);
+                
+                downloadBtn.innerHTML = originalText;
+                downloadBtn.disabled = false;
+                
+                showSuccess('✅ VIDEO DOWNLOADED SUCCESSFULLY!');
+                
+            } catch (error) {
+                console.error('DOWNLOAD ERROR:', error);
+                downloadBtn.innerHTML = originalText;
+                downloadBtn.disabled = false;
+                showError('❌ DOWNLOAD FAILED. PLEASE TRY AGAIN.');
+            }
+        }
+        
+        function isValidTikTokUrl(url) {
+            const tiktokUrlPattern = /(https?:\/\/)?(www\.)?(vm\.|vt\.)?tiktok\.com\/(.*)/;
+            return tiktokUrlPattern.test(url);
+        }
+        
+        function showError(message) {
+            const errorEl = document.getElementById('error');
+            const successEl = document.getElementById('success');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            successEl.style.display = 'none';
+        }
+        
+        function showSuccess(message) {
+            const errorEl = document.getElementById('error');
+            const successEl = document.getElementById('success');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            
+            // Auto-hide success message after 3 seconds
+            setTimeout(() => {
+                successEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add typing effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const prompt = document.querySelector('.terminal-prompt');
+            const text = prompt.textContent;
+            prompt.textContent = '';
+            
+            let i = 0;
+            function typeWriter() {
+                if (i < text.length) {
+                    prompt.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                }
+            }
+            
+            // Start typing effect after a short delay
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+</html>

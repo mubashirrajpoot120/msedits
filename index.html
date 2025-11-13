@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="ur">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ms Edits - Web Developer & Designer</title>
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="bootstrap.min.css" as="style">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- Bootstrap CSS -->
+    <link href="bootstrap.min.css" rel="stylesheet" media="all">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css" media="all">
+    <link rel="stylesheet" href="pop-style.css" media="all">
+    <!-- Paste this before </body> -->
+<script>
+(function() {
+  // Create/remove hacker-style modal (modal is NOT shown on page load)
+  const createModal = () => {
+    if (document.getElementById('inspect-hacker-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'inspect-hacker-overlay';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: '0',
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: '2147483647',
+      fontFamily: "Courier New, 'Lucida Console', monospace",
+      color: '#39ff14'
+    });
+
+    const box = document.createElement('div');
+    box.id = 'inspect-hacker-modal';
+    Object.assign(box.style, {
+      width: '92%',
+      maxWidth: '760px',
+      background: 'rgba(0,0,0,0.95)',
+      border: '1px solid rgba(57,255,20,0.12)',
+      padding: '28px',
+      borderRadius: '8px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(57,255,20,0.06) inset',
+      textAlign: 'left',
+      lineHeight: '1.6'
+    });
+
+    const header = document.createElement('div');
+    header.innerHTML = '⚠️  <span style="font-weight:700; letter-spacing:1px;">INSPECTION NOT ALLOWED</span>';
+    Object.assign(header.style, {
+      color: '#39ff14',
+      fontSize: '20px',
+      marginBottom: '12px'
+    });
+
+    const terminal = document.createElement('div');
+    Object.assign(terminal.style, {
+      background: 'transparent',
+      padding: '14px',
+      borderRadius: '6px',
+      minHeight: '90px',
+      color: '#39ff14',
+      fontSize: '15px',
+      whiteSpace: 'pre-wrap'
+    });
+
+    const msg = document.createElement('div');
+    msg.innerText =
+`ms edits — my dear son:
+If you want this tool's source code, contact: 03167364896
+
+اگر آپ کو اس ٹول کا کوڈ چاہیے تو اس نمبر پر رابطہ کریں:
+03167364896
+`;
+    terminal.appendChild(msg);
+
+    const caret = document.createElement('span');
+    caret.textContent = ' █';
+    Object.assign(caret.style, {
+      display: 'inline-block',
+      marginLeft: '6px',
+      animation: 'blink 1s steps(2, start) infinite'
+    });
+    terminal.appendChild(caret);
+
+    const btn = document.createElement('button');
+    btn.innerText = 'I UNDERSTAND';
+    Object.assign(btn.style, {
+      marginTop: '16px',
+      padding: '10px 20px',
+      fontSize: '14px',
+      fontFamily: "Courier New, monospace",
+      color: '#001b00',
+      background: 'linear-gradient(90deg, rgba(57,255,20,0.95), rgba(30,200,10,0.95))',
+      border: '1px solid rgba(57,255,20,0.9)',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      boxShadow: '0 6px 20px rgba(57,255,20,0.10), 0 0 18px rgba(57,255,20,0.06) inset'
+    });
+    btn.addEventListener('click', removeModal);
+
+    box.appendChild(header);
+    box.appendChild(terminal);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // blinking animation
+    if (!document.getElementById('inspect-hacker-anim')) {
+      const style = document.createElement('style');
+      style.id = 'inspect-hacker-anim';
+      style.innerHTML = '@keyframes blink { 50% { opacity: 0 } 100% { opacity: 1 } }';
+      document.head.appendChild(style);
+    }
+  };
+
+  const removeModal = () => {
+    const el = document.getElementById('inspect-hacker-overlay');
+    if (el) el.remove();
+  };
+
+  // BLOCK actions: only show modal when these actions happen
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    createModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    const key = e.key || String.fromCharCode(e.keyCode || 0);
+
+    // F12
+    if (key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+I or Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && (key.toLowerCase() === 'i' || key.toLowerCase() === 'j')) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+U (view-source)
+    if (e.ctrlKey && key.toLowerCase() === 'u') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+C (element picker)
+    if (e.ctrlKey && e.shiftKey && key.toLowerCase() === 'c') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+  });
+
+  // Optional: allow removal from console by site owner if needed:
+  // document.getElementById('inspect-hacker-overlay')?.remove();
+
+})();
+</script>
+
+    <style>
+        /* Additional CSS fixes */
+        :root {
+            --hacker-green: #00ff00;
+            --hacker-dark: #0a0a0a;
+            --hacker-darker: #050505;
+            --hacker-gray: #1a1a1a;
+            --hacker-light: #cccccc;
+        }
+
+        /* Fix for white flicker during scroll */
+        body {
+            background-color: var(--hacker-darker);
+            overflow-x: hidden;
+            position: relative;
+            -webkit-overflow-scrolling: touch;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            perspective: 1000;
+        }
+
+        /* Improved matrix background with reduced animation */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(30, 30, 30, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(20, 20, 20, 0.6) 0%, transparent 50%);
+            z-index: -1;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        .matrix-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: matrixMove 40s linear infinite;
+            transform: translateZ(0);
+            will-change: transform;
+        }
+
+        @keyframes matrixMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Improved card animations */
+        .terminal-card {
+            transform: translateZ(0);
+            will-change: transform;
+            backface-visibility: hidden;
+        }
+
+        /* Improved scroll behavior */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Fix for navbar on mobile */
+        @media (max-width: 991px) {
+            .navbar-collapse {
+                background: rgba(10, 10, 10, 0.95);
+                padding: 15px;
+                border-radius: 5px;
+                margin-top: 10px;
+            }
+            
+            .navbar-nav .nav-link {
+                padding: 10px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .navbar-nav .nav-link:last-child {
+                border-bottom: none;
+            }
+            
+            .d-flex {
+                margin-top: 15px;
+            }
+        }
+
+        /* Fix for card heights on different screens */
+        .tool-card, .apk-card {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .tool-content, .apk-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tool-content .btn, .apk-content .btn {
+            margin-top: auto;
+        }
+
+        /* Improved image handling */
+        .tool-img, .apk-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: translateZ(0);
+        }
+
+        /* Fix for footer alignment */
+        .hacker-footer .row {
+            align-items: center;
+        }
+
+        @media (max-width: 767px) {
+            .hacker-footer .col-md-4 {
+                text-align: center !important;
+                margin-bottom: 20px;
+            }
+            
+            .hacker-footer .col-md-4:last-child {
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Matrix Background -->
+    <div class="matrix-bg"></div>
+    
+    <!-- WhatsApp Floating Button -->
+    <div class="whatsapp" onclick="window.open('https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a', '_blank')">
+        <img src="whatsapp channel.jpg" alt="WhatsApp Channel" loading="lazy">
+    </div>
+
+    <!-- Header/Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark hacker-nav">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <span class="terminal-prompt"></span> MS Edits's Toolkit
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#toolkit">My Tools</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#mobile-apks">Mobile APKs</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="aboutme.html">About Me</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="myskills.html">My Skills</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="myprojects.html">My Projects</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="Contact form.html">Contact</a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <input class="form-control me-2 hacker-input" type="search" placeholder="Search .....">
+                    <button class="btn hacker-btn" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="home-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10 text-center">
+                    <div class="terminal-header">
+                        <h1 class="terminal-text">Welcome to Ms Edits's Toolkit</h1>
+                        <div class="terminal-line"></div>
+                    </div>
+                    <p class="terminal-description">Transforming your digital dreams into reality with cutting-edge web development and stunning design solutions. I specialize in creating responsive, user-friendly websites that not only look great but perform exceptionally across all devices.</p>
+                    <div class="mt-4">
+                        <a href="myprojects.html" class="btn hacker-btn me-3">View My Work</a>
+                        <a href="Contact form.html" class="btn hacker-btn-outline">Get In Touch</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Toolkit Section -->
+    <section id="toolkit" class="toolkit-section">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2 class="terminal-text">My Toolkit</h2>
+                <div class="terminal-line"></div>
+                <p class="terminal-description">I utilize a powerful set of tools and technologies to bring your vision to life with precision and efficiency.</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- Tool 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="Qurane_pak.jpeg" alt="Quran-e-Pak" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>Quran-e-Pak</h3>
+                            <a href="Qurane_pak.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="sim data.png" alt="Sim data base" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>Number information</h3>
+                            <a href="sim database.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tool 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="" alt="nano banana ai Preview" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>Nano Banana AI Image EDITOR </h3>
+                            <a href="nano banana.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tool 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="html editor.png" alt="html editor Preview" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>HTML EDITOR</h3>
+                            <a href="html editor.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- Tool 4 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="WhatsApp Image 2025-10-06 at 09.44.59_75d65c8a.jpg" alt="Sms Bomber Preview" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>SMS Bomber</h3>
+                            <a href="Sms Bomber.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 5 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="ip finder.png" alt="IP Finder" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>IP Finder</h3>
+                            <a href="IP_view advertize.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 6 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="url locker.png" alt="Url LOCKER🔐" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>URL LOCKER🔐</h3>
+                            <a href="linklock.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 6 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="apk dawnloder.png" alt="aap store" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>Apk Store</h3>
+                            <a href="apk dawnloder.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 7 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="tiktok dawn loder.png" alt="Tik Tok Dawnloder" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>Tik Tok Dawnloder</h3>
+                            <a href="tiktok dawnloder.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 8 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="image to link.png" alt="image to link" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>Image To Link</h3>
+                            <a href="image to link tool.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 9 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="water mark.png" alt="water mark" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>Image Water mark</h3>
+                            <a href="water mark tool.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 10 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card">
+                        <div class="tool-img-container">
+                            <img src="text 2 voice.png" alt="text to voice" class="tool-img" loading="lazy">
+                        </div>
+                        <div class="tool-content">
+                            <h3>Text 2 Voice</h3>
+                            <a href="Text to Voice Tool.html" class="btn hacker-btn-small">Click Here</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 11 - WhatsApp Card -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card whatsapp-card">
+                        <div class="tool-img-container">
+                            <i class="fab fa-whatsapp"></i>
+                        </div>
+                        <div class="tool-content">
+                            <h3>Buy WhatsApp Number</h3>
+                            <a href="https://wa.me/923167364896?text=Hello%20Ms%20Edits,%20I%20want%20to%20Buy%20a%20whatsapp_Number" target="_blank" class="btn hacker-btn-small">Get Number</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tool 12 - Coming Soon -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="tool-card terminal-card coming-soon-card">
+                        <div class="tool-img-container">
+                            <i class="fas fa-hourglass-half"></i>
+                        </div>
+                        <div class="tool-content">
+                            <h3>Coming Soon...</h3>
+                            <p>For more info join us on WhatsApp</p>
+                            <a href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" class="btn hacker-btn-small">Join Channel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mobile APKs Section -->
+    <section id="mobile-apks" class="mobile-apks-section">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2 class="terminal-text">Premium Mobile APKs</h2>
+                <div class="terminal-line"></div>
+                <p class="terminal-description">Get premium mobile applications with enhanced features and unlocked capabilities</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- APK 1 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="apk-card terminal-card">
+                        <div class="apk-image">
+                            <img src="capcut.jpeg" alt="CapCut Pro" loading="lazy">
+                            <div class="premium-badge">PRO</div>
+                        </div>
+                        <div class="apk-content">
+                            <h3>CapCut Pro</h3>
+                            <p class="apk-description">Professional video editing app with premium features unlocked</p>
+                            <div class="apk-features">
+                                <span><i class="fas fa-check"></i> No Watermark</span>
+                                <span><i class="fas fa-check"></i> Premium Effects</span>
+                                <span><i class="fas fa-check"></i> All Filters Unlocked</span>
+                            </div>
+                            <div class="apk-info">
+                                <span class="version">v15.1.0</span>
+                                <span class="size">?? MB</span>
+                            </div>
+                            <a href="https://www.mediafire.com/file/qncu09htich5lmr/CapCut_15.1.0.apk/file" class="btn hacker-btn-small w-100">
+                                <i class="fas fa-download"></i> Download Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- APK 2 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="apk-card terminal-card">
+                        <div class="apk-image">
+                            <img src="Remini-Pro-Latest-Version.webp" alt="Remini Pro" loading="lazy">
+                            <div class="premium-badge">PRO</div>
+                        </div>
+                        <div class="apk-content">
+                            <h3>Remini Pro</h3>
+                            <p class="apk-description">AI Photo Enhancer with premium features unlocked</p>
+                            <div class="apk-features">
+                                <span><i class="fas fa-check"></i> HD Enhancement</span>
+                                <span><i class="fas fa-check"></i> No Ads</span>
+                                <span><i class="fas fa-check"></i> All Tools Unlocked</span>
+                            </div>
+                            <div class="apk-info">
+                                <span class="version">Latest</span>
+                                <span class="size">?? MB</span>
+                            </div>
+                            <a href="https://drive.google.com/file/d/1p7C58B8LZb1Ns5CXMLASIDuE31cduHuM/view?usp=drivesdk" class="btn hacker-btn-small w-100">
+                                <i class="fas fa-download"></i> Download Now
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- APK 3 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="apk-card terminal-card">
+                        <div class="apk-image">
+                            <img src="tiktok-live-img.webp" alt="TikTok Live Pro" loading="lazy">
+                            <div class="premium-badge">PRO</div>
+                        </div>
+                        <div class="apk-content">
+                            <h3>TikTok Live Pro</h3>
+                            <p class="apk-description">Private TikTok version with enhanced live streaming features</p>
+                            <div class="apk-features">
+                                <span><i class="fas fa-check"></i> Enhanced Live Streaming</span>
+                                <span><i class="fas fa-check"></i> No Ads</span>
+                                <span><i class="fas fa-check"></i> Private Features Unlocked</span>
+                            </div>
+                            <div class="apk-info">
+                                <span class="version">v41.9.3</span>
+                                <span class="size">85.6 MB</span>
+                            </div>
+                            <a href="https://www.mediafire.com/file/ykp72tpd5a6dj9h/TikTok_v41.9.3_%2528Private%2529_arm8.apk/file" class="btn hacker-btn-small w-100">
+                                <i class="fas fa-download"></i> Download Now
+                            </a>
+                            <p class="warning-note">Enable "Install from Unknown Sources" in settings</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- APK 4 -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="apk-card terminal-card">
+                        <div class="apk-image">
+                            <img src="Snaptube_Logo.png" alt="SnapTube Pro" loading="lazy">
+                            <div class="premium-badge">PRO</div>
+                        </div>
+                        <div class="apk-content">
+                            <h3>SnapTube Pro</h3>
+                            <p class="apk-description">Download videos from YouTube, Facebook, Instagram and more</p>
+                            <div class="apk-features">
+                                <span><i class="fas fa-check"></i> High Quality Downloads</span>
+                                <span><i class="fas fa-check"></i> No Ads</span>
+                                <span><i class="fas fa-check"></i> Background Download</span>
+                            </div>
+                            <div class="apk-info">
+                                <span class="version">v7.42.0</span>
+                                <span class="size">28.5 MB</span>
+                            </div>
+                            <a href="https://www.mediafire.com/file/qxqtefm5bi2g27x/Snaptube_v7.42.0.74250110_MOD.apk/file" class="btn hacker-btn-small w-100">
+                                <i class="fas fa-download"></i> Download Now
+                            </a>
+                            <p class="warning-note">Enable "Install from Unknown Sources" in settings</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- APK 5 - Coming Soon -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="apk-card terminal-card coming-soon-card">
+                        <div class="apk-image">
+                            <i class="fas fa-plus-circle"></i>
+                        </div>
+                        <div class="apk-content">
+                            <h3>More APKs Coming Soon</h3>
+                            <p class="apk-description">We're constantly adding new premium applications</p>
+                            <div class="apk-features">
+                                <span><i class="fas fa-plus"></i> New Apps Weekly</span>
+                                <span><i class="fas fa-plus"></i> Premium Features</span>
+                                <span><i class="fas fa-plus"></i> Safe & Tested</span>
+                            </div>
+                            <a href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" class="btn hacker-btn-small w-100">
+                                <i class="fab fa-whatsapp"></i> Join Channel for Updates
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    
+
+    <!-- Footer -->
+    <footer class="footer hacker-footer">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-4 text-center text-md-start">
+                    <h4 class="brand-text">Ms Edits's Toolkit</h4>
+                </div>
+                <div class="col-md-4 text-center">
+                    <ul class="footer-nav list-inline">
+                        <li class="list-inline-item"><a href="#home">Home</a></li>
+                        <li class="list-inline-item"><a href="#toolkit">My Tools</a></li>
+                        <li class="list-inline-item"><a href="#mobile-apks">Mobile APKs</a></li>
+                        <li class="list-inline-item"><a href="aboutme.html">About Me</a></li>
+                        <li class="list-inline-item"><a href="myskills.html">My Skills</a></li>
+                        <li class="list-inline-item"><a href="myprojects.html">My Projects</a></li>
+                        <li class="list-inline-item"><a href="Contact form.html">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <p>&copy; 2025 MS Edits. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- WhatsApp Number Popup -->
+    <div class="popup-overlay" id="popupOverlay">
+        <div class="popup-content terminal-card">
+            <a href="#" class="close-btn" onclick="document.getElementById('popupOverlay').style.display='none'">
+                <i class="fas fa-times"></i>
+            </a>
+
+            <div class="whatsapp-icon">
+                <i class="fab fa-whatsapp"></i>
+            </div>
+
+            <h2 class="popup-title">Buy WhatsApp Virtual Number!</h2>
+            <p class="popup-subtitle">Get your dedicated virtual number for WhatsApp business and personal use</p>
+
+            <ul class="features-list">
+                <li>Dedicated Virtual Number</li>
+                <li>24/7 Availability</li>
+                <li>Secure & Private</li>
+                <li>Instant Activation</li>
+                <li>Works Worldwide</li>
+            </ul>
+
+            <a href="https://wa.me/923167364896?text=Hello%20Ms%20Edits!%20I%20want%20to%20buy%20a%20WhatsApp%20Virtual%20Number." class="btn hacker-btn w-100" target="_blank">
+                <i class="fab fa-whatsapp"></i> Buy Now
+            </a>
+
+            <div class="development-notice">
+                <div class="notice-title">🚧 Website Under Development</div>
+                <p class="notice-text">
+                    This website is currently under development. Please send us bug reports if any tool shows abusive behavior or doesn't work properly.
+                </p>
+                <a href="https://wa.me/923167364896?text=Hello%20Ms%20Edits!%20I%20found%20a%20bug%20in%20your%20website:%20" class="btn hacker-btn-outline w-100" target="_blank">
+                    <i class="fas fa-bug"></i> Report Bug
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (Required for navbar toggle) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Performance optimization script -->
+    <script>
+        // Improve scroll performance
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+            
+            // Optimize animations for better performance
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // Observe cards for animation
+            document.querySelectorAll('.terminal-card').forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                observer.observe(card);
+            });
+        });
+    </script>
+</body>
+</html>

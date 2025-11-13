@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Advanced HTML Editor - MS EDITS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- HTMLHint for error detection -->
+  <script src="https://cdn.jsdelivr.net/npm/htmlhint@0.15.3/dist/htmlhint.min.js"></script>
+  <!-- JS-Beautify for auto fix -->
+  <script src="https://cdn.jsdelivr.net/npm/js-beautify@1.14.9/js/lib/beautify-html.min.js"></script>
+
+  <!-- Paste this before </body> -->
+<script>
+(function() {
+  // Create/remove hacker-style modal (modal is NOT shown on page load)
+  const createModal = () => {
+    if (document.getElementById('inspect-hacker-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'inspect-hacker-overlay';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: '0',
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: '2147483647',
+      fontFamily: "Courier New, 'Lucida Console', monospace",
+      color: '#39ff14'
+    });
+
+    const box = document.createElement('div');
+    box.id = 'inspect-hacker-modal';
+    Object.assign(box.style, {
+      width: '92%',
+      maxWidth: '760px',
+      background: 'rgba(0,0,0,0.95)',
+      border: '1px solid rgba(57,255,20,0.12)',
+      padding: '28px',
+      borderRadius: '8px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(57,255,20,0.06) inset',
+      textAlign: 'left',
+      lineHeight: '1.6'
+    });
+
+    const header = document.createElement('div');
+    header.innerHTML = '⚠️  <span style="font-weight:700; letter-spacing:1px;">INSPECTION NOT ALLOWED</span>';
+    Object.assign(header.style, {
+      color: '#39ff14',
+      fontSize: '20px',
+      marginBottom: '12px'
+    });
+
+    const terminal = document.createElement('div');
+    Object.assign(terminal.style, {
+      background: 'transparent',
+      padding: '14px',
+      borderRadius: '6px',
+      minHeight: '90px',
+      color: '#39ff14',
+      fontSize: '15px',
+      whiteSpace: 'pre-wrap'
+    });
+
+    const msg = document.createElement('div');
+    msg.innerText =
+`ms edits — my dear son:
+If you want this tool's source code, contact: 03167364896
+
+اگر آپ کو اس ٹول کا کوڈ چاہیے تو اس نمبر پر رابطہ کریں:
+03167364896
+`;
+    terminal.appendChild(msg);
+
+    const caret = document.createElement('span');
+    caret.textContent = ' █';
+    Object.assign(caret.style, {
+      display: 'inline-block',
+      marginLeft: '6px',
+      animation: 'blink 1s steps(2, start) infinite'
+    });
+    terminal.appendChild(caret);
+
+    const btn = document.createElement('button');
+    btn.innerText = 'I UNDERSTAND';
+    Object.assign(btn.style, {
+      marginTop: '16px',
+      padding: '10px 20px',
+      fontSize: '14px',
+      fontFamily: "Courier New, monospace",
+      color: '#001b00',
+      background: 'linear-gradient(90deg, rgba(57,255,20,0.95), rgba(30,200,10,0.95))',
+      border: '1px solid rgba(57,255,20,0.9)',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      boxShadow: '0 6px 20px rgba(57,255,20,0.10), 0 0 18px rgba(57,255,20,0.06) inset'
+    });
+    btn.addEventListener('click', removeModal);
+
+    box.appendChild(header);
+    box.appendChild(terminal);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // blinking animation
+    if (!document.getElementById('inspect-hacker-anim')) {
+      const style = document.createElement('style');
+      style.id = 'inspect-hacker-anim';
+      style.innerHTML = '@keyframes blink { 50% { opacity: 0 } 100% { opacity: 1 } }';
+      document.head.appendChild(style);
+    }
+  };
+
+  const removeModal = () => {
+    const el = document.getElementById('inspect-hacker-overlay');
+    if (el) el.remove();
+  };
+
+  // BLOCK actions: only show modal when these actions happen
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    createModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    const key = e.key || String.fromCharCode(e.keyCode || 0);
+
+    // F12
+    if (key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+I or Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && (key.toLowerCase() === 'i' || key.toLowerCase() === 'j')) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+U (view-source)
+    if (e.ctrlKey && key.toLowerCase() === 'u') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+C (element picker)
+    if (e.ctrlKey && e.shiftKey && key.toLowerCase() === 'c') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+  });
+
+  // Optional: allow removal from console by site owner if needed:
+  // document.getElementById('inspect-hacker-overlay')?.remove();
+
+})();
+</script>
+
+
+  <style>
+    :root {
+      --hacker-green: #00ff00;
+      --hacker-dark: #0a0a0a;
+      --hacker-darker: #050505;
+      --hacker-gray: #1a1a1a;
+      --hacker-light: #cccccc;
+      --terminal-bg: #0a0a0a;
+      --terminal-text: #00ff00;
+      --terminal-border: #00ff00;
+      --panel-bg: rgba(10, 10, 10, 0.9);
+    }
+
+    [data-theme="light"] {
+      --hacker-green: #006400;
+      --hacker-dark: #f0f0f0;
+      --hacker-darker: #e0e0e0;
+      --hacker-gray: #d0d0d0;
+      --hacker-light: #333333;
+      --terminal-bg: #f5f5f5;
+      --terminal-text: #006400;
+      --terminal-border: #006400;
+      --panel-bg: rgba(245, 245, 245, 0.9);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    body {
+      font-family: 'Courier New', monospace;
+      background-color: var(--hacker-darker);
+      color: var(--hacker-light);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    .matrix-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+          radial-gradient(circle at 20% 30%, rgba(30, 30, 30, 0.8) 0%, transparent 50%),
+          radial-gradient(circle at 80% 70%, rgba(20, 20, 20, 0.6) 0%, transparent 50%);
+      z-index: -1;
+    }
+
+    .matrix-bg::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+          linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+      background-size: 50px 50px;
+      animation: matrixMove 20s linear infinite;
+    }
+
+    @keyframes matrixMove {
+      0% { transform: translateY(0); }
+      100% { transform: translateY(50px); }
+    }
+
+    .container {
+      background: var(--panel-bg);
+      margin-top: 40px;
+      width: 95%;
+      max-width: 800px;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(0, 255, 0, 0.2);
+      backdrop-filter: blur(10px);
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+    }
+
+    h2 {
+      color: var(--hacker-green);
+      font-size: 1.8rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+      margin: 0;
+    }
+
+    .theme-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-label {
+      color: var(--hacker-green);
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #333;
+      transition: .4s;
+      border-radius: 24px;
+      border: 1px solid var(--hacker-green);
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 3px;
+      background-color: var(--hacker-green);
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked + .slider {
+      background-color: var(--hacker-green);
+    }
+
+    input:checked + .slider:before {
+      transform: translateX(26px);
+      background-color: var(--hacker-dark);
+    }
+
+    textarea {
+      width: 100%;
+      height: 200px;
+      border: 2px solid rgba(0, 255, 0, 0.3);
+      border-radius: 8px;
+      padding: 15px;
+      resize: vertical;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      background: rgba(20, 20, 20, 0.8);
+      color: var(--hacker-light);
+      outline: none;
+      transition: all 0.3s ease;
+    }
+
+    textarea:focus {
+      border-color: var(--hacker-green);
+      box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+    }
+
+    .btn-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 20px 0;
+    }
+
+    .btn {
+      padding: 12px;
+      font-size: 16px;
+      border: 2px solid;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: 'Courier New', monospace;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-run {
+      background: linear-gradient(45deg, rgba(0, 255, 0, 0.1), rgba(0, 200, 0, 0.1));
+      border-color: var(--hacker-green);
+      color: var(--hacker-green);
+    }
+
+    .btn-detect {
+      background: linear-gradient(45deg, rgba(255, 165, 0, 0.1), rgba(255, 140, 0, 0.1));
+      border-color: #ffa500;
+      color: #ffa500;
+    }
+
+    .btn-fix {
+      background: linear-gradient(45deg, rgba(0, 150, 255, 0.1), rgba(0, 100, 200, 0.1));
+      border-color: #0096ff;
+      color: #0096ff;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 255, 0, 0.3);
+    }
+
+    .btn:hover::before {
+      left: 100%;
+    }
+
+    .btn-run:hover {
+      background: linear-gradient(45deg, rgba(0, 255, 0, 0.2), rgba(0, 200, 0, 0.2));
+    }
+
+    .btn-detect:hover {
+      background: linear-gradient(45deg, rgba(255, 165, 0, 0.2), rgba(255, 140, 0, 0.2));
+    }
+
+    .btn-fix:hover {
+      background: linear-gradient(45deg, rgba(0, 150, 255, 0.2), rgba(0, 100, 200, 0.2));
+    }
+
+    .result-card {
+      margin-top: 20px;
+      border: 1px solid rgba(0, 255, 0, 0.2);
+      border-radius: 8px;
+      padding: 15px;
+      background: rgba(20, 20, 20, 0.6);
+    }
+
+    .result-card h3 {
+      margin: 0 0 10px;
+      font-size: 16px;
+      color: var(--hacker-green);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    iframe {
+      width: 100%;
+      height: 200px;
+      border: 1px solid rgba(0, 255, 0, 0.3);
+      border-radius: 8px;
+      background: #fff;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 1px solid rgba(0, 255, 0, 0.2);
+      color: var(--hacker-light);
+      font-size: 14px;
+    }
+
+    .brand {
+      color: var(--hacker-green);
+      font-weight: bold;
+      font-size: 1.2rem;
+      margin-bottom: 5px;
+    }
+
+    .channel-link {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background: linear-gradient(45deg, var(--hacker-green), #00cc00);
+      color: #000;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(0, 255, 0, 0.3);
+    }
+
+    .channel-link:hover {
+      background: linear-gradient(45deg, #00cc00, var(--hacker-green));
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
+    }
+
+    .error {
+      color: #ff3333;
+      font-size: 14px;
+      margin: 3px 0;
+      font-family: 'Courier New', monospace;
+    }
+
+    .success {
+      color: var(--hacker-green);
+      font-weight: bold;
+      font-family: 'Courier New', monospace;
+    }
+
+    .glitch {
+      position: relative;
+    }
+
+    .glitch::before,
+    .glitch::after {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+
+    .glitch::before {
+      animation: glitch-1 0.5s infinite;
+      color: #00cc00;
+      z-index: -1;
+    }
+
+    .glitch::after {
+      animation: glitch-2 0.5s infinite;
+      color: #009900;
+      z-index: -2;
+    }
+
+    @keyframes glitch-1 {
+      0%, 14%, 15%, 49%, 50%, 99%, 100% {
+        transform: translate(0);
+      }
+      15%, 49% {
+        transform: translate(-2px, 2px);
+      }
+    }
+
+    @keyframes glitch-2 {
+      0%, 20%, 21%, 62%, 63%, 99%, 100% {
+        transform: translate(0);
+      }
+      21%, 62% {
+        transform: translate(2px, -2px);
+      }
+    }
+
+    /* Mobile Optimizations */
+    @media (max-width: 768px) {
+      .container {
+        padding: 15px;
+        margin-top: 20px;
+      }
+      
+      .btn-group {
+        grid-template-columns: 1fr;
+      }
+      
+      h2 {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="matrix-bg"></div>
+  
+  <div class="container">
+    <div class="header">
+      <h2 class="glitch" data-text="⚡ ADVANCED HTML EDITOR">⚡ ADVANCED HTML EDITOR</h2>
+      <div class="theme-toggle">
+        <span class="theme-label">DARK MODE</span>
+        <label class="toggle-switch">
+          <input type="checkbox" id="themeToggle">
+          <span class="slider"></span>
+        </label>
+        <span class="theme-label">LIGHT MODE</span>
+      </div>
+    </div>
+
+    <textarea id="codeInput" placeholder="Paste your HTML code here..."></textarea>
+
+    <div class="btn-group">
+      <button class="btn btn-run" onclick="runCode()">START</button>
+      <button class="btn btn-detect" onclick="detectErrors()">AUTO ERROR DETECTOR</button>
+      <button class="btn btn-fix" onclick="fixErrors()">START FIX ERROR</button>
+    </div>
+
+    <div class="result-card">
+      <h3>Live Preview:</h3>
+      <iframe id="preview"></iframe>
+    </div>
+
+    <div class="result-card">
+      <h3>Errors:</h3>
+      <div id="errorBox">No errors detected.</div>
+    </div>
+
+    <footer>
+      <div class="brand">POWERED BY MS EDITS</div>
+      <a href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" target="_blank" class="channel-link">
+        📱 JOIN WHATSAPP CHANNEL
+      </a>
+    </footer>
+  </div>
+
+  <script>
+    // Theme toggle functionality
+    const themeToggle = document.getElementById('themeToggle');
+    
+    // Check for saved theme preference or default to dark
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', currentTheme);
+    
+    // Set the toggle state based on current theme
+    if (currentTheme === 'light') {
+      themeToggle.checked = true;
+    }
+    
+    themeToggle.addEventListener('change', function() {
+      if (this.checked) {
+        document.documentElement.setAttribute('data-theme', 'light');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    function runCode() {
+      const code = document.getElementById("codeInput").value;
+      const preview = document.getElementById("preview").contentWindow.document;
+      preview.open();
+      preview.write(code);
+      preview.close();
+    }
+
+    function detectErrors() {
+      const code = document.getElementById("codeInput").value;
+      const rules = {
+        'tag-pair': true,
+        'tagname-lowercase': true,
+        'attr-value-double-quotes': true,
+        'doctype-first': false,
+        'id-unique': true
+      };
+      const messages = HTMLHint.verify(code, rules);
+
+      const errorBox = document.getElementById("errorBox");
+      if (messages.length > 0) {
+        errorBox.innerHTML = messages
+          .map(msg => `<div class='error'>⚠ Line ${msg.line}, Col ${msg.col}: ${msg.message}</div>`)
+          .join("");
+      } else {
+        errorBox.innerHTML = "<div class='success'>✅ No errors found!</div>";
+      }
+    }
+
+    function fixErrors() {
+      let code = document.getElementById("codeInput").value;
+
+      // Beautify & auto-correct formatting
+      const fixedCode = html_beautify(code, {
+        indent_size: 2,
+        wrap_line_length: 80
+      });
+
+      document.getElementById("codeInput").value = fixedCode;
+      runCode();
+      detectErrors();
+    }
+
+    // Add hacker effects
+    function addHackerEffects() {
+      // Add random glitch effects
+      setInterval(() => {
+        const elements = document.querySelectorAll('.btn');
+        const randomElement = elements[Math.floor(Math.random() * elements.length)];
+        if (randomElement && Math.random() < 0.1) {
+          randomElement.style.animation = 'glitch-1 0.3s ease-in-out';
+          setTimeout(() => {
+            randomElement.style.animation = '';
+          }, 300);
+        }
+      }, 2000);
+
+      // Add floating particles
+      createFloatingParticles();
+    }
+
+    function createFloatingParticles() {
+      for (let i = 0; i < 15; i++) {
+        const particle = document.createElement('div');
+        particle.style.cssText = `
+          position: fixed;
+          width: 2px;
+          height: 2px;
+          background: var(--hacker-green);
+          border-radius: 50%;
+          pointer-events: none;
+          z-index: -1;
+          animation: float ${5 + Math.random() * 10}s linear infinite;
+          left: ${Math.random() * 100}vw;
+          top: ${Math.random() * 100}vh;
+          opacity: ${0.3 + Math.random() * 0.7};
+        `;
+        document.body.appendChild(particle);
+      }
+
+      // Add CSS for floating animation
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes float {
+          0% { transform: translateY(100vh) rotate(0deg); }
+          100% { transform: translateY(-100vh) rotate(360deg); }
+        }
+      `;
+      document.head.appendChild(style);
+    }
+
+    // Initialize hacker effects
+    document.addEventListener('DOMContentLoaded', function() {
+      addHackerEffects();
+    });
+  </script>
+</body>
+</html>

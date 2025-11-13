@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APK Downloader - MS EDITS</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --hacker-green: #00ff00;
+            --hacker-dark: #0a0a0a;
+            --hacker-darker: #050505;
+            --hacker-gray: #1a1a1a;
+            --hacker-light: #cccccc;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background-color: var(--hacker-darker);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: var(--hacker-light);
+            position: relative;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* Matrix Background */
+        .matrix-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(30, 30, 30, 0.8) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(20, 20, 20, 0.6) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .matrix-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 255, 0, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 0, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: matrixMove 20s linear infinite;
+        }
+
+        @keyframes matrixMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(50px); }
+        }
+
+        /* Terminal Container */
+        .terminal-container {
+            background: linear-gradient(145deg, #1a1a1a, #222222);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(0, 255, 0, 0.1);
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px;
+        }
+
+        .terminal-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent, rgba(0, 255, 0, 0.05), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .terminal-container:hover::before {
+            transform: translateX(100%);
+        }
+
+        /* Terminal Header */
+        .terminal-header {
+            background: rgba(10, 10, 10, 0.9);
+            padding: 20px;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .terminal-title {
+            color: var(--hacker-green);
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin: 0;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .terminal-control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .control-close { background: #ff5f57; }
+        .control-minimize { background: #ffbd2e; }
+        .control-maximize { background: #28ca42; }
+
+        /* Terminal Content */
+        .terminal-content {
+            padding: 30px;
+        }
+
+        .terminal-prompt {
+            color: var(--hacker-green);
+            font-weight: bold;
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+        }
+
+        .typing-cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background-color: var(--hacker-green);
+            margin-left: 5px;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        /* Input Group */
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--hacker-green);
+            font-size: 1.1em;
+        }
+
+        .hacker-input {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(0, 255, 0, 0.3);
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            transition: all 0.3s ease;
+            background: rgba(20, 20, 20, 0.8);
+            color: var(--hacker-light);
+            font-family: 'Courier New', monospace;
+        }
+
+        .hacker-input:focus {
+            border-color: var(--hacker-green);
+            background: rgba(20, 20, 20, 0.9);
+            box-shadow: 0 0 0 3px rgba(0, 255, 0, 0.1);
+        }
+
+        /* Buttons */
+        .hacker-btn {
+            width: 100%;
+            padding: 15px 30px;
+            background: linear-gradient(90deg, var(--hacker-green), #00cc00);
+            color: #000;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .hacker-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.4);
+        }
+
+        .hacker-btn:active {
+            transform: translateY(0);
+        }
+
+        .hacker-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            background: #555;
+        }
+
+        /* Results Container */
+        .results-container {
+            margin-top: 30px;
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+            border-radius: 5px;
+            padding: 15px;
+            background: rgba(10, 10, 10, 0.5);
+        }
+
+        .apk-item {
+            background: rgba(20, 20, 20, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(0, 255, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .apk-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+            border-color: rgba(0, 255, 0, 0.3);
+        }
+
+        .apk-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .apk-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            margin-right: 15px;
+            object-fit: cover;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+
+        .apk-name {
+            font-weight: 600;
+            color: var(--hacker-green);
+            font-size: 1.1em;
+        }
+
+        .apk-details {
+            font-size: 0.9em;
+            color: var(--hacker-light);
+            margin-bottom: 10px;
+        }
+
+        .apk-details div {
+            margin-bottom: 5px;
+        }
+
+        .apk-download-btn {
+            background: linear-gradient(90deg, var(--hacker-green), #00cc00);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .apk-download-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 10px rgba(0, 255, 0, 0.3);
+        }
+
+        /* Status Messages */
+        .loading {
+            display: none;
+            color: var(--hacker-green);
+            font-weight: 600;
+            text-align: center;
+            padding: 15px;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            border-radius: 5px;
+            margin-top: 20px;
+            background: rgba(0, 255, 0, 0.05);
+        }
+
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            text-align: center;
+        }
+
+        .success {
+            color: var(--hacker-green);
+            background: rgba(0, 255, 0, 0.1);
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 20px;
+            display: none;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+            text-align: center;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 40px;
+            text-align: center;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .footer-links {
+            margin-bottom: 15px;
+        }
+
+        .whatsapp-btn {
+            display: inline-block;
+            background: #25d366;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .whatsapp-btn:hover {
+            background: #128c7e;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+            color: white;
+            text-decoration: none;
+        }
+
+        .powered-by {
+            color: var(--hacker-green);
+            font-size: 0.9em;
+            font-weight: bold;
+        }
+
+        .powered-by a {
+            color: var(--hacker-green);
+            text-decoration: none;
+        }
+
+        .powered-by a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .terminal-container {
+                margin: 15px;
+            }
+            
+            .terminal-content {
+                padding: 20px;
+            }
+            
+            .terminal-title {
+                font-size: 1.3rem;
+            }
+            
+            .apk-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .apk-icon {
+                margin-bottom: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .terminal-container {
+                margin: 10px;
+            }
+            
+            .terminal-content {
+                padding: 15px;
+            }
+            
+            .terminal-prompt {
+                font-size: 1rem;
+            }
+            
+            .hacker-btn {
+                padding: 12px 20px;
+                font-size: 16px;
+            }
+        }
+    </style>
+    <!-- Paste this before </body> -->
+<script>
+(function() {
+  // Create/remove hacker-style modal (modal is NOT shown on page load)
+  const createModal = () => {
+    if (document.getElementById('inspect-hacker-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'inspect-hacker-overlay';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: '0',
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: '2147483647',
+      fontFamily: "Courier New, 'Lucida Console', monospace",
+      color: '#39ff14'
+    });
+
+    const box = document.createElement('div');
+    box.id = 'inspect-hacker-modal';
+    Object.assign(box.style, {
+      width: '92%',
+      maxWidth: '760px',
+      background: 'rgba(0,0,0,0.95)',
+      border: '1px solid rgba(57,255,20,0.12)',
+      padding: '28px',
+      borderRadius: '8px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(57,255,20,0.06) inset',
+      textAlign: 'left',
+      lineHeight: '1.6'
+    });
+
+    const header = document.createElement('div');
+    header.innerHTML = '⚠️  <span style="font-weight:700; letter-spacing:1px;">INSPECTION NOT ALLOWED</span>';
+    Object.assign(header.style, {
+      color: '#39ff14',
+      fontSize: '20px',
+      marginBottom: '12px'
+    });
+
+    const terminal = document.createElement('div');
+    Object.assign(terminal.style, {
+      background: 'transparent',
+      padding: '14px',
+      borderRadius: '6px',
+      minHeight: '90px',
+      color: '#39ff14',
+      fontSize: '15px',
+      whiteSpace: 'pre-wrap'
+    });
+
+    const msg = document.createElement('div');
+    msg.innerText =
+`ms edits — my dear son:
+If you want this tool's source code, contact: 03167364896
+
+اگر آپ کو اس ٹول کا کوڈ چاہیے تو اس نمبر پر رابطہ کریں:
+03167364896
+`;
+    terminal.appendChild(msg);
+
+    const caret = document.createElement('span');
+    caret.textContent = ' █';
+    Object.assign(caret.style, {
+      display: 'inline-block',
+      marginLeft: '6px',
+      animation: 'blink 1s steps(2, start) infinite'
+    });
+    terminal.appendChild(caret);
+
+    const btn = document.createElement('button');
+    btn.innerText = 'I UNDERSTAND';
+    Object.assign(btn.style, {
+      marginTop: '16px',
+      padding: '10px 20px',
+      fontSize: '14px',
+      fontFamily: "Courier New, monospace",
+      color: '#001b00',
+      background: 'linear-gradient(90deg, rgba(57,255,20,0.95), rgba(30,200,10,0.95))',
+      border: '1px solid rgba(57,255,20,0.9)',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      boxShadow: '0 6px 20px rgba(57,255,20,0.10), 0 0 18px rgba(57,255,20,0.06) inset'
+    });
+    btn.addEventListener('click', removeModal);
+
+    box.appendChild(header);
+    box.appendChild(terminal);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // blinking animation
+    if (!document.getElementById('inspect-hacker-anim')) {
+      const style = document.createElement('style');
+      style.id = 'inspect-hacker-anim';
+      style.innerHTML = '@keyframes blink { 50% { opacity: 0 } 100% { opacity: 1 } }';
+      document.head.appendChild(style);
+    }
+  };
+
+  const removeModal = () => {
+    const el = document.getElementById('inspect-hacker-overlay');
+    if (el) el.remove();
+  };
+
+  // BLOCK actions: only show modal when these actions happen
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    createModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    const key = e.key || String.fromCharCode(e.keyCode || 0);
+
+    // F12
+    if (key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+I or Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && (key.toLowerCase() === 'i' || key.toLowerCase() === 'j')) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+U (view-source)
+    if (e.ctrlKey && key.toLowerCase() === 'u') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+C (element picker)
+    if (e.ctrlKey && e.shiftKey && key.toLowerCase() === 'c') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+  });
+
+  // Optional: allow removal from console by site owner if needed:
+  // document.getElementById('inspect-hacker-overlay')?.remove();
+
+})();
+</script>
+
+</head>
+<body>
+    <div class="matrix-bg"></div>
+
+    <div class="terminal-container">
+        <div class="terminal-header">
+            <h2 class="terminal-title">📱 APK DOWNLOADER</h2>
+            <div class="terminal-controls">
+                <div class="terminal-control control-close"></div>
+                <div class="terminal-control control-minimize"></div>
+                <div class="terminal-control control-maximize"></div>
+            </div>
+        </div>
+        
+        <div class="terminal-content">
+            <div class="terminal-prompt">
+                $ apk_downloader --start<span class="typing-cursor"></span>
+            </div>
+
+            <div class="input-group">
+                <label class="input-label">ENTER APK NAME</label>
+                <input type="text" id="apkSearch" class="hacker-input" placeholder="ENTER APK NAME (E.G., TELEGRAM, WHATSAPP)">
+            </div>
+            
+            <button id="downloadBtn" class="hacker-btn">DOWNLOAD APK</button>
+            
+            <div class="loading" id="loading">🔍 SEARCHING FOR APKS...</div>
+            <div class="error" id="error"></div>
+            <div class="success" id="success"></div>
+            
+            <div class="results-container" id="results"></div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-links">
+            <a href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" class="whatsapp-btn" target="_blank">
+                <i class="fab fa-whatsapp"></i> JOIN WHATSAPP CHANNEL
+            </a>
+        </div>
+        <div class="powered-by">POWERED BY <a href="https://msedits.pages.dev" target="_blank">MS EDITS</a></div>
+    </div>
+
+    <script>
+        const API_BASE = 'https://apk-downloader.bjcoderx.workers.dev/';
+        
+        document.getElementById('downloadBtn').addEventListener('click', searchAPKs);
+        document.getElementById('apkSearch').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchAPKs();
+            }
+        });
+
+        async function searchAPKs() {
+            const query = document.getElementById('apkSearch').value.trim();
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const successEl = document.getElementById('success');
+            const resultsEl = document.getElementById('results');
+            const downloadBtn = document.getElementById('downloadBtn');
+            
+            if (!query) {
+                showError('PLEASE ENTER AN APK NAME TO SEARCH');
+                return;
+            }
+            
+            // Show loading state
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            successEl.style.display = 'none';
+            resultsEl.innerHTML = '';
+            downloadBtn.disabled = true;
+            
+            try {
+                const response = await fetch(`${API_BASE}?query=${encodeURIComponent(query)}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ERROR! STATUS: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                loadingEl.style.display = 'none';
+                downloadBtn.disabled = false;
+                
+                if (data && data.length > 0) {
+                    displayResults(data);
+                } else {
+                    showError('NO APKS FOUND FOR YOUR SEARCH QUERY. TRY A DIFFERENT NAME.');
+                }
+                
+            } catch (error) {
+                console.error('ERROR FETCHING APKS:', error);
+                loadingEl.style.display = 'none';
+                downloadBtn.disabled = false;
+                showError('FAILED TO SEARCH APKS. PLEASE CHECK YOUR INTERNET CONNECTION AND TRY AGAIN.');
+            }
+        }
+        
+        function displayResults(apks) {
+            const resultsEl = document.getElementById('results');
+            resultsEl.innerHTML = '';
+            
+            apks.forEach(apk => {
+                const apkItem = document.createElement('div');
+                apkItem.className = 'apk-item';
+                
+                apkItem.innerHTML = `
+                    <div class="apk-header">
+                        <img src="${apk.image}" alt="${apk.name}" class="apk-icon" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTAiIGZpbGw9IiMyMjIyMjIiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSIxMyIgeT0iMTMiPgo8cGF0aCBkPSJNMTIgMkM2LjQ4IDIgMiA2LjQ4IDIgMTJzNC40OCAxMCAxMCAxMCAxMC00LjQ4IDEwLTEwUzE3LjUyIDIgMTIgMnptLTIgMTVsLTUtNSAxLjQxLTEuNDFMMTAgMTQuMTdsNy41OS03LjU5TDE5IDhsLTkgOXoiIGZpbGw9IiMwMGZmMDAiLz4KPC9zdmc+Cjwvc3ZnPgo='">
+                        <div class="apk-name">${apk.name}</div>
+                    </div>
+                    <div class="apk-details">
+                        <div><strong>VERSION:</strong> ${apk.version}</div>
+                        <div><strong>SIZE:</strong> ${apk.filesize}</div>
+                        <div><strong>DEVELOPER:</strong> ${apk.developer}</div>
+                        <div><strong>DOWNLOADS:</strong> ${apk.downloads.toLocaleString()}</div>
+                        <div><strong>RATING:</strong> ${apk.rating}/5 ⭐</div>
+                        <div><strong>RANK:</strong> ${apk.rank}</div>
+                    </div>
+                    <button class="apk-download-btn" onclick="downloadAPK('${apk.path}', '${apk.name}')">
+                        📥 DOWNLOAD APK
+                    </button>
+                `;
+                
+                resultsEl.appendChild(apkItem);
+            });
+        }
+        
+        function downloadAPK(downloadUrl, apkName) {
+            try {
+                // Create a temporary link element and trigger download
+                const link = document.createElement('a');
+                link.href = downloadUrl;
+                link.download = `${apkName.replace(/[^a-zA-Z0-9]/g, '_')}.apk`;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // Show success message
+                showSuccess(`DOWNLOAD STARTED FOR ${apkName}`);
+            } catch (error) {
+                console.error('DOWNLOAD ERROR:', error);
+                showError('FAILED TO START DOWNLOAD. PLEASE TRY AGAIN.');
+            }
+        }
+        
+        function showError(message) {
+            const errorEl = document.getElementById('error');
+            const successEl = document.getElementById('success');
+            errorEl.textContent = message;
+            errorEl.style.display = 'block';
+            successEl.style.display = 'none';
+        }
+        
+        function showSuccess(message) {
+            const errorEl = document.getElementById('error');
+            const successEl = document.getElementById('success');
+            successEl.textContent = message;
+            successEl.style.display = 'block';
+            errorEl.style.display = 'none';
+            
+            setTimeout(() => {
+                successEl.style.display = 'none';
+            }, 3000);
+        }
+
+        // Add typing effect
+        document.addEventListener('DOMContentLoaded', function() {
+            const prompt = document.querySelector('.terminal-prompt');
+            const text = prompt.textContent;
+            prompt.textContent = '';
+            
+            let i = 0;
+            function typeWriter() {
+                if (i < text.length) {
+                    prompt.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                }
+            }
+            
+            // Start typing effect after a short delay
+            setTimeout(typeWriter, 500);
+        });
+    </script>
+</body>
+</html>

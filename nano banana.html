@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS EDITS - AI Generation Suite</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons CDN -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- Paste this before </body> -->
+<script>
+(function() {
+  // Create/remove hacker-style modal (modal is NOT shown on page load)
+  const createModal = () => {
+    if (document.getElementById('inspect-hacker-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'inspect-hacker-overlay';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: '0',
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: '2147483647',
+      fontFamily: "Courier New, 'Lucida Console', monospace",
+      color: '#39ff14'
+    });
+
+    const box = document.createElement('div');
+    box.id = 'inspect-hacker-modal';
+    Object.assign(box.style, {
+      width: '92%',
+      maxWidth: '760px',
+      background: 'rgba(0,0,0,0.95)',
+      border: '1px solid rgba(57,255,20,0.12)',
+      padding: '28px',
+      borderRadius: '8px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(57,255,20,0.06) inset',
+      textAlign: 'left',
+      lineHeight: '1.6'
+    });
+
+    const header = document.createElement('div');
+    header.innerHTML = '⚠️  <span style="font-weight:700; letter-spacing:1px;">INSPECTION NOT ALLOWED</span>';
+    Object.assign(header.style, {
+      color: '#39ff14',
+      fontSize: '20px',
+      marginBottom: '12px'
+    });
+
+    const terminal = document.createElement('div');
+    Object.assign(terminal.style, {
+      background: 'transparent',
+      padding: '14px',
+      borderRadius: '6px',
+      minHeight: '90px',
+      color: '#39ff14',
+      fontSize: '15px',
+      whiteSpace: 'pre-wrap'
+    });
+
+    const msg = document.createElement('div');
+    msg.innerText =
+`ms edits — my dear son:
+If you want this tool's source code, contact: 03167364896
+
+اگر آپ کو اس ٹول کا کوڈ چاہیے تو اس نمبر پر رابطہ کریں:
+03167364896
+`;
+    terminal.appendChild(msg);
+
+    const caret = document.createElement('span');
+    caret.textContent = ' █';
+    Object.assign(caret.style, {
+      display: 'inline-block',
+      marginLeft: '6px',
+      animation: 'blink 1s steps(2, start) infinite'
+    });
+    terminal.appendChild(caret);
+
+    const btn = document.createElement('button');
+    btn.innerText = 'I UNDERSTAND';
+    Object.assign(btn.style, {
+      marginTop: '16px',
+      padding: '10px 20px',
+      fontSize: '14px',
+      fontFamily: "Courier New, monospace",
+      color: '#001b00',
+      background: 'linear-gradient(90deg, rgba(57,255,20,0.95), rgba(30,200,10,0.95))',
+      border: '1px solid rgba(57,255,20,0.9)',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      boxShadow: '0 6px 20px rgba(57,255,20,0.10), 0 0 18px rgba(57,255,20,0.06) inset'
+    });
+    btn.addEventListener('click', removeModal);
+
+    box.appendChild(header);
+    box.appendChild(terminal);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // blinking animation
+    if (!document.getElementById('inspect-hacker-anim')) {
+      const style = document.createElement('style');
+      style.id = 'inspect-hacker-anim';
+      style.innerHTML = '@keyframes blink { 50% { opacity: 0 } 100% { opacity: 1 } }';
+      document.head.appendChild(style);
+    }
+  };
+
+  const removeModal = () => {
+    const el = document.getElementById('inspect-hacker-overlay');
+    if (el) el.remove();
+  };
+
+  // BLOCK actions: only show modal when these actions happen
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    createModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    const key = e.key || String.fromCharCode(e.keyCode || 0);
+
+    // F12
+    if (key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+I or Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && (key.toLowerCase() === 'i' || key.toLowerCase() === 'j')) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+U (view-source)
+    if (e.ctrlKey && key.toLowerCase() === 'u') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+C (element picker)
+    if (e.ctrlKey && e.shiftKey && key.toLowerCase() === 'c') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+  });
+
+  // Optional: allow removal from console by site owner if needed:
+  // document.getElementById('inspect-hacker-overlay')?.remove();
+
+})();
+</script>
+
+
+    
+    <style>
+        /* --- THEME VARIABLES & BASE STYLES --- */
+        :root {
+            --fak-font: 'Poppins', sans-serif;
+            --border-radius-lg: 16px;
+            --border-radius-md: 10px;
+        }
+
+        body {
+            font-family: var(--fak-font);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+        
+        /* --- LIGHT THEME --- */
+        [data-bs-theme="light"] {
+            --bs-body-bg: #f4f7f9;
+            --bs-body-color: #212529;
+            --surface-color: #ffffff;
+            --border-color: #dee2e6;
+            --muted-color: #6c757d;
+            --input-bg: #f8f9fa;
+        }
+
+        /* --- DARK THEME --- */
+        [data-bs-theme="dark"] {
+            --bs-body-bg: #1a1a1a;
+            --bs-body-color: #f0f0f0;
+            --surface-color: #2b2b2b;
+            --border-color: #444;
+            --muted-color: #888;
+            --input-bg: #333;
+        }
+
+        .main-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: var(--surface-color);
+            padding: 2.5rem;
+            border-radius: var(--border-radius-lg);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        /* --- HEADER & BRANDING --- */
+        header { text-align: center; margin-bottom: 2rem; }
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        header p { color: var(--muted-color); font-size: 1.1rem; }
+        .theme-switcher { position: absolute; top: 20px; right: 20px; font-size: 1.5rem; cursor: pointer; }
+
+        /* --- TABS --- */
+        .nav-tabs { border-bottom-color: var(--border-color); }
+        .nav-tabs .nav-link { 
+            font-weight: 600;
+            color: var(--muted-color);
+            border-bottom-color: transparent;
+        }
+        .nav-tabs .nav-link.active { 
+            color: var(--bs-primary);
+            background-color: transparent;
+            border-color: var(--border-color) var(--border-color) var(--surface-color);
+        }
+        
+        /* --- SHARED FORM STYLES --- */
+        .form-control, .form-control:focus {
+            background-color: var(--input-bg);
+            color: var(--bs-body-color);
+            border-color: var(--border-color);
+            border-radius: var(--border-radius-md);
+            padding: 0.85rem 1rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-control:focus {
+            box-shadow: 0 0 0 4px rgba(13, 110, 253, 0.15);
+        }
+        .form-label { font-weight: 600; }
+        pre { background-color: var(--input-bg); border: 1px solid var(--border-color); padding: 15px; border-radius: 5px; white-space: pre-wrap; word-break: break-all; }
+
+       
+        .simple-generator-ui .form-label { display: flex; align-items: center; gap: 0.5rem; }
+        .simple-generator-ui .form-label i { color: var(--bs-primary); }
+        .message-box { 
+            padding: 1rem; border-radius: var(--border-radius-md); margin-top: 1rem; 
+            display: flex; align-items: center; justify-content: center; gap: 0.75rem; font-weight: 500;
+        }
+        #countdown-timer { color: #664d03; background-color: #fff3cd; border: 1px solid #ffecb5; }
+        #error-message { color: #842029; background-color: #f8d7da; border: 1px solid #f5c2c7; }
+
+        /* --- ADVANCED TESTER SPECIFIC STYLES --- */
+        .advanced-tester-ui .card { background-color: var(--surface-color); border-color: var(--border-color); }
+        .advanced-tester-ui .card-header { background-color: var(--input-bg); font-family: 'Courier New', monospace; letter-spacing: 2px; }
+
+        /* --- FOOTER --- */
+        footer { text-align: center; margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color); font-size: 0.9rem; color: var(--muted-color); }
+        footer a { color: var(--bs-primary); text-decoration: none; font-weight: 600; }
+        footer a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body class="p-4">
+
+    <button id="theme-switcher" class="btn theme-switcher" title="Toggle Theme">
+        <i class="bi"></i>
+    </button>
+
+    <div class="main-container">
+        <header>
+            <h1>MS EDITS</h1>
+            <p>AI Generation Suite</p>
+        </header>
+
+        <!-- Main Navigation Tabs -->
+        <ul class="nav nav-tabs" id="mainTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="simple-tab" data-bs-toggle="tab" data-bs-target="#simple-pane" type="button">
+                    <i class="bi bi-stars me-2"></i>Nano Bnana Latest
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="advanced-tab" data-bs-toggle="tab" data-bs-target="#advanced-pane" type="button">
+                    <i class="bi bi-tools me-2"></i>Stable Diffusion
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content pt-4">
+           
+            <div class="tab-pane fade show active simple-generator-ui" id="simple-pane">
+                <form id="generator-form">
+                    <div class="mb-3">
+                        <label for="prompt-input" class="form-label"><i class="bi bi-chat-left-text-fill"></i>Enter your prompt</label>
+                        <textarea class="form-control" id="prompt-input" placeholder="e.g., A majestic lion wearing a crown, cinematic lighting" required rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="image-url-input" class="form-label"><i class="bi bi-link-45deg"></i>Image URL (Optional)</label>
+                        <input type="url" class="form-control" id="image-url-input" placeholder="For image-to-image, paste a direct image link here">
+                    </div>
+                    <button type="submit" id="generate-btn" class="btn btn-primary w-100 py-2 fs-5">
+                        <i class="bi bi-magic"></i>
+                        <span>Generate Image</span>
+                    </button>
+                </form>
+                <div id="output" class="text-center mt-4">
+                    <div class="spinner-border text-primary d-none" id="loader" role="status"></div>
+                    <div id="countdown-timer" class="message-box d-none">
+                        <i class="bi bi-clock-history"></i>
+                        <span>Rate limited. Please wait <strong id="countdown-seconds">30</strong> seconds.</span>
+                    </div>
+                    <p id="error-message" class="message-box d-none"></p>
+                    <img id="result-image" class="d-none img-fluid rounded" alt="Generated Image" style="border: 1px solid var(--border-color);">
+                </div>
+            </div>
+
+            <!-- ADVANCED TESTER PANE -->
+            <div class="tab-pane fade advanced-tester-ui" id="advanced-pane">
+                <ul class="nav nav-tabs" id="apiTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#t2i-pane" type="button">
+                            <i class="bi bi-fonts me-2"></i>Text-to-Image
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#i2i-pane" type="button">
+                            <i class="bi bi-image me-2"></i>Image-to-Image
+                        </button>
+                    </li>
+                </ul>
+                <div class="tab-content pt-3">
+                    <div class="tab-pane fade show active" id="t2i-pane">
+                        <div class="card">
+                            <div class="card-header">Endpoint: GET /text-to-image</div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="t2i-prompt" class="form-label">Prompt:</label>
+                                    <textarea id="t2i-prompt" class="form-control" rows="3" placeholder="A robot painting a masterpiece..."></textarea>
+                                </div>
+                                <button id="t2i-submit" class="btn btn-primary"><i class="bi bi-magic me-2"></i>Generate</button>
+                                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#t2i-curl-collapse">
+                                    <i class="bi bi-code-slash me-2"></i>Show cURL
+                                </button>
+                                <div class="collapse mt-3" id="t2i-curl-collapse"><pre id="t2i-curl-output">Click "Generate" to see the command.</pre></div>
+                                <hr><h5 class="mt-3">Result:</h5>
+                                <div id="t2i-result" class="text-center d-flex align-items-center justify-content-center" style="min-height: 200px;">
+                                    <span class="text-secondary">Your image will appear here.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="i2i-pane">
+                        <div class="card">
+                            <div class="card-header">Endpoint: POST /image-to-image</div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="i2i-file" class="form-label">Source Image:</label>
+                                    <input class="form-control" type="file" id="i2i-file" accept="image/*">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="i2i-prompt" class="form-label">Modification Prompt:</label>
+                                    <textarea id="i2i-prompt" class="form-control" rows="3" placeholder="Make this a watercolor painting..."></textarea>
+                                </div>
+                                <button id="i2i-submit" class="btn btn-primary"><i class="bi bi-palette-fill me-2"></i>Modify</button>
+                                <button class="btn btn-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#i2i-curl-collapse">
+                                    <i class="bi bi-code-slash me-2"></i>Show cURL
+                                </button>
+                                <div class="collapse mt-3" id="i2i-curl-collapse"><pre id="i2i-curl-output">Click "Modify" to see the command.</pre></div>
+                                <hr><h5 class="mt-3">Result:</h5>
+                                <div id="i2i-result" class="text-center d-flex align-items-center justify-content-center" style="min-height: 200px;">
+                                    <span class="text-secondary">Your modified image will appear here.</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 MS EDITS. All Rights Reserved.</p>
+            <p><a href="https://msedits.pages.dev" target="_blank">API Docs</a> | <a href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" target="_blank">Join WhatsApp Channel</a></p>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- THEME SWITCHER LOGIC ---
+        const themeSwitcher = document.getElementById('theme-switcher');
+        const themeIcon = themeSwitcher.querySelector('i');
+        const getPreferredTheme = () => localStorage.getItem('theme') || 'light';
+        const setTema = (theme) => {
+            document.documentElement.setAttribute('data-bs-theme', theme);
+            localStorage.setItem('theme', theme);
+            themeIcon.className = theme === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+        };
+        setTema(getPreferredTheme());
+        themeSwitcher.addEventListener('click', () => setTema(getPreferredTheme() === 'light' ? 'dark' : 'light'));
+        const simpleGenerator = {
+            API_BASE_URL: 'https://nano-bnana.fak-official.workers.dev',
+            form: document.getElementById('generator-form'),
+            btn: document.getElementById('generate-btn'),
+            btnText: document.getElementById('generate-btn').querySelector('span'),
+            loader: document.getElementById('loader'),
+            resultImg: document.getElementById('result-image'),
+            errorMsg: document.getElementById('error-message'),
+            countdownTimer: document.getElementById('countdown-timer'),
+            countdownSecondsEl: document.getElementById('countdown-seconds'),
+            countdownInterval: null,
+
+            init() {
+                this.form.addEventListener('submit', (e) => this.handleSubmit(e));
+            },
+            async handleSubmit(event) {
+                event.preventDefault();
+                const prompt = document.getElementById('prompt-input').value.trim();
+                if (!prompt) {
+                    this.showError('Prompt cannot be empty.');
+                    return;
+                }
+
+                this.resetUI();
+                this.loader.classList.remove('d-none');
+                this.btn.disabled = true;
+                this.btnText.textContent = 'Generating...';
+
+                try {
+                    const imageUrl = document.getElementById('image-url-input').value.trim();
+                    const apiUrl = new URL(`${this.API_BASE_URL}/image`);
+                    apiUrl.searchParams.append('prompt', prompt);
+                    if (imageUrl) apiUrl.searchParams.append('imageUrl', imageUrl);
+
+                    const response = await fetch(apiUrl);
+                    if (!response.ok) throw new Error(await response.text() || `API Error: ${response.status}`);
+                    
+                    const blob = await response.blob();
+                    if (!blob.type.startsWith('image/')) throw new Error('API did not return a valid image.');
+                    
+                    this.resultImg.src = URL.createObjectURL(blob);
+                    this.resultImg.classList.remove('d-none');
+                } catch (error) {
+                    if (error instanceof TypeError && error.message.includes('fetch')) {
+                        this.startCountdown();
+                    } else {
+                        this.showError(error.message);
+                    }
+                } finally {
+                    this.loader.classList.add('d-none');
+                    if (!this.countdownInterval) this.resetButton();
+                }
+            },
+            startCountdown() {
+                let secondsLeft = 30;
+                this.countdownTimer.classList.remove('d-none');
+                this.countdownSecondsEl.textContent = secondsLeft;
+                this.btnText.textContent = 'Please Wait';
+
+                this.countdownInterval = setInterval(() => {
+                    secondsLeft--;
+                    this.countdownSecondsEl.textContent = secondsLeft;
+                    if (secondsLeft <= 0) {
+                        clearInterval(this.countdownInterval);
+                        this.countdownInterval = null;
+                        this.countdownTimer.classList.add('d-none');
+                        this.resetButton();
+                    }
+                }, 1000);
+            },
+            resetUI() {
+                this.errorMsg.classList.add('d-none');
+                this.resultImg.classList.add('d-none');
+                this.countdownTimer.classList.add('d-none');
+                this.resultImg.src = '';
+                if (this.countdownInterval) {
+                    clearInterval(this.countdownInterval);
+                    this.countdownInterval = null;
+                }
+            },
+            resetButton() {
+                this.btn.disabled = false;
+                this.btnText.textContent = 'Generate Image';
+            },
+            showError(message) {
+                this.errorMsg.textContent = message;
+                this.errorMsg.classList.remove('d-none');
+            }
+        };
+        simpleGenerator.init();
+
+        // --- ADVANCED TESTER LOGIC ---
+        const advancedTester = {
+            API_BASE_URL: 'https://stable-diffusion.fak-official.workers.dev', // Fallback API URL
+            
+            init() {
+                this.t2i.init(this);
+                this.i2i.init(this);
+            },
+            showSpinner: (el) => el.innerHTML = `<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>`,
+            showImage: (el, url, filename) => el.innerHTML = `<div><img src="${url}" class="img-fluid rounded mb-3" alt="Generated Image" style="border: 1px solid var(--border-color);"><a href="${url}" download="${filename}" class="btn btn-success"><i class="bi bi-download me-2"></i>Download</a></div>`,
+            showError: (el, msg) => el.innerHTML = `<span class="text-danger">${msg}</span>`,
+            
+            t2i: {
+                init(parent) {
+                    this.parent = parent;
+                    document.getElementById('t2i-submit').addEventListener('click', () => this.handleSubmit());
+                },
+                async handleSubmit() {
+                    const prompt = document.getElementById('t2i-prompt').value.trim();
+                    if (!prompt) return alert('Please enter a prompt.');
+
+                    const resultDiv = document.getElementById('t2i-result');
+                    this.parent.showSpinner(resultDiv);
+                    
+                    const apiUrl = `${this.parent.API_BASE_URL}/text-to-image?prompt=${encodeURIComponent(prompt)}`;
+                    document.getElementById('t2i-curl-output').textContent = `curl -v "${apiUrl}" -o generated.png`;
+                    
+                    try {
+                        const response = await fetch(apiUrl);
+                        if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
+                        const blob = await response.blob();
+                        this.parent.showImage(resultDiv, URL.createObjectURL(blob), 'generated-image.png');
+                    } catch (error) {
+                        this.parent.showError(resultDiv, `Error: ${error.message}`);
+                    }
+                }
+            },
+            i2i: {
+                fileBase64: null,
+                init(parent) {
+                    this.parent = parent;
+                    document.getElementById('i2i-file').addEventListener('change', (e) => this.handleFileChange(e));
+                    document.getElementById('i2i-submit').addEventListener('click', () => this.handleSubmit());
+                },
+                handleFileChange(event) {
+                    const file = event.target.files[0];
+                    if (!file) return this.fileBase64 = null;
+                    const reader = new FileReader();
+                    reader.onload = e => this.fileBase64 = e.target.result;
+                    reader.readAsDataURL(file);
+                },
+                async handleSubmit() {
+                    const prompt = document.getElementById('i2i-prompt').value.trim();
+                    if (!this.fileBase64) return alert('Please select an image file.');
+                    if (!prompt) return alert('Please enter a modification prompt.');
+
+                    const resultDiv = document.getElementById('i2i-result');
+                    this.parent.showSpinner(resultDiv);
+
+                    const payload = { sourceImage: this.fileBase64, prompt: prompt };
+                    const apiUrl = `${this.parent.API_BASE_URL}/image-to-image`;
+                    
+                    document.getElementById('i2i-curl-output').textContent = `# Create a payload.json with the base64 image data and prompt, then run:\ncurl -X POST -H "Content-Type: application/json" --data @payload.json "${apiUrl}" -o modified.png`;
+                    
+                    try {
+                        const response = await fetch(apiUrl, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
+                        const blob = await response.blob();
+                        this.parent.showImage(resultDiv, URL.createObjectURL(blob), 'modified-image.png');
+                    } catch (error) {
+                        this.parent.showError(resultDiv, `Error: ${error.message}`);
+                    }
+                }
+            }
+        };
+        advancedTester.init();
+    });
+    </script>
+</body>
+</html>

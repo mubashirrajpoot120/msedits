@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS EDITS - IP Info Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #000000 100%);
+            color: #00ff00;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .ad-container {
+            max-width: 800px;
+            width: 100%;
+            background: rgba(10, 10, 10, 0.95);
+            border: 2px solid #00ff00;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+            position: relative;
+        }
+
+        .ad-header {
+            background: linear-gradient(90deg, #001a00 0%, #003300 100%);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #00ff00;
+        }
+
+        .ad-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.7);
+        }
+
+        .ad-header p {
+            font-size: 1.2rem;
+            color: #00cc00;
+        }
+
+        .ad-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 30px;
+        }
+
+        .ad-text {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+
+        .ad-text h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #00ff00;
+            border-bottom: 1px solid #00aa00;
+            padding-bottom: 10px;
+        }
+
+        .features {
+            list-style-type: none;
+            margin: 20px 0;
+        }
+
+        .features li {
+            padding: 10px 0;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .features li:before {
+            content: "✓";
+            color: #00ff00;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 1.3rem;
+        }
+
+        .ad-visual {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .phone-mockup {
+            width: 280px;
+            height: 500px;
+            background: #000;
+            border: 3px solid #00ff00;
+            border-radius: 30px;
+            padding: 15px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.5);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #001100 0%, #000000 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-header {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .screen-header h3 {
+            font-size: 1.2rem;
+            color: #00ff00;
+        }
+
+        .screen-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .input-group input {
+            flex: 1;
+            padding: 10px;
+            background: rgba(0, 30, 0, 0.7);
+            border: 1px solid #00aa00;
+            border-radius: 5px;
+            color: #00ff00;
+        }
+
+        .input-group button {
+            padding: 10px 15px;
+            background: #00aa00;
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            font-weight: bold;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
+        .info-card {
+            background: rgba(0, 40, 0, 0.5);
+            border: 1px solid #00aa00;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .info-label {
+            color: #00cc00;
+        }
+
+        .info-value {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .ad-footer {
+            background: rgba(0, 20, 0, 0.8);
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #00ff00;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 40px;
+            background: linear-gradient(90deg, #00aa00 0%, #00ff00 100%);
+            color: #000;
+            font-size: 1.3rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            margin: 10px 0;
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.5);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.7);
+        }
+
+        .brand {
+            margin-top: 15px;
+            font-size: 1.1rem;
+            color: #00cc00;
+        }
+
+        .brand span {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .binary-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .binary-digit {
+            position: absolute;
+            color: #00ff00;
+            font-size: 14px;
+            font-family: 'Courier New', monospace;
+            opacity: 0;
+            animation: float 15s linear infinite;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.7;
+            }
+            90% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .ad-header h1 {
+                font-size: 2rem;
+            }
+            
+            .ad-content {
+                padding: 15px;
+            }
+            
+            .phone-mockup {
+                width: 250px;
+                height: 450px;
+            }
+        }
+    </style>
+    <!-- Paste this before </body> -->
+<script>
+(function() {
+  // Create/remove hacker-style modal (modal is NOT shown on page load)
+  const createModal = () => {
+    if (document.getElementById('inspect-hacker-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'inspect-hacker-overlay';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: '0',
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: '2147483647',
+      fontFamily: "Courier New, 'Lucida Console', monospace",
+      color: '#39ff14'
+    });
+
+    const box = document.createElement('div');
+    box.id = 'inspect-hacker-modal';
+    Object.assign(box.style, {
+      width: '92%',
+      maxWidth: '760px',
+      background: 'rgba(0,0,0,0.95)',
+      border: '1px solid rgba(57,255,20,0.12)',
+      padding: '28px',
+      borderRadius: '8px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(57,255,20,0.06) inset',
+      textAlign: 'left',
+      lineHeight: '1.6'
+    });
+
+    const header = document.createElement('div');
+    header.innerHTML = '⚠️  <span style="font-weight:700; letter-spacing:1px;">INSPECTION NOT ALLOWED</span>';
+    Object.assign(header.style, {
+      color: '#39ff14',
+      fontSize: '20px',
+      marginBottom: '12px'
+    });
+
+    const terminal = document.createElement('div');
+    Object.assign(terminal.style, {
+      background: 'transparent',
+      padding: '14px',
+      borderRadius: '6px',
+      minHeight: '90px',
+      color: '#39ff14',
+      fontSize: '15px',
+      whiteSpace: 'pre-wrap'
+    });
+
+    const msg = document.createElement('div');
+    msg.innerText =
+`ms edits — my dear son:
+If you want this tool's source code, contact: 03167364896
+
+اگر آپ کو اس ٹول کا کوڈ چاہیے تو اس نمبر پر رابطہ کریں:
+03167364896
+`;
+    terminal.appendChild(msg);
+
+    const caret = document.createElement('span');
+    caret.textContent = ' █';
+    Object.assign(caret.style, {
+      display: 'inline-block',
+      marginLeft: '6px',
+      animation: 'blink 1s steps(2, start) infinite'
+    });
+    terminal.appendChild(caret);
+
+    const btn = document.createElement('button');
+    btn.innerText = 'I UNDERSTAND';
+    Object.assign(btn.style, {
+      marginTop: '16px',
+      padding: '10px 20px',
+      fontSize: '14px',
+      fontFamily: "Courier New, monospace",
+      color: '#001b00',
+      background: 'linear-gradient(90deg, rgba(57,255,20,0.95), rgba(30,200,10,0.95))',
+      border: '1px solid rgba(57,255,20,0.9)',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      boxShadow: '0 6px 20px rgba(57,255,20,0.10), 0 0 18px rgba(57,255,20,0.06) inset'
+    });
+    btn.addEventListener('click', removeModal);
+
+    box.appendChild(header);
+    box.appendChild(terminal);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // blinking animation
+    if (!document.getElementById('inspect-hacker-anim')) {
+      const style = document.createElement('style');
+      style.id = 'inspect-hacker-anim';
+      style.innerHTML = '@keyframes blink { 50% { opacity: 0 } 100% { opacity: 1 } }';
+      document.head.appendChild(style);
+    }
+  };
+
+  const removeModal = () => {
+    const el = document.getElementById('inspect-hacker-overlay');
+    if (el) el.remove();
+  };
+
+  // BLOCK actions: only show modal when these actions happen
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    createModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    const key = e.key || String.fromCharCode(e.keyCode || 0);
+
+    // F12
+    if (key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+I or Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && (key.toLowerCase() === 'i' || key.toLowerCase() === 'j')) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+U (view-source)
+    if (e.ctrlKey && key.toLowerCase() === 'u') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+C (element picker)
+    if (e.ctrlKey && e.shiftKey && key.toLowerCase() === 'c') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+  });
+
+  // Optional: allow removal from console by site owner if needed:
+  // document.getElementById('inspect-hacker-overlay')?.remove();
+
+})();
+</script>
+
+</head>
+<body>
+    <!-- Binary animation background -->
+    <div class="binary-bg" id="binaryBg"></div>
+
+    <div class="ad-container">
+        <div class="ad-header">
+            <h1>IP INFO LOOKUP TOOL</h1>
+            <p>Professional IP Geolocation & Network Analysis</p>
+        </div>
+        
+        <div class="ad-content">
+            <div class="ad-text">
+                <h2>Unlock Detailed IP Information</h2>
+                <p style="margin-bottom: 20px; line-height: 1.6;">Get comprehensive details about any IP address with our advanced lookup tool. Perfect for network administrators, cybersecurity professionals, and curious tech enthusiasts.</p>
+                
+                <ul class="features">
+                    <li>Real-time IP geolocation</li>
+                    <li>ISP and organization details</li>
+                    <li>Network security information</li>
+                    <li>Country, city, and timezone data</li>
+                    <li>Easy-to-use interface</li>
+                    <li>Fast and accurate results</li>
+                </ul>
+                
+                <p style="margin-top: 20px; font-style: italic; color: #00cc00;">
+                    "The most comprehensive IP analysis tool I've used. Essential for my daily workflow." - Network Security Expert
+                </p>
+            </div>
+            
+            <div class="ad-visual">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="screen-header">
+                            <h3>IP Info Lookup</h3>
+                        </div>
+                        <div class="screen-content">
+                            <div class="input-group">
+                                <input type="text" placeholder="Enter IP address">
+                                <button>Lookup</button>
+                            </div>
+                            <div class="info-card">
+                                <div class="info-row">
+                                    <span class="info-label">IP Address:</span>
+                                    <span class="info-value">192.168.1.1</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Country:</span>
+                                    <span class="info-value">United States</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">ISP:</span>
+                                    <span class="info-value">Example Telecom</span>
+                                </div>
+                                <div class="info-row">
+                                    <span class="info-label">Location:</span>
+                                    <span class="info-value">New York, NY</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="ad-footer">
+            <a href="IP_view.html" class="cta-button">TRY IT NOW - FREE</a>
+            <div class="brand">Developed by <span>MS EDITS</span> | Professional Tools for Tech Professionals</div>
+        </div>
+    </div>
+
+    <script>
+        // Binary animation
+        function createBinaryAnimation() {
+            const binaryBg = document.getElementById('binaryBg');
+            const digits = ['0', '1'];
+            
+            // Clear any existing content
+            binaryBg.innerHTML = '';
+            
+            // Create binary digits
+            for (let i = 0; i < 80; i++) {
+                const digit = document.createElement('div');
+                digit.className = 'binary-digit';
+                digit.textContent = digits[Math.floor(Math.random() * digits.length)];
+                digit.style.left = `${Math.random() * 100}%`;
+                digit.style.animationDelay = `${Math.random() * 15}s`;
+                binaryBg.appendChild(digit);
+            }
+        }
+
+        // Initialize binary animation
+        createBinaryAnimation();
+    </script>
+</body>
+</html>

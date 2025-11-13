@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS EDITS SIM Database</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&family=Inter:wght@600;700&display=swap" rel="stylesheet">
+
+
+
+
+<!-- Paste this before </body> -->
+<script>
+(function() {
+  // Create/remove hacker-style modal (modal is NOT shown on page load)
+  const createModal = () => {
+    if (document.getElementById('inspect-hacker-overlay')) return;
+
+    const overlay = document.createElement('div');
+    overlay.id = 'inspect-hacker-overlay';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: '0',
+      background: '#000',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: '2147483647',
+      fontFamily: "Courier New, 'Lucida Console', monospace",
+      color: '#39ff14'
+    });
+
+    const box = document.createElement('div');
+    box.id = 'inspect-hacker-modal';
+    Object.assign(box.style, {
+      width: '92%',
+      maxWidth: '760px',
+      background: 'rgba(0,0,0,0.95)',
+      border: '1px solid rgba(57,255,20,0.12)',
+      padding: '28px',
+      borderRadius: '8px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(57,255,20,0.06) inset',
+      textAlign: 'left',
+      lineHeight: '1.6'
+    });
+
+    const header = document.createElement('div');
+    header.innerHTML = '⚠️  <span style="font-weight:700; letter-spacing:1px;">INSPECTION NOT ALLOWED</span>';
+    Object.assign(header.style, {
+      color: '#39ff14',
+      fontSize: '20px',
+      marginBottom: '12px'
+    });
+
+    const terminal = document.createElement('div');
+    Object.assign(terminal.style, {
+      background: 'transparent',
+      padding: '14px',
+      borderRadius: '6px',
+      minHeight: '90px',
+      color: '#39ff14',
+      fontSize: '15px',
+      whiteSpace: 'pre-wrap'
+    });
+
+    const msg = document.createElement('div');
+    msg.innerText =
+`ms edits — my dear son:
+If you want this tool's source code, contact: 03167364896
+
+اگر آپ کو اس ٹول کا کوڈ چاہیے تو اس نمبر پر رابطہ کریں:
+03167364896
+`;
+    terminal.appendChild(msg);
+
+    const caret = document.createElement('span');
+    caret.textContent = ' █';
+    Object.assign(caret.style, {
+      display: 'inline-block',
+      marginLeft: '6px',
+      animation: 'blink 1s steps(2, start) infinite'
+    });
+    terminal.appendChild(caret);
+
+    const btn = document.createElement('button');
+    btn.innerText = 'I UNDERSTAND';
+    Object.assign(btn.style, {
+      marginTop: '16px',
+      padding: '10px 20px',
+      fontSize: '14px',
+      fontFamily: "Courier New, monospace",
+      color: '#001b00',
+      background: 'linear-gradient(90deg, rgba(57,255,20,0.95), rgba(30,200,10,0.95))',
+      border: '1px solid rgba(57,255,20,0.9)',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      boxShadow: '0 6px 20px rgba(57,255,20,0.10), 0 0 18px rgba(57,255,20,0.06) inset'
+    });
+    btn.addEventListener('click', removeModal);
+
+    box.appendChild(header);
+    box.appendChild(terminal);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // blinking animation
+    if (!document.getElementById('inspect-hacker-anim')) {
+      const style = document.createElement('style');
+      style.id = 'inspect-hacker-anim';
+      style.innerHTML = '@keyframes blink { 50% { opacity: 0 } 100% { opacity: 1 } }';
+      document.head.appendChild(style);
+    }
+  };
+
+  const removeModal = () => {
+    const el = document.getElementById('inspect-hacker-overlay');
+    if (el) el.remove();
+  };
+
+  // BLOCK actions: only show modal when these actions happen
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    createModal();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    const key = e.key || String.fromCharCode(e.keyCode || 0);
+
+    // F12
+    if (key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+I or Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && (key.toLowerCase() === 'i' || key.toLowerCase() === 'j')) {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+U (view-source)
+    if (e.ctrlKey && key.toLowerCase() === 'u') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+
+    // Ctrl+Shift+C (element picker)
+    if (e.ctrlKey && e.shiftKey && key.toLowerCase() === 'c') {
+      e.preventDefault();
+      createModal();
+      return;
+    }
+  });
+
+  // Optional: allow removal from console by site owner if needed:
+  // document.getElementById('inspect-hacker-overlay')?.remove();
+
+})();
+</script>
+
+
+
+    <style>
+        /* --- Professional UI Styles --- */
+        :root {
+            --primary-blue: #2563eb;
+            --light-blue: #3b82f6;
+            --dark-blue: #1e40af;
+            --accent-teal: #0d9488;
+            --light-bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-dark: #1e293b;
+            --text-light: #64748b;
+            --success-green: #10b981;
+            --whatsapp-green: #25d366;
+            --alert-red: #ef4444;
+            --border-light: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: var(--text-dark);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .background-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            z-index: -1;
+            pointer-events: none;
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.05;
+        }
+        
+        .circle-1 {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-blue);
+            top: 10%;
+            right: 10%;
+        }
+        
+        .circle-2 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent-teal);
+            bottom: 15%;
+            left: 5%;
+        }
+        
+        .circle-3 {
+            width: 150px;
+            height: 150px;
+            background: var(--success-green);
+            top: 60%;
+            right: 20%;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-light);
+        }
+        
+        .container:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: var(--primary-blue);
+        }
+
+        h1 {
+            text-align: center;
+            color: var(--text-dark);
+            margin-bottom: 10px;
+            font-size: 1.8rem;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: 30px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+        
+        /* Input Styles */
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 16px 20px;
+            background: var(--light-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--text-dark);
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        input[type="text"]::placeholder {
+            color: var(--text-light);
+        }
+        
+        /* Button Styles */
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-blue), var(--dark-blue));
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--light-blue), var(--primary-blue));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(37, 99, 235, 0.2);
+        }
+        
+        .btn-primary:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-green), #059669);
+            display: none; /* Hidden until results are ready */
+        }
+        
+        .btn-success:hover:not(:disabled) {
+            background: linear-gradient(135deg, #34d399, var(--success-green));
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-whatsapp {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-align: center;
+            padding: 16px;
+            border-radius: 10px;
+            color: white;
+            background: linear-gradient(135deg, var(--whatsapp-green), #128c7e);
+            text-decoration: none;
+            margin-top: 20px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-whatsapp:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(37, 211, 102, 0.2);
+        }
+
+        /* Results Section */
+        .results-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid var(--border-light);
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .section-title {
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #results {
+            white-space: pre-wrap;
+            background: var(--light-bg);
+            padding: 20px;
+            border-radius: 10px;
+            min-height: 120px;
+            border: 1px solid var(--border-light);
+            overflow-x: auto;
+            word-wrap: break-word;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+        
+        #results:empty::before {
+            content: "Enter a Phone or CNIC Number above and click 'Search Database' to view details.";
+            color: var(--text-light);
+            font-style: italic;
+        }
+        
+        /* Status Indicators */
+        .loading {
+            text-align: center;
+            color: var(--text-dark);
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 120px;
+        }
+        
+        .loading::after {
+            content: '';
+            width: 30px;
+            height: 30px;
+            margin-top: 15px;
+            border: 3px solid rgba(37, 99, 235, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary-blue);
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        .error-message {
+            color: var(--alert-red);
+            font-weight: 600;
+        }
+        
+        .success-message {
+            color: var(--success-green);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.85rem;
+            color: var(--text-light);
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+                border-radius: 12px;
+            }
+            
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            input[type="text"], .btn, .btn-whatsapp {
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-elements">
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">🔍</div>
+            <h1>SIM Database Lookup</h1>
+            <p class="subtitle">Search phone and CNIC information securely</p>
+        </div>
+        
+        <div class="input-group">
+            <input type="text" id="phone-number" placeholder="Enter Phone or CNIC Number (e.g., 03xxxxxxxxx)" required>
+        </div>
+        
+        <button id="search-button" class="btn btn-primary">
+            <span>Search Database</span>
+        </button>
+
+        <a id="whatsapp-button" class="btn-whatsapp" href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" target="_blank">
+            <span>Join WhatsApp Channel</span>
+        </a>
+
+        <div class="results-section">
+            <h2 class="section-title">
+                <span>Results</span>
+            </h2>
+            <pre id="results"></pre>
+            <button id="copy-button" class="btn btn-success">
+                <span>Copy Results</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="footer">
+        &copy; MS Edits Official. All rights reserved.
+    </div>
+
+    <script>
+        // --- API & DOM Elements ---
+        const API_BASE_URL = 'https://sim-data.ftgmhacks.workers.dev/'; 
+        const phoneNumberInput = document.getElementById('phone-number');
+        const searchButton = document.getElementById('search-button');
+        const resultsDiv = document.getElementById('results');
+        const copyButton = document.getElementById('copy-button');
+
+        // --- Core Functions ---
+
+        /**
+         * Fall Back System Function: Displays an error message and handles UI state.
+         */
+        function displayError(message) {
+            resultsDiv.innerHTML = `<span class="error-message">Error:</span>\n\n${message}\n\nNo records found or a search error occurred.`;
+            copyButton.style.display = 'none';
+        }
+
+        /**
+         * Handles the search action.
+         */
+        async function searchDatabase() {
+            const number = phoneNumberInput.value.trim();
+            
+            if (!number) {
+                displayError("Please enter a Phone or CNIC Number to search.");
+                return;
+            }
+
+            // Set Loading State
+            resultsDiv.innerHTML = `<div class="loading">Searching database by ms...</div>`;
+            copyButton.style.display = 'none';
+            searchButton.disabled = true;
+            searchButton.innerHTML = '<span>Searching...</span>';
+
+            try {
+                // Construct the API URL
+                const url = `${API_BASE_URL}?number=${encodeURIComponent(number)}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`API Network Error: ${response.status} ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                let records = [];
+                // Normalize data structure for simplicity (new API check: 'detail' property)
+                if (Array.isArray(data)) {
+                    records = data;
+                } else if (data && Array.isArray(data.detail)) {
+                    records = data.detail;
+                } else if (data && Array.isArray(data.records)) {
+                    records = data.records;
+                } else if (data && Array.isArray(data.data)) {
+                    records = data.data;
+                }
+                
+                if (records.length > 0) {
+                    // Success: Format and display results
+                    const resultText = records.map(record => {
+                        return `
+Name: ${record.name || record.owner || 'N/A'}
+Number: ${record.mobile || record.number || 'N/A'}
+CNIC: ${record.cNIC || record.cnic || record.idcard || 'N/A'}
+Address: ${record.address || record.location || 'N/A'}
+---------------------------------`.trim();
+                    }).join('\n\n');
+
+                    resultsDiv.innerText = resultText;
+                    copyButton.style.display = 'flex';
+                    
+                    // Smooth scroll to results
+                    setTimeout(() => {
+                        document.querySelector('.results-section').scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 300);
+                } else {
+                    // Fall Back System for no results
+                    displayError(`for paid services contact wtith ms edit. No records found for: ${number}`);
+                }
+
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                // Fall Back System for network/fetch errors
+                displayError(`A communication error occurred. Please check your connection or try again.`);
+            } finally {
+                // Reset Button State
+                searchButton.disabled = false;
+                searchButton.innerHTML = '<span>Search Database</span>';
+            }
+        }
+
+        /**
+         * Function to copy results to the clipboard.
+         */
+        function copyResults() {
+            const textToCopy = resultsDiv.innerText;
+
+            if (!textToCopy || textToCopy.includes('Error') || textToCopy.includes('Phone or CNIC Number')) {
+                 alert("⚠️ Cannot copy: Please search for results first, or an error is currently displayed.");
+                 return;
+            }
+
+            // Use the modern Clipboard API
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    alert('✅ Results copied to clipboard!');
+                }).catch(err => {
+                    console.error('Could not copy text using API:', err);
+                    fallbackCopyText(textToCopy);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyText(textToCopy);
+            }
+        }
+
+        // Fallback for copy using textarea (older browsers)
+        function fallbackCopyText(text) {
+            var textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed"; 
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                alert('✅ Results copied to clipboard! (Fallback Method)');
+            } catch (err) {
+                alert('❌ Copying failed! Please copy the text manually.');
+            }
+            document.body.removeChild(textArea);
+        }
+
+        // --- Event Listeners ---
+        searchButton.addEventListener('click', searchDatabase);
+        copyButton.addEventListener('click', copyResults);
+        
+        // Allow searching on Enter key press in the input field
+        phoneNumberInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchDatabase();
+            }
+        });
+    </script>
+</body>
+</html>
