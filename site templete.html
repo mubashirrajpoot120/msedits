@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS EDITS</title>
+    <style>
+        
+        /* --- MASTER STYLESHEET --- */
+        :root {
+            --bg-color: #0d0d0d;
+            --container-bg: rgba(20, 20, 20, 0.85); /* Slightly less transparent for readability */
+            --accent-color: #ff0000;
+            --text-color: #e0e0e0;
+            --input-bg: #1a1a1a;
+            --success-color: #00ff00;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        /* --- FIX/IMPROVEMENT: Allow scrolling --- */
+        /* Make html and body take full height to act as a proper base */
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            /* --- FIX/IMPROVEMENT: REMOVED `overflow: hidden` --- */
+            /* This was the main cause of the mobile issues. Removing it allows the page to scroll. */
+        }
+
+        /* --- SHARED BACKGROUND ELEMENTS --- */
+        /* These are fixed, so they will stay in place during scroll, which is the desired effect */
+        #background-skull { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100vw; height: 100vh; z-index: -2; opacity: 0.15; animation: pulse-bg 8s infinite ease-in-out; }
+        #background-skull svg { width: 100%; height: 100%; object-fit: contain; }
+        #matrix-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        @keyframes pulse-bg { 0% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); } 50% { opacity: 0.2; transform: translate(-50%, -50%) scale(1.05); } 100% { opacity: 0.1; transform: translate(-50%, -50%) scale(1); } }
+
+        /* --- ENTRY GATE (No changes needed, works well) --- */
+        #entry-gate {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.8); z-index: 100;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer; backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px);
+        }
+        .start-button {
+            padding: 20px 40px; border: 2px solid var(--accent-color); color: var(--accent-color);
+            font-size: 2rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.2em;
+            text-align: center; animation: pulse-button 2s infinite;
+            background: transparent; /* Ensure no background color */
+        }
+        @keyframes pulse-button {
+            0% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+            50% { transform: scale(1.05); box-shadow: 0 0 35px rgba(255, 0, 0, 0.8); }
+            100% { transform: scale(1); box-shadow: 0 0 20px rgba(255, 0, 0, 0.5); }
+        }
+        
+        /* --- MAIN CONTENT & NAVIGATION --- */
+        /* --- FIX/IMPROVEMENT: Make main-content the scrollable container --- */
+        #main-content {
+            display: none; /* Hidden by default */
+            height: 100%; /* Take full height of the viewport */
+            overflow-y: auto; /* Allow ONLY vertical scrolling if content overflows */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .main-header {
+            position: fixed; top: 0; left: 0; width: 100%;
+            padding: 20px 40px; display: flex; justify-content: space-between; align-items: center;
+            background: rgba(10, 10, 10, 0.5); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--accent-color); z-index: 50;
+        }
+        .brand { font-size: 1.5em; font-weight: bold; color: var(--text-color); text-shadow: 0 0 5px var(--accent-color); }
+        .main-nav a { color: var(--text-color); text-decoration: none; margin-left: 30px; font-size: 1.1em; text-transform: uppercase; transition: all 0.3s ease; cursor: pointer; }
+        .main-nav a:hover, .main-nav a.active { color: var(--accent-color); text-shadow: 0 0 10px var(--accent-color); }
+
+        /* --- PAGE SECTIONS --- */
+        .page-section {
+            display: none;
+            justify-content: center;
+            align-items: center;
+            min-height: 100%; /* Use 100% instead of 100vh to respect parent's height */
+            padding: 120px 20px 40px 20px; /* Generous padding for content */
+        }
+        .page-section.active {
+            display: flex;
+            flex-direction: column; /* Ensure vertical alignment */
+        }
+
+        /* --- SHARED CONTAINER & GLITCH TITLE --- */
+        .container {
+            width: 100%;
+            max-width: 550px;
+            background-color: var(--container-bg);
+            padding: 40px;
+            border-radius: 8px;
+            border: 1px solid var(--accent-color);
+            box-shadow: 0 0 25px rgba(255, 0, 0, 0.4);
+            margin: auto; /* Ensures it stays centered within the flex container */
+        }
+        .glitch-title { font-size: 3rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.1em; position: relative; text-shadow: 0 0 5px var(--accent-color), 0 0 10px var(--accent-color), 0 0 15px var(--accent-color); text-align: center; }
+        .glitch-title::before, .glitch-title::after { content: attr(data-text); position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); overflow: hidden; }
+        .glitch-title::before { left: 2px; text-shadow: -1px 0 #00ff00; animation: glitch-anim-1 2s infinite linear alternate-reverse; }
+        .glitch-title::after { left: -2px; text-shadow: -1px 0 #ffff00; animation: glitch-anim-2 2s infinite linear alternate-reverse; }
+        @keyframes glitch-anim-1 { 0% { clip-path: inset(10% 0 80% 0); } 20% { clip-path: inset(50% 0 10% 0); } 40% { clip-path: inset(90% 0 5% 0); } 60% { clip-path: inset(25% 0 60% 0); } 80% { clip-path: inset(5% 0 75% 0); } 100% { clip-path: inset(70% 0 20% 0); } }
+        @keyframes glitch-anim-2 { 0% { clip-path: inset(80% 0 15% 0); } 20% { clip-path: inset(20% 0 70% 0); } 40% { clip-path: inset(60% 0 5% 0); } 60% { clip-path: inset(10% 0 85% 0); } 80% { clip-path: inset(90% 0 5% 0); } 100% { clip-path: inset(40% 0 40% 0); } }
+
+        /* --- MAILER & CONTACT STYLES --- */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+        .form-group input, .form-group textarea { width: 100%; padding: 12px 15px; background-color: var(--input-bg); border: 1px solid #333; border-radius: 4px; color: var(--text-color); font-family: inherit; font-size: 1em; transition: all 0.3s ease; }
+        .form-group input:focus, .form-group textarea:focus { outline: none; border-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
+        .form-group textarea { resize: vertical; min-height: 120px; }
+        .button-container { display: flex; align-items: center; gap: 15px; }
+        button { flex-grow: 1; padding: 15px; background: var(--accent-color); border: none; border-radius: 4px; color: white; font-size: 1.1em; font-weight: bold; font-family: inherit; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all 0.2s ease; }
+        button:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 0 20px var(--accent-color); }
+        button:disabled { background: #555; cursor: not-allowed; opacity: 0.5; }
+        .loader { width: 24px; height: 24px; border: 3px solid rgba(255, 0, 0, 0.3); border-top-color: var(--accent-color); border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        #response { margin-top: 20px; padding: 15px; border-radius: 4px; font-weight: bold; text-align: center; display: none; }
+        #response.success { background-color: var(--success-color); color: black; text-shadow: 0 0 5px #fff; }
+        #response.error { background-color: var(--accent-color); color: white; text-shadow: 0 0 5px #000; }
+        .contact-container { text-align: center; }
+        .contact-container p { font-size: 1.2em; margin: 30px 0; line-height: 1.6; }
+        .contact-button { display: inline-block; padding: 20px 40px; background: var(--accent-color); color: white; text-decoration: none; font-size: 1.5em; font-weight: bold; text-transform: uppercase; letter-spacing: 2px; border-radius: 4px; transition: all 0.2s ease; }
+        .contact-button:hover { transform: translateY(-3px); box-shadow: 0 0 25px var(--accent-color); }
+
+
+        /* --- FIX/IMPROVEMENT: ENHANCED RESPONSIVE STYLES --- */
+        @media (max-width: 768px) {
+            .main-header {
+                flex-direction: column; /* Stack brand and nav */
+                padding: 15px;
+                gap: 10px; /* Add space between brand and nav */
+            }
+            .brand {
+                margin-bottom: 0; /* Remove bottom margin as gap is used now */
+            }
+            .main-nav {
+                display: flex;
+                flex-wrap: wrap; /* Allow nav links to wrap onto new lines */
+                justify-content: center; /* Center the links */
+                width: 100%;
+            }
+            .main-nav a {
+                margin: 5px 10px; /* Adjust margin for wrapped items */
+            }
+
+            /* Adjust page padding to account for the taller fixed header */
+            .page-section {
+                padding-top: 160px; /* Increased padding top */
+                padding-left: 10px; /* Reduce side padding */
+                padding-right: 10px;
+            }
+
+            /* Reduce container padding on small screens */
+            .container {
+                padding: 25px;
+            }
+
+            .glitch-title { font-size: 2.2rem; } /* Slightly larger title */
+            .contact-container p { font-size: 1rem; } /* More readable paragraph text */
+        }
+    </style>
+</head>
+<body>
+    <div id="background-skull">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="rgba(255, 0, 0, 0.5)"><path d="M12 2.04c-5.5 0-10 4.48-10 10s4.5 10 10 10 10-4.48 10-10-4.5-10-10-10zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM10 10.5c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm4 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-4 5c-2.33 0-4.31 1.46-5.11 3.5h10.22c-.8-2.04-2.78-3.5-5.11-3.5z"></path></svg>
+    </div>
+    <canvas id="matrix-canvas" width="432" height="600"></canvas>
+    <audio id="music-intro" src="https://fak-h.jokerkeep057.workers.dev/VjClI" preload="auto"></audio>
+    <audio id="music-loop" src="https://fak-h.jokerkeep057.workers.dev/UHl3l" preload="auto" loop=""></audio>
+    <div id="entry-gate" style="transition: opacity 0.5s ease-out; opacity: 0; display: none;">
+        <button class="start-button">[ System Access ]</button>
+    </div>
+    <div id="main-content" style="display: block;">
+        <header class="main-header">
+            <div class="brand">⫷ MS EDITS ⫸</div>
+            <nav class="main-nav">
+                <a href="#" data-page="home" class="active">[ Home ]</a>
+                <a href="#" data-page="mailer">[ FAK Email Boomber ]</a>
+                <a href="#" data-page="contact">[ Contact ]</a>
+            </nav>
+        </header>
+
+        
+        <main>
+            
+            <section id="page-home" class="page-section active">
+                <h1 class="glitch-title" data-text="⫷ MS EDITS ⫸">⫷ MS EDITS ⫸</h1>
+            </section>
+
+            
+            <section id="page-mailer" class="page-section">
+                <div class="container">
+                    <form id="emailForm">
+                        <div class="form-group"><label for="to">Recipient's Email</label><input type="email" id="to" placeholder="target_address@domain.com" required=""></div>
+                        <div class="form-group"><label for="subject">Subject</label><input type="text" id="subject" placeholder="RE: CLASSIFIED" required=""></div>
+                        <div class="form-group"><label for="message">Your Message</label><textarea id="message" placeholder="Begin transmission..." required=""></textarea></div>
+                        <div class="form-group"><label for="count">Payload Count (1-500)</label><input type="number" id="count" placeholder="Leave empty for single transmission" min="1" max="500"></div>
+                        <div class="button-container"><button type="submit" id="submitBtn">Transmit</button><div class="loader" id="loader"></div></div>
+                    </form>
+                    <div id="response"></div>
+                </div>
+            </section>
+
+            
+            <section id="page-contact" class="page-section">
+                <div class="container contact-container">
+                    <h1 class="glitch-title" data-text="Establish Connection">Establish Connection</h1>
+                    <p>Join the official channel for updates, discussions, and direct access to the community. All operatives are encouraged to connect.</p>
+                    <a href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" class="contact-button" target="_blank" rel="noopener noreferrer">[ Access WhatsApp Channel ]</a>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+
+
+
+
+
+        // // --- CONFIGURATION & URL REDIRECT ---
+        // const WHATSAPP_CHANNEL_URL = 'https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a';
+        // if (window.location.search || window.location.pathname.length > 1) {
+        //     window.location.href = WHATSAPP_CHANNEL_URL;
+        // }
+
+        // --- GLOBAL DOM ELEMENTS ---
+        const entryGate = document.getElementById('entry-gate');
+        const mainContent = document.getElementById('main-content');
+        const musicIntro = document.getElementById('music-intro');
+        const musicLoop = document.getElementById('music-loop');
+        const navLinks = document.querySelectorAll('.main-nav a');
+        const pageSections = document.querySelectorAll('.page-section');
+
+        // --- ENTRY GATE LOGIC ---
+        entryGate.addEventListener('click', () => {
+            entryGate.style.transition = 'opacity 0.5s ease-out';
+            entryGate.style.opacity = '0';
+            setTimeout(() => {
+                entryGate.style.display = 'none';
+            }, 500);
+
+            mainContent.style.display = 'block';
+
+            // --- FIX/IMPROVEMENT: Handle audio autoplay policies ---
+            // Modern browsers (especially mobile) require a user interaction to start audio.
+            // This ensures the audio plays reliably after the first click.
+            if (musicIntro.paused) {
+                musicIntro.play().catch(error => console.error("Intro music playback failed:", error));
+            }
+        });
+
+        musicIntro.addEventListener('ended', () => {
+            if (musicLoop.paused) {
+                musicLoop.play().catch(error => console.error("Loop music playback failed:", error));
+            }
+        });
+
+        // --- SINGLE-PAGE NAVIGATION LOGIC ---
+        function showPage(pageId) {
+            pageSections.forEach(section => section.classList.remove('active'));
+            navLinks.forEach(link => link.classList.remove('active'));
+            document.getElementById(`page-${pageId}`).classList.add('active');
+            document.querySelector(`.main-nav a[data-page="${pageId}"]`).classList.add('active');
+            
+            // --- FIX/IMPROVEMENT: Scroll to top on page change ---
+            document.getElementById('main-content').scrollTop = 0;
+        }
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPage(e.target.getAttribute('data-page'));
+            });
+        });
+
+        // --- MAILER FORM LOGIC ---
+        const API_URL = 'https://email.f-a-k.workers.dev/';
+        const OWNER_NAME = '⫷ MS EDITS ⫸';
+        document.getElementById('emailForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            const loader = document.getElementById('loader');
+            const responseDiv = document.getElementById('response');
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Transmitting...';
+            loader.style.display = 'block';
+            responseDiv.style.display = 'none';
+
+            const payload = {
+                to: document.getElementById('to').value,
+                subject: document.getElementById('subject').value,
+                message: `${document.getElementById('message').value}\n\n---\nSent via FAK Official Service\nOwner: ${OWNER_NAME}\nJoin our WhatsApp Channel: ${WHATSAPP_CHANNEL_URL}`,
+                from: "sender@fak-official.com"
+            };
+            const count = document.getElementById('count').value;
+            if (count && parseInt(count) > 0) payload.count = String(count);
+
+            try {
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) throw new Error(`Server responded with status: ${response.status}`);
+                const result = await response.json();
+                if (!result.success) throw new Error(result.error || 'Unknown API error.');
+
+                const message = result.batch_summary ? `Transmission complete. ${result.batch_summary.total_successful}/${result.batch_summary.total_requested} payloads delivered.` : 'Transmission successful!';
+                showResponse(message, 'success');
+                e.target.reset();
+            } catch (error) { showResponse(`Transmission Failed: ${error.message}`, 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Transmit';
+                loader.style.display = 'none';
+            }
+        });
+        function showResponse(message, type) {
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = message;
+            responseDiv.className = type;
+            responseDiv.style.display = 'block';
+        }
+
+        // --- MATRIX RAIN ANIMATION ---
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        let columns;
+        let rainDrops;
+
+        function setupMatrix() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            columns = Math.floor(canvas.width / fontSize);
+            rainDrops = Array(columns).fill(1);
+        }
+
+        const alphabet = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890@#$%^&*()*&^%+-/~{[|`]}';
+        const fontSize = 16;
+        const colors = ['#ff0000', '#ffff00', '#00ff00'];
+        
+        const draw = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = fontSize + 'px monospace';
+            rainDrops.forEach((y, ind) => {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.fillText(text, ind * fontSize, y * fontSize);
+                if (y * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[ind] = 0;
+                } else {
+                    rainDrops[ind] = y + 1;
+                }
+            });
+        };
+
+        // --- FIX/IMPROVEMENT: Correctly handle window resize for the matrix ---
+        window.addEventListener('resize', setupMatrix);
+        
+        // Initial setup and animation start
+        setupMatrix();
+        setInterval(draw, 33);
+    
+    </script>
+    
+</body>
+
+</html>
+

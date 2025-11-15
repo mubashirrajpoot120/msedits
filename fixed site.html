@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> MS EDITS </title>
+
+<style>
+
+/* ROOT COLORS */
+:root {
+    --bg-color: #0d0d0d;
+    --container-bg: rgba(20, 20, 20, 0.85);
+    --accent-color: #ff0000;
+    --text-color: #e0e0e0;
+    --input-bg: #1a1a1a;
+    --success-color: #00ff00;
+}
+
+/* RESET */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+html, body {
+    height: 100%;
+}
+body {
+    font-family: 'Courier New', monospace;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+/* BACKGROUND SKULL */
+#background-skull {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw; height: 100vh;
+    opacity: 0.15;
+    z-index: -2;
+    animation: pulse-bg 8s infinite ease-in-out;
+}
+#background-skull svg {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+@keyframes pulse-bg {
+    0% { opacity: .1; transform: translate(-50%, -50%) scale(1); }
+    50% { opacity: .2; transform: translate(-50%, -50%) scale(1.05); }
+    100% { opacity: .1; transform: translate(-50%, -50%) scale(1); }
+}
+
+/* MATRIX CANVAS */
+#matrix-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: -1;
+}
+
+/* ENTRY GATE */
+#entry-gate {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,.8);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    backdrop-filter: blur(5px);
+}
+.start-button {
+    padding: 20px 40px;
+    border: 2px solid var(--accent-color);
+    color: var(--accent-color);
+    font-size: 2rem;
+    font-weight: bold;
+    animation: pulse-button 2s infinite;
+    background: transparent;
+}
+@keyframes pulse-button {
+    0% { transform: scale(1); box-shadow: 0 0 20px red; }
+    50% { transform: scale(1.07); box-shadow: 0 0 40px red; }
+    100% { transform: scale(1); box-shadow: 0 0 20px red; }
+}
+
+/* MAIN CONTENT */
+#main-content {
+    display: none;
+    height: 100%;
+    overflow-y: auto;
+}
+
+/* HEADER */
+.main-header {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    padding: 20px 40px;
+    background: rgba(10,10,10,.5);
+    border-bottom: 1px solid var(--accent-color);
+    backdrop-filter: blur(10px);
+    display: flex;
+    justify-content: space-between;
+    z-index: 50;
+}
+.brand {
+    font-size: 1.6em;
+    font-weight: bold;
+    text-shadow: 0 0 10px var(--accent-color);
+}
+.main-nav a {
+    color: var(--text-color);
+    margin-left: 30px;
+    text-decoration: none;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+.main-nav a.active,
+.main-nav a:hover {
+    color: var(--accent-color);
+    text-shadow: 0 0 10px var(--accent-color);
+}
+
+/* PAGE SECTIONS */
+.page-section {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    min-height: 100%;
+    padding: 130px 20px 40px 20px;
+}
+.page-section.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* CONTAINER */
+.container {
+    width: 100%;
+    max-width: 550px;
+    background-color: var(--container-bg);
+    padding: 40px;
+    border-radius: 8px;
+    border: 1px solid var(--accent-color);
+    box-shadow: 0 0 25px rgba(255,0,0,.4);
+}
+
+/* GLITCH TITLE */
+.glitch-title {
+    font-size: 3rem;
+    font-weight: bold;
+    position: relative;
+    text-align: center;
+    text-shadow: 0 0 10px var(--accent-color);
+}
+
+/* RESPONSIVE FIX */
+@media(max-width:768px){
+    .main-header {
+        flex-direction: column;
+        gap: 10px;
+        padding: 15px;
+    }
+    .main-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .main-nav a { margin: 5px 10px; }
+    .container { padding: 25px; }
+    .glitch-title { font-size: 2.3rem; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- BACKGROUND -->
+<div id="background-skull">
+    <svg xmlns="http://www.w3.org/2000/svg" fill="rgba(255,0,0,.5)" viewBox="0 0 24 24">
+        <path d="M12 2.04c-5.5 0-10 4.48-10 10s4.5 10 10 10 10-4.48 10-10-4.5-10-10-10zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8..."/>
+    </svg>
+</div>
+
+<canvas id="matrix-canvas"></canvas>
+
+<!-- AUDIO -->
+<audio id="music-intro" src="https://fak-h.jokerkeep057.workers.dev/VjClI" preload="auto"></audio>
+<audio id="music-loop" src="https://fak-h.jokerkeep057.workers.dev/UHl3l" preload="auto" loop></audio>
+
+<!-- ENTRY GATE -->
+<div id="entry-gate">
+    <button class="start-button">[ SYSTEM ACCESS ]</button>
+</div>
+
+<!-- MAIN CONTENT -->
+<div id="main-content">
+    <header class="main-header">
+        <div class="brand">⫷ MS EDITS ⫸</div>
+
+        <nav class="main-nav">
+            <a data-page="home" class="active">[ Home ]</a>
+            <a data-page="mailer">[ Email Bomber ]</a>
+            <a data-page="contact">[ Contact ]</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="page-home" class="page-section active">
+            <h1 class="glitch-title">⫷ MS EDITS ⫸</h1>
+        </section>
+
+        <section id="page-mailer" class="page-section">
+            <div class="container">
+                <form id="emailForm">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="to" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <input type="text" id="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea id="message" required></textarea>
+                    </div>
+                    <button type="submit">Transmit</button>
+                </form>
+            </div>
+        </section>
+
+        <section id="page-contact" class="page-section">
+            <div class="container contact-container">
+                <h1 class="glitch-title">Establish Connection</h1>
+                <p>Join the official channel.</p>
+                <a class="contact-button"
+                   href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a"
+                   target="_blank">[ WhatsApp Channel ]</a>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+
+/* REDIRECT KEEP 
+const WHATSAPP_CHANNEL_URL =
+ "https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a";
+if (window.location.search || window.location.pathname.length > 1) {
+    window.location.href = WHATSAPP_CHANNEL_URL;
+}
+    */
+
+/* ELEMENTS */
+const entryGate = document.getElementById("entry-gate");
+const mainContent = document.getElementById("main-content");
+const musicIntro = document.getElementById("music-intro");
+const musicLoop = document.getElementById("music-loop");
+
+/* ENTRY CLICK */
+entryGate.onclick = () => {
+    entryGate.style.opacity = "0";
+    setTimeout(() => { entryGate.style.display = "none"; }, 500);
+
+    mainContent.style.display = "block";
+
+    musicIntro.play().catch(()=>{});
+};
+musicIntro.onended = () => {
+    musicLoop.play().catch(()=>{});
+};
+
+/* NAVIGATION */
+document.querySelectorAll(".main-nav a").forEach(link => {
+    link.onclick = () => {
+        document.querySelectorAll(".main-nav a").forEach(a=>a.classList.remove("active"));
+        link.classList.add("active");
+
+        document.querySelectorAll(".page-section").forEach(sec=>sec.classList.remove("active"));
+        document.getElementById("page-"+link.dataset.page).classList.add("active");
+    };
+});
+
+/* MATRIX ANIMATION */
+const canvas = document.getElementById("matrix-canvas");
+const ctx = canvas.getContext("2d");
+let fontSize = 16;
+let columns;
+let rainDrops;
+
+function setupMatrix() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    columns = Math.floor(canvas.width / fontSize);
+    rainDrops = Array(columns).fill(1);
+}
+setupMatrix();
+
+const alphabet = "アァカサタナハマ...ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456..ms..edits";
+
+function drawMatrix() {
+    ctx.fillStyle = "rgba(0,0,0,.05)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.font = fontSize + "px monospace";
+
+    rainDrops.forEach((y, i) => {
+        const text = alphabet.charAt(Math.random()*alphabet.length);
+        ctx.fillStyle = ["#ff0000","#ffff00","#00ff00"][Math.floor(Math.random()*3)];
+        ctx.fillText(text, i * fontSize, y * fontSize);
+
+        if (y * fontSize > canvas.height && Math.random() > 0.97)
+            rainDrops[i] = 0;
+        rainDrops[i]++;
+    });
+}
+setInterval(drawMatrix, 33);
+window.onresize = setupMatrix;
+
+</script>
+
+</body>
+</html>
