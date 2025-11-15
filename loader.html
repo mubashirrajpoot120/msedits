@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="ur">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>MS Edits — Loading</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family: "Courier New", monospace;
+  background:#0a0f0a;
+  color:#b9ffcc;
+  overflow:hidden;
+  min-height:100vh;
+}
+#site-content{
+  opacity:0;
+  transition:opacity .6s ease .2s;
+  padding:40px;
+}
+#preloader{
+  position:fixed;inset:0;
+  background:#000;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:20px;
+  z-index:9999;
+}
+#binaryCanvas{
+  position:absolute;inset:0;width:100%;height:100%;z-index:1;
+}
+.loader-front{
+  z-index:2;
+  padding:20px 30px;
+  border-radius:14px;
+  background:rgba(0,0,0,0.4);
+  border:1px solid rgba(160,255,180,0.4);
+  box-shadow:0 0 25px rgba(180,255,180,0.2);
+  backdrop-filter:blur(4px);
+  text-align:center;
+}
+.loader-title{
+  color:#c9ffd9;
+  font-size:22px;
+  text-shadow:0 0 12px rgba(200,255,200,0.5);
+}
+.loader-sub{
+  color:#d7ffe8;font-size:14px;margin-bottom:12px;
+}
+.progress-wrap{
+  width:380px;max-width:90vw;height:12px;
+  background:rgba(255,255,255,0.08);
+  border-radius:999px;overflow:hidden;
+  border:1px solid rgba(160,255,180,0.4);
+}
+.progress-bar{
+  width:0%;height:100%;
+  background:rgba(180,255,200,0.8);
+  box-shadow:0 0 15px rgba(180,255,200,0.5);
+  transition:width .15s linear;
+}
+.progress-percent{
+  color:#c4ffd6;font-size:14px;margin-top:6px;font-weight:bold;
+}
+.loader-hint{
+  color:#99ffbb;font-size:12px;margin-top:5px;
+}
+.preloader-hidden{opacity:0;transition:opacity .8s ease;}
+.loaded-body{overflow:auto;}
+</style>
+</head>
+<body>
+
+<div id="preloader">
+  <canvas id="binaryCanvas"></canvas>
+  <div class="loader-front">
+    <div class="loader-title">MS Edits — Loading Environment</div>
+    <div class="loader-sub">Initializing hacking interface... please wait</div>
+    <div class="progress-wrap"><div class="progress-bar" id="pb"></div></div>
+    <div class="progress-percent" id="pt">0%</div>
+    <div class="loader-hint">Light neon green matrix active</div>
+  </div>
+</div>
+
+<div id="site-content">
+  <h1>MS Edits — Loaded</h1>
+  <p>Your hacking style interface is now active.</p>
+</div>
+
+<script>
+// Matrix Rain
+(function(){
+  const c=document.getElementById("binaryCanvas"),x=c.getContext("2d");
+  let w,h,cols,drops=[],fs=16;
+  function resize(){
+    w=c.width=innerWidth;h=c.height=innerHeight;
+    cols=Math.floor(w/fs);
+    drops=Array(cols).fill(0);
+  }
+  addEventListener("resize",resize);resize();
+  function draw(){
+    x.fillStyle="rgba(0,0,0,0.15)";
+    x.fillRect(0,0,w,h);
+    x.font=fs+"px monospace";
+    for(let i=0;i<cols;i++){
+      const t=Math.random()>0.5?"0":"1";
+      x.fillStyle="rgba(200,255,200,0.9)";
+      x.fillText(t,i*fs,drops[i]*fs);
+      if(drops[i]*fs>h && Math.random()>0.975) drops[i]=0;
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// Progress
+(function(){
+  const bar=document.getElementById("pb");
+  const text=document.getElementById("pt");
+  const pre=document.getElementById("preloader");
+  const cont=document.getElementById("site-content");
+
+  let p=0;
+  const int=setInterval(()=>{
+    p=Math.min(98,p+Math.random()*4);
+    bar.style.width=Math.round(p)+"%";
+    text.textContent=Math.round(p)+"%";
+  },150);
+
+  window.onload=()=>setTimeout(()=>{
+    clearInterval(int);
+    let f=p;
+    const fin=setInterval(()=>{
+      f+=2;
+      if(f>=100)f=100;
+      bar.style.width=f+"%";
+      text.textContent=f+"%";
+      if(f===100){
+        clearInterval(fin);
+        pre.classList.add("preloader-hidden");
+        setTimeout(()=>{pre.remove();cont.style.opacity="1";},700);
+      }
+    },40);
+  },300);
+})();
+</script>
+
+</body>
+</html>
