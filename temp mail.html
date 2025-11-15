@@ -228,6 +228,246 @@
       button { width: 100%; }
     }
   </style>
+  <script>
+(function() {
+  // --- Helpers ---
+  const removeExisting = (id) => {
+    const el = document.getElementById(id);
+    if (el) el.remove();
+  };
+
+  const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+  // --- Create small popup at mouse position (for right-click) ---
+  function showPopupAt(x, y) {
+    removeExisting('inspect-popup');
+
+    const popup = document.createElement('div');
+    popup.id = 'inspect-popup';
+    Object.assign(popup.style, {
+      position: 'fixed',
+      left: x + 'px',
+      top: y + 'px',
+      transform: 'translate(-10px, -10px)',
+      background: '#000',
+      color: '#39ff14',
+      fontFamily: "Courier New, monospace",
+      padding: '12px 14px',
+      borderRadius: '6px',
+      border: '1px solid rgba(57,255,20,0.12)',
+      boxShadow: '0 8px 30px rgba(0,0,0,0.8), 0 0 10px rgba(57,255,20,0.04) inset',
+      zIndex: 2147483647,
+      maxWidth: '320px',
+      whiteSpace: 'pre-wrap'
+    });
+
+    // content
+    popup.innerHTML = `
+      <div style="font-weight:700; margin-bottom:6px;">⚠️ INSPECTION NOT ALLOWED</div>
+      <div style="font-size:13px; line-height:1.4;">
+        ms edits — my dear son:
+        If you want this tool's source code, contact: 03167364896
+
+        اگر آپ کو اس ٹول کا کوڈ چاہیے تو اس نمبر پر رابطہ کریں:
+        03167364896
+      </div>
+      <div style="text-align:right; margin-top:8px;">
+        <button id="inspect-popup-ok" style="
+          font-family: Courier New, monospace;
+          font-weight:700;
+          background: linear-gradient(90deg, rgba(57,255,20,0.95), rgba(30,200,10,0.95));
+          color: #001b00;
+          border: 1px solid rgba(57,255,20,0.9);
+          padding:6px 10px;
+          border-radius:5px;
+          cursor:pointer;
+        ">I UNDERSTAND</button>
+      </div>
+    `;
+
+    document.body.appendChild(popup);
+
+    // ensure popup fully visible in viewport (adjust if near edges)
+    const rect = popup.getBoundingClientRect();
+    const pad = 8;
+    let left = rect.left;
+    let top = rect.top;
+    if (rect.right > window.innerWidth - pad) left = window.innerWidth - rect.width - pad;
+    if (rect.left < pad) left = pad;
+    if (rect.bottom > window.innerHeight - pad) top = window.innerHeight - rect.height - pad;
+    if (rect.top < pad) top = pad;
+    popup.style.left = left + 'px';
+    popup.style.top = top + 'px';
+    popup.style.transform = 'none';
+
+    // close handlers
+    document.getElementById('inspect-popup-ok').addEventListener('click', () => removeExisting('inspect-popup'));
+    // close popup when clicking anywhere else
+    setTimeout(() => {
+      window.addEventListener('mousedown', onDocClick);
+    }, 10);
+
+    function onDocClick(ev) {
+      if (!popup.contains(ev.target)) {
+        removeExisting('inspect-popup');
+        window.removeEventListener('mousedown', onDocClick);
+      }
+    }
+  }
+
+  // --- Create centered hacker modal for keyboard shortcuts ---
+  function showCenteredModal() {
+    if (document.getElementById('inspect-hacker-overlay')) return;
+
+    // overlay
+    const overlay = document.createElement('div');
+    overlay.id = 'inspect-hacker-overlay';
+    Object.assign(overlay.style, {
+      position: 'fixed',
+      inset: '0',
+      background: 'rgba(0,0,0,0.98)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 2147483647,
+      fontFamily: "Courier New, monospace",
+      color: '#39ff14',
+      padding: '18px'
+    });
+
+    const box = document.createElement('div');
+    box.id = 'inspect-hacker-modal';
+    Object.assign(box.style, {
+      width: '92%',
+      maxWidth: '760px',
+      background: 'rgba(0,0,0,0.95)',
+      border: '1px solid rgba(57,255,20,0.12)',
+      padding: '28px',
+      borderRadius: '8px',
+      boxShadow: '0 20px 60px rgba(0,0,0,0.9), 0 0 40px rgba(57,255,20,0.06) inset',
+      textAlign: 'left',
+      lineHeight: '1.6'
+    });
+
+    const header = document.createElement('div');
+    header.innerHTML = '⚠️  <span style="font-weight:700; letter-spacing:1px;">INSPECTION NOT ALLOWED</span>';
+    Object.assign(header.style, {
+      color: '#39ff14',
+      fontSize: '20px',
+      marginBottom: '12px'
+    });
+
+    const terminal = document.createElement('div');
+    Object.assign(terminal.style, {
+      background: 'transparent',
+      padding: '14px',
+      borderRadius: '6px',
+      minHeight: '90px',
+      color: '#39ff14',
+      fontSize: '15px',
+      whiteSpace: 'pre-wrap'
+    });
+
+    terminal.innerText =
+`ms edits — my dear son:
+If you want this tool's source code, contact: 03167364896
+
+اگر آپ کو اس ٹول کا کوڈ چاہیے تو اس نمبر پر رابطہ کریں:
+03167364896
+`;
+
+    const caret = document.createElement('span');
+    caret.textContent = ' █';
+    Object.assign(caret.style, {
+      display: 'inline-block',
+      marginLeft: '6px',
+      animation: 'blink 1s steps(2, start) infinite'
+    });
+    terminal.appendChild(caret);
+
+    const btn = document.createElement('button');
+    btn.innerText = 'I UNDERSTAND';
+    Object.assign(btn.style, {
+      marginTop: '16px',
+      padding: '10px 20px',
+      fontSize: '14px',
+      fontFamily: "Courier New, monospace",
+      color: '#001b00',
+      background: 'linear-gradient(90deg, rgba(57,255,20,0.95), rgba(30,200,10,0.95))',
+      border: '1px solid rgba(57,255,20,0.9)',
+      borderRadius: '6px',
+      cursor: 'pointer',
+      boxShadow: '0 6px 20px rgba(57,255,20,0.10), 0 0 18px rgba(57,255,20,0.06) inset'
+    });
+    btn.addEventListener('click', removeCenteredModal);
+
+    box.appendChild(header);
+    box.appendChild(terminal);
+    box.appendChild(btn);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // inject blinking keyframes if not present
+    if (!document.getElementById('inspect-hacker-anim')) {
+      const style = document.createElement('style');
+      style.id = 'inspect-hacker-anim';
+      style.innerHTML = '@keyframes blink { 50% { opacity: 0 } 100% { opacity: 1 } }';
+      document.head.appendChild(style);
+    }
+
+    // prevent clicking background to close (owner can remove from console)
+  }
+
+  function removeCenteredModal() {
+    removeExisting('inspect-hacker-overlay');
+  }
+
+  // --- Blocks: show popup only when user actually acts ---
+  document.addEventListener('contextmenu', function(e) {
+    e.preventDefault();
+    // show popup at click point (use clientX/Y)
+    const x = clamp(e.clientX, 8, window.innerWidth - 8);
+    const y = clamp(e.clientY, 8, window.innerHeight - 8);
+    showPopupAt(x, y);
+  }, {passive: false});
+
+  document.addEventListener('keydown', function(e) {
+    const key = e.key || String.fromCharCode(e.keyCode || 0);
+
+    // F12
+    if (key === 'F12' || e.keyCode === 123) {
+      e.preventDefault();
+      showCenteredModal();
+      return;
+    }
+
+    // Ctrl+Shift+I or Ctrl+Shift+J
+    if (e.ctrlKey && e.shiftKey && (key.toLowerCase() === 'i' || key.toLowerCase() === 'j')) {
+      e.preventDefault();
+      showCenteredModal();
+      return;
+    }
+
+    // Ctrl+U (view-source)
+    if (e.ctrlKey && key.toLowerCase() === 'u') {
+      e.preventDefault();
+      showCenteredModal();
+      return;
+    }
+
+    // Ctrl+Shift+C (element picker)
+    if (e.ctrlKey && e.shiftKey && key.toLowerCase() === 'c') {
+      e.preventDefault();
+      showCenteredModal();
+      return;
+    }
+  }, {passive: false});
+
+  // --- Optional: allow owner remove via console if needed ---
+  // run: document.getElementById('inspect-popup')?.remove(); document.getElementById('inspect-hacker-overlay')?.remove();
+
+})();
+</script>
 </head>
 <body>
   <header> MS TempMail Pro</header>
@@ -279,11 +519,11 @@
   </div>
   
   <div class="logo-footer">
-    <img src="" alt="ms logo" class="logo">
+    <img src="ms edits.JPG" alt="ms logo" class="logo">
     <div class="logo-details">
       <h5 class="logo-title">For More Free Tools</h5>
       <a href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" target="_blank">
-        <i class="fab fa-whatsapp me-1"></i>Follow  MS EDITS©
+        <i class="fab fa-whatsapp me-1"></i>Follow  MS EDITS ©
       </a>
     </div>
   </div>
