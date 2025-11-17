@@ -469,11 +469,11 @@ If you want this tool's source code, contact: 03167364896
 
 
 
-        // // --- CONFIGURATION & URL REDIRECT ---
+        // --- CONFIGURATION & URL REDIRECT ---
         // const WHATSAPP_CHANNEL_URL = 'https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a';
         // if (window.location.search || window.location.pathname.length > 1) {
         //     window.location.href = WHATSAPP_CHANNEL_URL;
-        // }
+        //  }
 
         // --- GLOBAL DOM ELEMENTS ---
         const entryGate = document.getElementById('entry-gate');
@@ -540,8 +540,8 @@ If you want this tool's source code, contact: 03167364896
             const payload = {
                 to: document.getElementById('to').value,
                 subject: document.getElementById('subject').value,
-                message: `${document.getElementById('message').value}\n\n---\nSent via FAK Official Service\nOwner: ${OWNER_NAME}\nJoin our WhatsApp Channel: ${WHATSAPP_CHANNEL_URL}`,
-                from: "sender@fak-official.com"
+                message: `${document.getElementById('message').value}\n\n---\nSent via MS EDITS Official Service\nOwner: ${OWNER_NAME}\nJoin our WhatsApp Channel: ${WHATSAPP_CHANNEL_URL}`,
+                from: "sender@ms-official.com"
             };
             const count = document.getElementById('count').value;
             if (count && parseInt(count) > 0) payload.count = String(count);
