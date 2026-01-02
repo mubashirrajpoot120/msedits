@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS EDITS Toolkit</title>
+
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<style>
+/* ================= THEME VARIABLES ================= */
+:root{
+  --bg:#0a0d12;
+  --card:#141824;
+  --border:#273043;
+  --text:#ffffff;
+  --text-light:#ffffff;
+  --text-dark:#111111;
+  --muted:#9aa4b2;
+  --muted-light:#555555;
+  --accent:#00ff9c;
+  --glow:0 0 18px rgba(0,255,156,.6);
+}
+
+body.light{
+  --bg:#f4f6fb;
+  --card:#ffffff;
+  --border:#e1e5ec;
+  --text:var(--text-dark);
+  --muted:var(--muted-light);
+}
+
+/* ================= BASE ================= */
+*{box-sizing:border-box;transition:.25s}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,Segoe UI,Roboto;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* ================= NAVBAR ================= */
+.navbar{
+  position:sticky;top:0;z-index:999;
+  background:rgba(0,0,0,.75) !important;
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+  padding:10px 0;
+}
+.navbar-brand{
+  font-weight:900;
+  letter-spacing:1px;
+  font-size:1.2rem;
+  color:var(--text) !important;
+}
+
+/* ================= HERO ================= */
+.hero{
+  text-align:center;
+  padding:40px 20px;
+  background:linear-gradient(135deg, rgba(20,24,36,0.8), rgba(10,13,18,0.9));
+  border-bottom:1px solid var(--border);
+}
+.hero h1{
+  font-size:3rem;
+  font-weight:900;
+  margin-bottom:1rem;
+  color:var(--text);
+}
+.hero span{
+  background:linear-gradient(90deg,#ff004c,#00ff9c,#3b82ff,#ffd000);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p{
+  color:var(--text);
+  opacity:0.8;
+  font-size:1.1rem;
+  max-width:600px;
+  margin:0 auto;
+}
+
+/* ================= SEARCH ================= */
+.search{
+  padding:20px;
+  background:var(--bg);
+}
+.search input{
+  width:100%;
+  padding:14px 20px;
+  border-radius:30px;
+  border:1px solid var(--border);
+  background:var(--card);
+  color:var(--text);
+  outline:none;
+}
+.search input::placeholder{
+  color:var(--muted);
+}
+
+/* ================= GRID ================= */
+.grid-container{
+  padding:20px;
+}
+.tool-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  text-align:center;
+  position:relative;
+  cursor:pointer;
+  height:100%;
+  transition:all 0.3s ease;
+  display:block;
+  text-decoration:none !important;
+  color:inherit;
+}
+.tool-card:hover{
+  transform:translateY(-6px);
+  box-shadow:var(--glow);
+  text-decoration:none;
+  color:inherit;
+}
+.tool-card i{
+  font-size:36px;
+  color:var(--accent);
+  text-shadow:var(--glow);
+  margin-bottom:15px;
+}
+.tool-card h4{
+  font-size:1rem;
+  margin:10px 0 5px;
+  font-weight:600;
+  color:var(--text);
+}
+.tool-card small{
+  color:var(--muted);
+  font-size:0.85rem;
+}
+
+/* FAVORITE */
+.star{
+  position:absolute;
+  top:12px;
+  right:12px;
+  font-size:16px;
+  color:#666;
+  cursor:pointer;
+  z-index:2;
+}
+.star.active{color:#ffd000}
+
+/* ================= FLOATING ================= */
+.fab{
+  position:fixed;
+  right:20px;
+  width:50px;
+  height:50px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--card);
+  border:2px solid var(--accent);
+  box-shadow:var(--glow);
+  cursor:pointer;
+  z-index:1000;
+  font-size:1.2rem;
+  color:var(--text);
+}
+#fab-theme{bottom:180px}
+#fab-color{bottom:120px}
+#fab-wa{bottom:60px}
+
+/* ================= PANELS ================= */
+.color-panel{
+  position:fixed;
+  right:20px;
+  bottom:240px;
+  width:200px;
+  background:var(--card);
+  border:2px solid var(--accent);
+  border-radius:16px;
+  padding:15px;
+  display:none;
+  box-shadow:var(--glow);
+  z-index:1001;
+}
+.color-btn{
+  width:100%;
+  padding:10px;
+  margin-bottom:10px;
+  border:none;
+  border-radius:12px;
+  background:var(--accent);
+  color:#000;
+  font-weight:700;
+  cursor:pointer;
+  transition:transform 0.2s;
+}
+.color-btn:hover{
+  transform:scale(1.05);
+}
+
+/* ================= MODAL ================= */
+.modal-content{
+  background:var(--card);
+  border:2px solid var(--accent);
+  border-radius:18px;
+  overflow:hidden;
+  color:var(--text);
+}
+.modal-header{
+  border-bottom:1px solid var(--border);
+  padding:20px;
+  color:var(--text);
+}
+.modal-title{
+  color:var(--text);
+  font-weight:700;
+}
+.modal-body{
+  padding:20px;
+  color:var(--text);
+}
+.modal-body p{
+  color:var(--text);
+  opacity:0.8;
+}
+.modal-footer{
+  border-top:1px solid var(--border);
+  padding:15px 20px;
+}
+.btn-accent{
+  background:var(--accent);
+  color:#000;
+  font-weight:700;
+  border:none;
+  padding:10px 20px;
+  border-radius:10px;
+  transition:all 0.3s;
+}
+.btn-accent:hover{
+  background:var(--accent);
+  opacity:0.9;
+  color:#000;
+  transform:scale(1.05);
+}
+.btn-close{
+  filter:invert(1);
+  opacity:0.8;
+}
+.btn-close:hover{
+  opacity:1;
+}
+
+/* WhatsApp Modal Specific */
+#modal-wa .modal-header .btn-close {
+  display: none !important; /* Hide cross on WhatsApp modal */
+}
+
+/* ================= FOOTER ================= */
+.footer{
+  text-align:center;
+  padding:30px 20px;
+  color:var(--text);
+  opacity:0.7;
+  border-top:1px solid var(--border);
+  margin-top:40px;
+}
+.footer small{
+  color:var(--muted);
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width:768px){
+  .hero h1{font-size:2.2rem;}
+  .fab{width:45px;height:45px;right:15px;}
+  #fab-theme{bottom:160px}
+  #fab-color{bottom:110px}
+  #fab-wa{bottom:60px}
+  .color-panel{right:15px;bottom:200px;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <div class="navbar-brand">MS EDITS TOOLKIT</div>
+    <div class="d-flex gap-2">
+      <button class="btn btn-outline-secondary rounded-circle p-2" onclick="toggleTheme()" style="width:40px;height:40px;color:var(--text)">🌓</button>
+      <button class="btn btn-outline-secondary rounded-circle p-2" onclick="showPanel()" style="width:40px;height:40px;color:var(--text)">🎨</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <h1>Hack The <span>Future</span></h1>
+    <p>Advanced Cyber Developer Toolkit</p>
+  </div>
+</section>
+
+<!-- SEARCH -->
+<div class="search">
+  <div class="container">
+    <input type="text" class="form-control" placeholder="Search tools..." oninput="searchTools(this.value)">
+  </div>
+</div>
+
+<!-- TOOLS GRID -->
+<div class="grid-container">
+  <div class="container">
+    <div class="row g-4" id="grid"></div>
+  </div>
+</div>
+
+<!-- FLOATING BUTTONS -->
+<div class="fab" id="fab-theme" onclick="toggleTheme()">🌓</div>
+<div class="fab" id="fab-color" onclick="showPanel()">🎨</div>
+<div class="fab" id="fab-wa" onclick="showModal('wa')">💬</div>
+
+<!-- COLOR PANEL -->
+<div class="color-panel" id="panel">
+  <button class="color-btn" onclick="setColor('#00ff9c')">Green</button>
+  <button class="color-btn" onclick="setColor('#ff3b3b')">Red</button>
+  <button class="color-btn" onclick="setColor('#3b82ff')">Blue</button>
+  <button class="color-btn" onclick="setColor('#ffd000')">Yellow</button>
+  <button class="color-btn" onclick="autoColor()">AUTO</button>
+</div>
+
+<!-- MODALS -->
+
+<!-- WhatsApp Modal (NO CLOSE BUTTON) -->
+<div class="modal fade" id="modal-wa" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">Join WhatsApp Channel</h5>
+        <!-- No close button here -->
+      </div>
+      <div class="modal-body text-center">
+        <i class="fab fa-whatsapp fa-3x mb-3" style="color:#25D366"></i>
+        <h4 class="mb-3">Latest Tools & Updates</h4>
+        <p class="mb-0">Get notified about new tools, updates and cybersecurity tips</p>
+        <p class="text-muted mt-2"><small>Join channel to close this popup</small></p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <button onclick="joinWhatsAppChannel()" class="btn btn-success btn-lg px-4">
+          <i class="fab fa-whatsapp me-2"></i>Join Channel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Contact Modal (HAS CLOSE BUTTON) -->
+<div class="modal fade" id="modal-contact" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <h5 class="modal-title">Need Hacker Website?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <i class="fas fa-code fa-3x mb-3" style="color:var(--accent)"></i>
+        <h4 class="mb-3">Professional Web Development</h4>
+        <p class="mb-0">We create custom hacker/cybersecurity themed websites</p>
+      </div>
+      <div class="modal-footer border-0 justify-content-center">
+        <a href="https://wa.me/923001234567" target="_blank" class="btn btn-accent btn-lg px-4" onclick="closeModal('contact')">
+          <i class="fab fa-whatsapp me-2"></i>Contact on WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <p class="mb-2">© 2026 MS EDITS - Advanced Cyber Toolkit</p>
+    <small>For educational and ethical use only</small>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ================= DATA ================= */
+const tools = [
+  {name:"AI Chat", icon:"fa-robot", link:"https://obfuscator.io/"},
+ 
+];
+
+const grid = document.getElementById("grid");
+let waModal = null;
+let contactModal = null;
+
+/* ================= INITIALIZE MODALS ================= */
+document.addEventListener('DOMContentLoaded', function() {
+  waModal = new bootstrap.Modal(document.getElementById('modal-wa'));
+  contactModal = new bootstrap.Modal(document.getElementById('modal-contact'));
+  
+  // Show WhatsApp modal only if not joined before
+  if(!localStorage.getItem('whatsappJoined')){
+    setTimeout(() => {
+      waModal.show();
+    }, 1500);
+  }
+  
+  // Show contact modal after 60 seconds
+  setTimeout(() => {
+    if(!localStorage.getItem('contactShown')){
+      contactModal.show();
+      localStorage.setItem('contactShown', 'true');
+    }
+  }, 60000);
+});
+
+/* ================= RENDER ================= */
+function render(list){
+  grid.innerHTML = "";
+  list.forEach(t => {
+    const col = document.createElement("div");
+    col.className = "col-md-3 col-sm-4 col-6";
+    
+    const toolCard = document.createElement("a");
+    toolCard.className = "tool-card";
+    toolCard.href = t.link;
+    toolCard.target = "_blank";
+    toolCard.innerHTML = `
+      <i class="fa-solid ${t.icon}"></i>
+      <h4>${t.name}</h4>
+      <small>Click to open tool</small>
+      <div class="star">⭐</div>
+    `;
+    
+    col.appendChild(toolCard);
+    grid.appendChild(col);
+  });
+}
+render(tools);
+
+/* ================= SEARCH ================= */
+function searchTools(v){
+  const filtered = tools.filter(t => 
+    t.name.toLowerCase().includes(v.toLowerCase())
+  );
+  render(filtered);
+}
+
+/* ================= THEME ================= */
+function toggleTheme(){
+  document.body.classList.toggle("light");
+  localStorage.theme = document.body.classList.contains("light") ? "light" : "dark";
+  updateThemeColors();
+}
+
+function updateThemeColors(){
+  const textElements = document.querySelectorAll('.modal-title, .modal-body, .modal-body p, .hero p, .navbar-brand, .fab');
+  textElements.forEach(el => {
+    el.style.color = getComputedStyle(document.documentElement).getPropertyValue('--text');
+  });
+}
+
+if(localStorage.theme === "light") {
+  document.body.classList.add("light");
+}
+
+/* ================= COLORS ================= */
+function setColor(c){
+  document.documentElement.style.setProperty("--accent", c);
+  localStorage.color = c;
+}
+function autoColor(){
+  const colors = ["#00ff9c","#ff3b3b","#3b82ff","#ffd000"];
+  setColor(colors[Math.floor(Math.random() * colors.length)]);
+}
+if(localStorage.color) setColor(localStorage.color);
+
+/* ================= PANEL ================= */
+function showPanel(){
+  const panel = document.getElementById("panel");
+  panel.style.display = panel.style.display === "block" ? "none" : "block";
+}
+
+// Close panel when clicking outside
+document.addEventListener('click', function(event) {
+  const panel = document.getElementById('panel');
+  const fabColor = document.getElementById('fab-color');
+  
+  if (panel && !panel.contains(event.target) && !fabColor.contains(event.target)) {
+    panel.style.display = 'none';
+  }
+});
+
+/* ================= WHATSAPP CHANNEL JOIN ================= */
+function joinWhatsAppChannel(){
+  // Open WhatsApp channel link
+  window.open('https://wa.me/channel-link-here', '_blank');
+  
+  // Mark as joined
+  localStorage.setItem('whatsappJoined', 'true');
+  
+  // Close the modal
+  waModal.hide();
+  
+  // Show success message
+  setTimeout(() => {
+    alert('Welcome to MS EDITS WhatsApp Channel! You will now receive updates.');
+  }, 500);
+}
+
+/* ================= MODAL FUNCTIONS ================= */
+function showModal(type){
+  if(type === 'wa' && !localStorage.getItem('whatsappJoined')){
+    waModal.show();
+  } else if(type === 'contact'){
+    contactModal.show();
+  }
+}
+
+function closeModal(type){
+  if(type === 'wa'){
+    waModal.hide();
+  } else if(type === 'contact'){
+    contactModal.hide();
+  }
+}
+
+// Star functionality
+document.addEventListener('click', function(e){
+  if(e.target.classList.contains('star') || e.target.closest('.star')){
+    const star = e.target.classList.contains('star') ? e.target : e.target.closest('.star');
+    star.classList.toggle('active');
+  }
+});
+
+// Update colors on load
+updateThemeColors();
+</script>
+</body>
+</html>
