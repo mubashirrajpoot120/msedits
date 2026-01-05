@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MS EDITS AI Wallpapers</title>
+
+<style>
+:root{
+    --bg:#0b0f1a;
+    --card:#12182a;
+    --text:#eaeaff;
+    --muted:#9aa4ff;
+    --accent:#6c7bff;
+    --border:rgba(255,255,255,0.08);
+}
+body.light{
+    --bg:#f4f6fb;
+    --card:#ffffff;
+    --text:#111;
+    --muted:#555;
+    --accent:#4f46e5;
+    --border:#e6e6e6;
+}
+
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    padding:20px;
+}
+
+/* HEADER */
+header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    max-width:1200px;
+    margin:0 auto 30px;
+}
+header h1{
+    margin:0;
+    font-size:28px;
+    color:var(--accent);
+}
+header p{
+    margin:5px 0 0;
+    color:var(--muted);
+    font-size:14px;
+}
+
+/* TOGGLE */
+.toggle{
+    background:var(--card);
+    border:1px solid var(--border);
+    padding:8px 14px;
+    border-radius:20px;
+    cursor:pointer;
+    font-size:14px;
+    color:var(--text);
+}
+
+/* SEARCH */
+.search-container{
+    max-width:600px;
+    margin:0 auto 30px;
+    display:flex;
+    gap:10px;
+}
+.search-container input{
+    flex:1;
+    padding:14px;
+    border-radius:10px;
+    border:1px solid var(--border);
+    background:var(--card);
+    color:var(--text);
+    outline:none;
+}
+.search-container button{
+    padding:14px 22px;
+    border-radius:10px;
+    border:none;
+    background:var(--accent);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+}
+
+/* LOADER */
+#loader{
+    text-align:center;
+    margin:30px;
+    color:var(--muted);
+    display:none;
+}
+
+/* GRID */
+.grid{
+    max-width:1200px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+    gap:20px;
+}
+
+/* CARD */
+.card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:16px;
+    overflow:hidden;
+    transition:.3s;
+}
+.card:hover{
+    transform:translateY(-5px);
+}
+.card img{
+    width:100%;
+    height:260px;
+    object-fit:cover;
+    display:block;
+}
+.card a{
+    display:block;
+    text-align:center;
+    margin:12px;
+    padding:10px;
+    border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),#8b5cf6);
+    color:white;
+    text-decoration:none;
+    font-size:14px;
+}
+
+/* FOOTER */
+footer{
+    margin-top:60px;
+    padding-top:20px;
+    border-top:1px solid var(--border);
+    text-align:center;
+    font-size:14px;
+    color:var(--muted);
+}
+footer a{
+    color:var(--accent);
+    text-decoration:none;
+    margin:0 6px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div>
+        <h1>MS EDITS AI Wallpapers</h1>
+        <p>Smart search • Fast download • Clean design</p>
+    </div>
+    <button class="toggle" onclick="toggleTheme()">🌙 / ☀️</button>
+</header>
+
+<div class="search-container">
+    <input type="text" id="searchInput" placeholder="Search AI wallpapers...">
+    <button onclick="fetchWallpapers()">Search</button>
+</div>
+
+<div id="loader">🤖 AI is fetching images...</div>
+<div class="grid" id="imageGrid"></div>
+
+<footer>
+    Developed by <strong>MS EDITS</strong><br><br>
+    <a href="https://wa.me/+923167364896">WhatsApp</a> |
+    <a href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a">Channel</a>
+</footer>
+
+<script>
+async function fetchWallpapers(){
+    const query = searchInput.value.trim();
+    if(!query) return alert("Please enter a keyword");
+
+    imageGrid.innerHTML="";
+    loader.style.display="block";
+
+    try{
+        const res = await fetch(`https://api.siputzx.my.id/api/s/pinterest?query=${encodeURIComponent(query)}&type=image`);
+        const data = await res.json();
+
+        if(data.status && data.data){
+            data.data.forEach(item=>{
+                if(item.image_url){
+                    const div=document.createElement("div");
+                    div.className="card";
+                    div.innerHTML=`
+                        <img src="${item.image_url}">
+                        <a href="${item.image_url}" target="_blank">View / Download</a>
+                    `;
+                    imageGrid.appendChild(div);
+                }
+            });
+        }
+    }catch(e){
+        alert("Server error");
+    }finally{
+        loader.style.display="none";
+    }
+}
+
+/* ENTER KEY */
+searchInput.addEventListener("keypress",e=>{
+    if(e.key==="Enter") fetchWallpapers();
+});
+
+/* THEME TOGGLE */
+function toggleTheme(){
+    document.body.classList.toggle("light");
+}
+</script>
+
+</body>
+</html>

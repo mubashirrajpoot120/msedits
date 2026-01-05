@@ -1,0 +1,926 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MS EDITS SIM Database</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* ===== CSS RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        :root {
+            /* Modern Color Palette */
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --primary-light: #eef2ff;
+            --secondary: #06d6a0;
+            --accent: #ff6b6b;
+            --dark: #1a1a2e;
+            --dark-light: #2d3047;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --gray-light: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+            --shadow-md: 0 10px 15px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.15);
+            
+            /* Borders */
+            --radius-sm: 8px;
+            --radius: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 24px;
+            
+            /* Transitions */
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-slow: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* ===== BACKGROUND ELEMENTS ===== */
+        .background-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(40px);
+            opacity: 0.15;
+        }
+        
+        .circle-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -100px;
+            right: -100px;
+        }
+        
+        .circle-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            bottom: -80px;
+            left: -80px;
+        }
+        
+        .circle-3 {
+            width: 200px;
+            height: 200px;
+            background: var(--accent);
+            top: 40%;
+            left: 10%;
+        }
+        
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 500px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .app-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            overflow: hidden;
+            margin-top: 40px;
+            transition: var(--transition-slow);
+        }
+        
+        .app-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-xl), 0 15px 30px rgba(67, 97, 238, 0.1);
+        }
+        
+        /* ===== HEADER ===== */
+        .app-header {
+            padding: 40px 40px 30px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, #3a56d4 100%);
+            color: white;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .app-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+            opacity: 0.2;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-right: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 28px;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .app-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 26px;
+            margin-bottom: 10px;
+            letter-spacing: -0.3px;
+        }
+        
+        .app-subtitle {
+            font-size: 15px;
+            opacity: 0.9;
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        /* ===== MAIN CONTENT ===== */
+        .app-content {
+            padding: 40px;
+        }
+        
+        /* Input Section */
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--dark);
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .input-container {
+            position: relative;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 18px 20px 18px 50px;
+            background: var(--light);
+            border: 2px solid var(--gray-light);
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--dark);
+            transition: var(--transition);
+            box-shadow: var(--shadow-sm);
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(67, 97, 238, 0.15);
+        }
+        
+        .search-input::placeholder {
+            color: var(--gray);
+        }
+        
+        .input-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 18px;
+        }
+        
+        /* Buttons */
+        .button-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+        
+        .btn {
+            padding: 18px 24px;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: var(--shadow);
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .btn:active:not(:disabled) {
+            transform: translateY(-1px);
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            box-shadow: var(--shadow-lg), 0 10px 20px rgba(67, 97, 238, 0.3);
+        }
+        
+        .btn-primary:disabled {
+            background: var(--gray-light);
+            color: var(--gray);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--secondary), #05c895);
+            color: white;
+            display: none;
+        }
+        
+        .btn-success:hover:not(:disabled) {
+            background: linear-gradient(135deg, #05c895, var(--secondary));
+            box-shadow: var(--shadow-lg), 0 10px 20px rgba(6, 214, 160, 0.3);
+        }
+        
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            color: white;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+        
+        .btn-whatsapp:hover {
+            box-shadow: var(--shadow-lg), 0 10px 20px rgba(37, 211, 102, 0.3);
+        }
+        
+        /* Results Section */
+        .results-section {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid var(--gray-light);
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .section-title {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .results-container {
+            background: var(--light);
+            border-radius: var(--radius);
+            padding: 25px;
+            min-height: 150px;
+            border: 1px solid var(--gray-light);
+            margin-bottom: 20px;
+            overflow-x: auto;
+            transition: var(--transition);
+        }
+        
+        #results {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            color: var(--dark);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        
+        #results:empty::before {
+            content: "Enter a Phone or CNIC Number above and click 'Search Database' to view details.";
+            color: var(--gray);
+            font-style: italic;
+        }
+        
+        /* Status Indicators */
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 150px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+        
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid rgba(67, 97, 238, 0.2);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            margin-bottom: 15px;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-weight: 600;
+            background: rgba(239, 68, 68, 0.1);
+            padding: 15px;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--danger);
+            margin-bottom: 10px;
+        }
+        
+        .success-message {
+            color: var(--success);
+            font-weight: 600;
+        }
+        
+        /* Footer */
+        .app-footer {
+            padding: 30px 40px;
+            background: var(--dark-light);
+            color: white;
+            text-align: center;
+            border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(67, 97, 238, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(67, 97, 238, 0); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .app-header {
+                padding: 30px 20px 25px;
+            }
+            
+            .app-content {
+                padding: 30px 20px;
+            }
+            
+            .app-footer {
+                padding: 25px 20px;
+            }
+            
+            .app-title {
+                font-size: 22px;
+            }
+            
+            .logo-text {
+                font-size: 24px;
+            }
+            
+            .logo-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 28px;
+            }
+            
+            .search-input, .btn {
+                padding: 16px 20px 16px 50px;
+            }
+        }
+        
+        /* ===== ENHANCED STYLES ===== */
+        .result-item {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: white;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--primary);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        
+        .result-item:hover {
+            transform: translateX(5px);
+            box-shadow: var(--shadow);
+        }
+        
+        .result-field {
+            display: flex;
+            margin-bottom: 8px;
+            align-items: flex-start;
+        }
+        
+        .field-label {
+            font-weight: 600;
+            min-width: 100px;
+            color: var(--primary);
+        }
+        
+        .field-value {
+            flex: 1;
+            word-break: break-word;
+        }
+        
+        .divider {
+            height: 1px;
+            background: var(--gray-light);
+            margin: 20px 0;
+        }
+        
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            color: white;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.success {
+            background: var(--success);
+        }
+        
+        .notification.error {
+            background: var(--danger);
+        }
+        
+        /* Security Badge */
+        .security-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="background-elements">
+        <div class="bg-circle circle-1"></div>
+        <div class="bg-circle circle-2"></div>
+        <div class="bg-circle circle-3"></div>
+    </div>
+    
+    <!-- Notification Container -->
+    <div id="notification" class="notification"></div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <div class="app-card">
+            <!-- Header -->
+            <div class="app-header">
+                <div class="logo-container">
+                    <div class="logo-icon">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <div class="logo-text">MS EDITS</div>
+                </div>
+                <h1 class="app-title">SIM Database Lookup</h1>
+                <p class="app-subtitle">Search phone and CNIC information securely with our advanced database system</p>
+                <div class="security-badge">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure & Encrypted</span>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="app-content">
+                <!-- Search Input -->
+                <div class="input-section">
+                    <label class="input-label">
+                        <i class="fas fa-search"></i>
+                        <span>Search Query</span>
+                    </label>
+                    <div class="input-container">
+                        <i class="fas fa-phone-alt input-icon"></i>
+                        <input 
+                            type="text" 
+                            id="phone-number" 
+                            class="search-input" 
+                            placeholder="Enter Phone or CNIC Number (e.g., 03xxxxxxxxx)" 
+                            required
+                        >
+                    </div>
+                </div>
+                
+                <!-- Buttons -->
+                <div class="button-group">
+                    <button id="search-button" class="btn btn-primary">
+                        <i class="fas fa-search"></i>
+                        <span>Search Database</span>
+                    </button>
+                    
+                    <button id="copy-button" class="btn btn-success">
+                        <i class="fas fa-copy"></i>
+                        <span>Copy Results</span>
+                    </button>
+                    
+                    <a id="whatsapp-button" class="btn btn-whatsapp" href="https://whatsapp.com/channel/0029Vaxu3IeFy726dtMIEC1a" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>Join WhatsApp Channel</span>
+                    </a>
+                </div>
+                
+                <!-- Results Section -->
+                <div class="results-section">
+                    <div class="section-header">
+                        <h2 class="section-title">
+                            <i class="fas fa-list-alt"></i>
+                            <span>Search Results</span>
+                        </h2>
+                        <span id="result-count" style="color: var(--gray); font-size: 14px; font-weight: 500;"></span>
+                    </div>
+                    
+                    <div class="results-container">
+                        <pre id="results"></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div class="app-footer">
+                <p class="footer-text">&copy; 2025 MS Edits Official. All rights reserved.</p>
+                <p class="footer-text" style="margin-top: 5px; font-size: 13px;">For paid services contact: 03167364896</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ===== DOM ELEMENTS =====
+        const phoneNumberInput = document.getElementById('phone-number');
+        const searchButton = document.getElementById('search-button');
+        const resultsDiv = document.getElementById('results');
+        const copyButton = document.getElementById('copy-button');
+        const resultCount = document.getElementById('result-count');
+        const notification = document.getElementById('notification');
+        
+        // ===== API CONFIG =====
+        const API_BASE_URL = 'https://sim-data.ftgmhacks.workers.dev/';
+        
+        // ===== HELPER FUNCTIONS =====
+        
+        // Show notification
+        function showNotification(message, type = 'success') {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Format phone number
+        function formatPhoneNumber(number) {
+            const cleaned = number.replace(/\D/g, '');
+            if (cleaned.length === 10) {
+                return cleaned.replace(/(\d{3})(\d{7})/, '$1-$2');
+            } else if (cleaned.length === 11) {
+                return cleaned.replace(/(\d{4})(\d{7})/, '$1-$2');
+            }
+            return number;
+        }
+        
+        // Format CNIC
+        function formatCNIC(cnic) {
+            const cleaned = cnic.replace(/\D/g, '');
+            if (cleaned.length === 13) {
+                return cleaned.replace(/(\d{5})(\d{7})(\d{1})/, '$1-$2-$3');
+            }
+            return cnic;
+        }
+        
+        // Display error with styling
+        function displayError(message) {
+            const formattedMessage = `❌ ${message}\n\nPlease try again or contact support.\n\nContact: 03167364896`;
+            resultsDiv.innerHTML = `<span class="error-message">${formattedMessage}</span>`;
+            copyButton.style.display = 'none';
+            resultCount.textContent = '0 results';
+        }
+        
+        // Display results with better formatting
+        function displayResults(records, query) {
+            if (records.length === 0) {
+                displayError(`No records found for: ${query}`);
+                return;
+            }
+            
+            let resultText = '';
+            let count = 1;
+            
+            records.forEach(record => {
+                resultText += `\n📋 RECORD #${count++}\n`;
+                resultText += `══════════════════════════════════════\n`;
+                
+                if (record.name || record.owner) {
+                    resultText += `👤 Name: ${record.name || record.owner}\n`;
+                }
+                
+                if (record.mobile || record.number) {
+                    const phone = record.mobile || record.number;
+                    resultText += `📱 Number: ${formatPhoneNumber(phone)}\n`;
+                }
+                
+                if (record.cNIC || record.cnic || record.idcard) {
+                    const cnic = record.cNIC || record.cnic || record.idcard;
+                    resultText += `🪪 CNIC: ${formatCNIC(cnic)}\n`;
+                }
+                
+                if (record.address || record.location) {
+                    resultText += `📍 Address: ${record.address || record.location}\n`;
+                }
+                
+                if (record.operator) {
+                    resultText += `📶 Operator: ${record.operator}\n`;
+                }
+                
+                if (record.status) {
+                    resultText += `📊 Status: ${record.status}\n`;
+                }
+                
+                resultText += `\n`;
+            });
+            
+            resultsDiv.textContent = resultText;
+            resultCount.textContent = `${records.length} record${records.length > 1 ? 's' : ''} found`;
+            copyButton.style.display = 'flex';
+            
+            // Smooth scroll to results
+            setTimeout(() => {
+                document.querySelector('.results-section').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 300);
+        }
+        
+        // ===== MAIN SEARCH FUNCTION =====
+        async function searchDatabase() {
+            const number = phoneNumberInput.value.trim();
+            
+            if (!number) {
+                showNotification('Please enter a phone or CNIC number', 'error');
+                phoneNumberInput.focus();
+                return;
+            }
+            
+            // Validate input format
+            const phoneRegex = /^(\+92|0)[0-9]{10}$/;
+            const cnicRegex = /^[0-9]{5}-[0-9]{7}-[0-9]{1}$|^[0-9]{13}$/;
+            
+            if (!phoneRegex.test(number) && !cnicRegex.test(number.replace(/-/g, ''))) {
+                showNotification('Please enter a valid phone or CNIC number', 'error');
+                return;
+            }
+            
+            // Set loading state
+            resultsDiv.innerHTML = `
+                <div class="loading">
+                    <div class="loading-spinner"></div>
+                    <div>Searching database...</div>
+                    <div style="font-size: 12px; margin-top: 10px; opacity: 0.7;">Query: ${number}</div>
+                </div>
+            `;
+            copyButton.style.display = 'none';
+            resultCount.textContent = 'Searching...';
+            searchButton.disabled = true;
+            searchButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i><span>Searching...</span>';
+            
+            try {
+                // Construct API URL
+                const url = `${API_BASE_URL}?number=${encodeURIComponent(number)}`;
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`Network error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                
+                let records = [];
+                // Handle different API response structures
+                if (Array.isArray(data)) {
+                    records = data;
+                } else if (data && Array.isArray(data.detail)) {
+                    records = data.detail;
+                } else if (data && Array.isArray(data.records)) {
+                    records = data.records;
+                } else if (data && Array.isArray(data.data)) {
+                    records = data.data;
+                }
+                
+                if (records.length > 0) {
+                    displayResults(records, number);
+                    showNotification(`Found ${records.length} record${records.length > 1 ? 's' : ''}`, 'success');
+                } else {
+                    displayError(`No records found for: ${number}`);
+                    showNotification('No records found', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Search error:', error);
+                displayError('Database connection failed. Please try again.');
+                showNotification('Search failed. Please check connection.', 'error');
+            } finally {
+                // Reset button state
+                searchButton.disabled = false;
+                searchButton.innerHTML = '<i class="fas fa-search"></i><span>Search Database</span>';
+            }
+        }
+        
+        // ===== COPY RESULTS FUNCTION =====
+        function copyResults() {
+            const textToCopy = resultsDiv.textContent;
+            
+            if (!textToCopy || textToCopy.includes('Error') || textToCopy.includes('Enter a Phone')) {
+                showNotification('No results to copy', 'error');
+                return;
+            }
+            
+            // Use modern Clipboard API
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    showNotification('Results copied to clipboard!', 'success');
+                }).catch(err => {
+                    console.error('Clipboard error:', err);
+                    fallbackCopyText(textToCopy);
+                });
+            } else {
+                // Fallback for older browsers
+                fallbackCopyText(textToCopy);
+            }
+        }
+        
+        // Fallback copy method
+        function fallbackCopyText(text) {
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    showNotification('Results copied to clipboard!', 'success');
+                } else {
+                    showNotification('Copy failed. Please copy manually.', 'error');
+                }
+            } catch (err) {
+                showNotification('Copy failed. Please copy manually.', 'error');
+            }
+            
+            document.body.removeChild(textArea);
+        }
+        
+        // ===== EVENT LISTENERS =====
+        searchButton.addEventListener('click', searchDatabase);
+        copyButton.addEventListener('click', copyResults);
+        
+        // Search on Enter key
+        phoneNumberInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                searchDatabase();
+            }
+        });
+        
+        // Input validation
+        phoneNumberInput.addEventListener('input', function(e) {
+            const value = e.target.value;
+            // Allow only numbers and dashes
+            e.target.value = value.replace(/[^0-9\-+]/g, '');
+        });
+        
+        // Focus animation
+        phoneNumberInput.addEventListener('focus', function() {
+            this.style.animation = 'pulse 2s infinite';
+        });
+        
+        phoneNumberInput.addEventListener('blur', function() {
+            this.style.animation = '';
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            phoneNumberInput.focus();
+            showNotification('Ready to search. Enter a phone or CNIC number.', 'success');
+        });
+    </script>
+</body>
+</html>
