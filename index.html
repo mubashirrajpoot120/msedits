@@ -457,20 +457,7 @@ footer{
   </div>
 </div>
 
-<!-- Warning Modal -->
-<div class="modal-overlay" id="warningModal">
-  <div class="modal-container warning-modal">
-    <div class="warning-icon">⚠️</div>
-    <div class="modal-content">
-      <p><strong>⚠️ Warning!</strong></p>
-      <p>Inspection and source code viewing are disabled for security reasons.</p>
-      <p><em>Developed by MS EDITS</em></p>
-    </div>
-    <div class="modal-buttons">
-      <button class="modal-btn modal-btn-primary" onclick="closeWarningModal()">I Understand</button>
-    </div>
-  </div>
-</div>
+
 
 <script>
 // EXISTING FUNCTIONS - DO NOT MODIFY
@@ -515,68 +502,8 @@ function contactNow() {
   closeServicesModal();
 }
 
-// =================================
-// FEATURE 3 & 4: DISABLE INSPECTION & WARNING
-// =================================
-function showWarningModal() {
-  document.getElementById('warningModal').style.display = 'flex';
-}
 
-function closeWarningModal() {
-  document.getElementById('warningModal').style.display = 'none';
-}
 
-// Disable right-click context menu
-document.addEventListener('contextmenu', function(e) {
-  e.preventDefault();
-  showWarningModal();
-  return false;
-});
-
-// Disable keyboard shortcuts for dev tools
-document.addEventListener('keydown', function(e) {
-  // F12
-  if (e.key === 'F12') {
-    e.preventDefault();
-    showWarningModal();
-    return false;
-  }
-  
-  // Ctrl+Shift+I
-  if (e.ctrlKey && e.shiftKey && e.key === 'I') {
-    e.preventDefault();
-    showWarningModal();
-    return false;
-  }
-  
-  // Ctrl+Shift+J
-  if (e.ctrlKey && e.shiftKey && e.key === 'J') {
-    e.preventDefault();
-    showWarningModal();
-    return false;
-  }
-  
-  // Ctrl+Shift+C
-  if (e.ctrlKey && e.shiftKey && e.key === 'C') {
-    e.preventDefault();
-    showWarningModal();
-    return false;
-  }
-  
-  // Ctrl+U (View Source)
-  if (e.ctrlKey && e.key === 'u') {
-    e.preventDefault();
-    showWarningModal();
-    return false;
-  }
-  
-  // Additional combinations
-  if (e.ctrlKey && e.shiftKey && e.key === 'U') {
-    e.preventDefault();
-    showWarningModal();
-    return false;
-  }
-});
 
 // =================================
 // INITIALIZATION
